@@ -1,29 +1,13 @@
-import { useEffect, useState } from "react";
-import { getDocentes } from "../api/users";
 import DocenteItem from "./DocenteItem";
 import "./styles/ListaDocentes.css";
 
-const ListaDocentes = () => {
-  const [docentes, setDocentes] = useState([]);
-
-  useEffect(() => {
-    const fetchDocentes = async () => {
-      try {
-        const response = await getDocentes();
-        setDocentes(response.data.rows);
-      } catch (error) {
-        console.error("Error al obtener docentes:", error);
-      }
-    };
-
-    fetchDocentes();
-  }, []);
-
+const ListaDocentes = ({ docentes }) => {
   return (
     <div className="docentes-container">
       <h1>Docentes</h1>
+
       {docentes.length === 0 ? (
-        <p>No hay docentes disponibles.</p>
+        <p className="docentes-empty-message">No hay docentes disponibles.</p>
       ) : (
         docentes.map((docente) => (
           <DocenteItem

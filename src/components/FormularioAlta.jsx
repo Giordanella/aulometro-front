@@ -3,7 +3,7 @@ import { createUser } from "../api/users";
 import "./styles/FormularioAlta.css";
 import BotonPrimario from "./BotonPrimario";
 
-const FormularioAlta = () => {
+const FormularioAlta = ({ setDocentes }) => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -27,8 +27,15 @@ const FormularioAlta = () => {
 
     try {
       const response = await createUser(formData);
-      setMensaje(`Usuario "${response.data.name}" creado correctamente.`);
+      const nuevoDocente = response.data;
+
+      setMensaje(`Usuario "${nuevoDocente.name}" creado correctamente.`);
       setTipoMensaje("success");
+
+      if (nuevoDocente.role === "DOCENTE") {
+        setDocentes((prevDocentes) => [...prevDocentes, nuevoDocente]);
+      }
+
       setFormData({ name: "", email: "", password: "", role: "" });
 
       setTimeout(() => {
@@ -92,11 +99,7 @@ const FormularioAlta = () => {
         <BotonPrimario>Dar de alta usuario</BotonPrimario>
       </form>
 
-      {mensaje && (
-        <p className={`form-message ${tipoMensaje}`}>
-          {mensaje}
-        </p>
-      )}
+      {mensaje && <p className={`form-message ${tipoMensaje}`}>{mensaje}</p>}
     </div>
   );
 };
