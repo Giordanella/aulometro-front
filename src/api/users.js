@@ -11,3 +11,5 @@ export const updateUserById = (id, data) => api.put(`/users/${id}`, data);
 export const deleteUserById = (id) => api.delete(`/users/${id}`);
 
 export const deleteAllUsers = () => api.delete("/users");
+
+export const getDocentes = () => api.get("/users/docentes");
