@@ -1,13 +1,7 @@
-import { useNavigate } from "react-router-dom";
+import BotonPrimario from "../components/BotonPrimario";
 import "./styles/Login.css";
 
-function Login() {
-  const navigate = useNavigate();
-
-  const handleClick = () => {
-    navigate("/");
-  };
-
+const Login = () => {
   return (
     <div className="login-container">
       <h1 className="login-title">Login</h1>
@@ -24,16 +18,10 @@ function Login() {
           className="login-input"
           required
         />
-        <button type="submit" className="login-button">
-          Iniciar sesión
-        </button>
+        <BotonPrimario>Iniciar sesión</BotonPrimario>
       </form>
-
-      <button onClick={handleClick} className="home-button">
-        Ir a la página de Home
-      </button>
     </div>
   );
-}
+};
 
 export default Login;
