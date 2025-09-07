@@ -1,4 +1,5 @@
 import FormularioAlta from "../components/FormularioAlta";
+import ListaDocentes from "../components/ListaDocentes";
 import "./styles/Home.css";
 
 function Home() {
@@ -6,6 +7,7 @@ function Home() {
     <div className="home-container">
       <h1>Dashboard</h1>
       <FormularioAlta />
+      <ListaDocentes />
     </div>
   );
 }

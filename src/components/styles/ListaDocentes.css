@@ -1,0 +1,9 @@
+.docentes-container {
+  align-items: center;
+  background-color: whitesmoke;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  padding: 2rem;
+}
