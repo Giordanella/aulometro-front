@@ -1,0 +1,27 @@
+.docente-container {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  display: flex;
+  gap: 1rem;
+  justify-content: space-evenly;
+  padding: 1rem;
+  width: 600px;
+}
+
+.docente-data {
+  border-radius: 8px;
+  color: #333;
+  overflow: hidden;
+  padding: 0.5rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.name {
+  background-color: rgba(64, 224, 208, 0.5);
+}
+
+.email {
+  background-color: rgba(255, 99, 71, 0.5);
+}

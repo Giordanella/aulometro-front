@@ -1,0 +1,33 @@
+.login-container {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.login {
+  align-items: center;
+  background-color: whitesmoke;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  padding: 3rem;
+  width: 400px;
+}
+
+.login-title {
+  margin: 0;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  width: 100%;
+}
+
+.login-input {
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  padding: 0.75rem;
+}
