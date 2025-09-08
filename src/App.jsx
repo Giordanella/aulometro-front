@@ -5,7 +5,7 @@ import DashboardDocente from "./pages/DashboardDocente";
 import Login from "./pages/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
 
-function App() {
+const App = () => {
   return (
     <>
       <Routes>
@@ -37,6 +37,6 @@ function App() {
       </Routes>
     </>
   );
-}
+};
 
 export default App;

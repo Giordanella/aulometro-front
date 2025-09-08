@@ -1,10 +1,16 @@
-function DashboardDocente() {
+import { useAuth } from "../contexts/AuthContext";
+import BotonPrimario from "../components/BotonPrimario";
+
+const DashboardDirectivo = () => {
+  const { user, logout } = useAuth();
+
   return (
-    <div style={{ padding: 24 }}>
-      <h1>Dashboard Docente</h1>
-      <p>Pantalla de bienvenida temporal.</p>
+    <div>
+      <h1>Bienvenido {user?.email}</h1>
+      <p>Tu rol es: {user?.role}</p>
+      <BotonPrimario onClick={logout}>Cerrar sesión</BotonPrimario>
     </div>
   );
-}
+};
 
-export default DashboardDocente;
+export default DashboardDirectivo;
