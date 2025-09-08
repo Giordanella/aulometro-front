@@ -1,8 +1,9 @@
 import "./App.css";
 import { Routes, Route, Navigate } from "react-router-dom";
-import Home from "./pages/DashboardDirectivo"; // podriamos renombrar home a dashboarddirectivo
+import DashboardDirectivo from "./pages/DashboardDirectivo";
 import DashboardDocente from "./pages/DashboardDocente";
 import Login from "./pages/Login";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
@@ -10,10 +11,28 @@ function App() {
       <Routes>
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/dashboard/docente" element={<DashboardDocente />} />
-        <Route path="/dashboard/directivo" element={<Home />} />
 
-        {/*fallback: otra ruta -> login*/}
+        {/* Ruta solo para docentes */}
+        <Route
+          path="/dashboard/docente"
+          element={
+            <ProtectedRoute role="DOCENTE">
+              <DashboardDocente />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Ruta solo para directivos */}
+        <Route
+          path="/dashboard/directivo"
+          element={
+            <ProtectedRoute role="DIRECTIVO">
+              <DashboardDirectivo />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* fallback */}
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </>

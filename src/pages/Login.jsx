@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import BotonPrimario from "../components/BotonPrimario";
 import { loginRequest } from "../api/auth";
+import { useAuth } from "../contexts/AuthContext";
+import { setAuthRole } from "../api/axios";
 import "./styles/Login.css";
 
 const Login = () => {
@@ -10,18 +12,27 @@ const Login = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
+  const { user, setUser } = useAuth();
+
+  // Si ya hay usuario logueado, redirigir a su dashboard
+  useEffect(() => {
+    if (user) {
+      navigate(user.role === "DOCENTE" ? "/dashboard/docente" : "/dashboard/directivo");
+    }
+  }, [user, navigate]);
+
   async function handleSubmit(e) {
     e.preventDefault();
     setError(null);
 
     try {
       const data = await loginRequest(email, password);
-      const role = data.user?.role; //rol para saber a donde redirigir cada usuario
-      if (role === "DOCENTE") {
-        navigate("/dashboard/docente");
-      } else if (role === "DIRECTIVO") {
-        navigate("/dashboard/directivo");
-      }
+
+      // Guardar usuario en contexto + configurar rol en axios
+      setUser(data.user);
+      setAuthRole(data.user.role);
+
+      // No hace falta redirigir acá, el useEffect se encarga
     } catch (err) {
       const msg = err?.response?.data?.message || "Credenciales inválidas";
       setError(msg);
