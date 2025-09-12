@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "lint": "eslint .",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "preview": "vite preview",
     "format": "prettier --write .",
     "test": "jest",
@@ -15,8 +15,7 @@
   "lint-staged": {
 		"src/**/*.{js,jsx,ts,tsx}": [
 			"eslint --fix",
-      "npm test -- --bail --findRelatedTests",
-			"git add"
+      "npm test -- --bail --findRelatedTests"
 		],
 		"lint": "eslint \"src/**/*.{js,jsx,ts,tsx,json}\" \"cypress/**/*.{js,jsx,ts,tsx,json}\" \"./*.{js,cjs,ts,json}\" --fix",
 		"format": "prettier \"src/**/*.{js,jsx,ts,tsx,json}\" \"cypress/**/*.{js,jsx,ts,tsx,json}\" \"./*.{js,cjs,ts,json}\" --write",
