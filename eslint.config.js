@@ -23,7 +23,16 @@ export default defineConfig([
       },
     },
     rules: {
+      "react/react-in-jsx-scope": "off",
       "no-unused-vars": ["error", { varsIgnorePattern: "^[A-Z_]" }],
+      "no-console": "warn",
+      "eqeqeq": ["error", "always"],
+      "curly": ["error", "all"],
+      "semi": ["error", "always"],
+      "quotes": ["error", "double"],
+      "indent": ["error", 2],
+      "react/jsx-uses-react": "off",
+      "react/prop-types": "off"
     },
   },
 ]);
