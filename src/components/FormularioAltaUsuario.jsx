@@ -3,7 +3,7 @@ import { createUser } from "../api/users";
 import "./styles/FormularioAlta.css";
 import BotonPrimario from "./BotonPrimario";
 
-const FormularioAlta = ({ setDocentes }) => {
+const FormularioAltaUsuario = ({ setDocentes }) => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -57,6 +57,7 @@ const FormularioAlta = ({ setDocentes }) => {
   return (
     <div className="form-container">
       <form className="form" onSubmit={handleSubmit}>
+        <h2>Alta de Usuario</h2>
         <input
           type="text"
           name="name"
@@ -104,4 +105,4 @@ const FormularioAlta = ({ setDocentes }) => {
   );
 };
 
-export default FormularioAlta;
+export default FormularioAltaUsuario;
