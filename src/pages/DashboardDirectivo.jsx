@@ -3,7 +3,7 @@ import { getDocentes } from "../api/users";
 import FormularioAlta from "../components/FormularioAlta";
 import ListaDocentes from "../components/ListaDocentes";
 import BotonPrimario from "../components/BotonPrimario";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../contexts/useAuth";
 import "./styles/Home.css";
 
 const Home = () => {
