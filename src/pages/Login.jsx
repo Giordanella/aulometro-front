@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import BotonPrimario from "../components/BotonPrimario";
 import { loginRequest } from "../api/auth";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../contexts/useAuth";
 import { setAuthRole } from "../api/axios";
 import "./styles/Login.css";
 
