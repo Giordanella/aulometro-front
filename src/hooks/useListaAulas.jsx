@@ -10,7 +10,7 @@ export function useListaAulas() {
     const fetchAulas = async () => {
       try {
         const response = await getAulas();
-        setAulas(response.data);
+        setAulas(response.data.rows);
       } catch (err) {
         console.error("Error al obtener aulas:", err);
         setError(err);
