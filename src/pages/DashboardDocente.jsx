@@ -1,19 +1,20 @@
 import { useAuth } from "../contexts/useAuth";
 import BotonPrimario from "../components/BotonPrimario";
 import ListaAulas from "../components/ListaAulas";
-import { useListaAulas } from "../hooks/useListaAulas";
+import { useLista } from "../hooks/useLista.jsx";
 import "./styles/Home.css";
 import DataLoader from "../components/DataLoader.jsx";
+import { getAulas } from "../api/aulas";
 
 const DashboardDirectivo = () => {
   const { user, logout } = useAuth();
-  const { aulas, loading, error } = useListaAulas();
+  const { items: aulas, fetchItems: fetchAulas } = useLista(getAulas);
 
   return (
     <div className="home-container">
       <h1>Bienvenido/a {user?.role}</h1>
       <h2>Lista de Aulas</h2>
-      <DataLoader loading={loading} error={error}>
+      <DataLoader fetchData={fetchAulas} fallbackLoading="Cargando aulas..." fallbackError="Error al cargar aulas">
         <ListaAulas aulas={aulas} />
       </DataLoader>
       <p>Has ingresado con tu email {user?.email}</p>

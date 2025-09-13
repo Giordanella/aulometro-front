@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { getDocentes } from "../api/users";
+import { getAulas } from "../api/aulas";
 import FormularioAltaUsuario from "../components/FormularioAltaUsuario";
 import FormularioAltaAula from "../components/FormularioAltaAula";
 import ListaDocentes from "../components/ListaDocentes";
@@ -8,27 +9,15 @@ import { useAuth } from "../contexts/useAuth";
 import "./styles/Home.css";
 import SelectorFormulario from "../components/SelectorFormulario";
 import ListaAulas from "../components/ListaAulas";
-import { useListaAulas } from "../hooks/useListaAulas";
+import { useLista } from "../hooks/useLista.jsx";
 import DataLoader from "../components/DataLoader.jsx";
 
+
 const Home = () => {
-  const [docentes, setDocentes] = useState([]);
-  const { aulas, setAulas, loading, error } = useListaAulas();
+  const { items: aulas, setItems: setAulas, fetchItems: fetchAulas } = useLista(getAulas);
+  const { items: docentes, setItems: setDocentes, fetchItems: fetchDocentes } = useLista(getDocentes);
   const [formularioActivo, setFormularioActivo] = useState("usuario");
   const { logout } = useAuth();
-
-  useEffect(() => {
-    const fetchDocentes = async () => {
-      try {
-        const response = await getDocentes();
-        setDocentes(response.data.rows);
-      } catch (error) {
-        console.error("Error al obtener docentes:", error);
-      }
-    };
-
-    fetchDocentes();
-  }, []);
 
   return (
     <div className="home-container">
@@ -40,14 +29,14 @@ const Home = () => {
       {formularioActivo === "usuario" ? (
         <div className="home-container">
           <FormularioAltaUsuario setDocentes={setDocentes} />
-          <DataLoader loading={loading} error={error}>
+          <DataLoader fetchData={fetchDocentes} fallbackLoading="Cargando docentes..." fallbackError="Error al cargar docentes">
             <ListaDocentes docentes={docentes} />
           </DataLoader>
         </div>
       ) : (
         <div className="home-container">
           <FormularioAltaAula setAulas={setAulas} />
-          <DataLoader loading={loading} error={error}>
+          <DataLoader fetchData={fetchAulas} fallbackLoading="Cargando aulas..." fallbackError="Error al cargar aulas">
             <ListaAulas aulas={aulas} />
           </DataLoader>
         </div>
