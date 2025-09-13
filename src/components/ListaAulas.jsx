@@ -18,7 +18,7 @@ const ListaAulas = ({ aulas }) => {
             capacidad={aula.capacidad}
             cantidadComputadoras={aula.cantidadComputadoras}
             tieneProyector={aula.tieneProyector}
-            franjaHoraria={aula.franjaHoraria}
+            estado={aula.estado}
           />
         ))
       )}

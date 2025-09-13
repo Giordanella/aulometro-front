@@ -2,7 +2,7 @@ import { useFormularioAlta } from "../hooks/useFormularioAlta";
 import { createAula } from "../api/aulas";
 import "./styles/FormularioAlta.css";
 import BotonPrimario from "./BotonPrimario";
-import { validarCapacidad, validarNumeroAula, validarUbicacion, validarCantidadComputadoras, validarFranjaHoraria } from "../utils/validarAula";
+import { validarCapacidad, validarNumeroAula, validarUbicacion, validarCantidadComputadoras, validarEstado } from "../utils/validarAula";
 import CampoFormulario from "./CampoFormulario";
 
 const FormularioAltaAula = ({ onAulaCreada }) => {
@@ -12,7 +12,7 @@ const FormularioAltaAula = ({ onAulaCreada }) => {
     capacidad: validarCapacidad,
     ubicacion: validarUbicacion,
     cantidadComputadoras: validarCantidadComputadoras,
-    franjaHoraria: validarFranjaHoraria
+    estado: validarEstado
   };
 
   const {
@@ -29,7 +29,7 @@ const FormularioAltaAula = ({ onAulaCreada }) => {
       ubicacion: "",
       cantidadComputadoras: "",
       tieneProyector: false,
-      franjaHoraria: "disponible"
+      estado: "disponible"
     },
     createAula,
     onAulaCreada,
@@ -78,14 +78,15 @@ const FormularioAltaAula = ({ onAulaCreada }) => {
         />
 
         <CampoFormulario
-          label="Franja horaria"
-          name="franjaHoraria"
+          label="Estado"
+          name="estado"
           type="select"
-          value={formData.franjaHoraria}
+          value={formData.estado}
           onChange={handleChange}
-          error={errores.franjaHoraria}
+          error={errores.estado}
         >
           <option value="disponible">Disponible</option>
+          <option value="mantenimiento">En mantenimiento</option>
           <option value="no_disponible">No disponible</option>
         </CampoFormulario>
 

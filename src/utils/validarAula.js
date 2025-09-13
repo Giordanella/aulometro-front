@@ -27,7 +27,7 @@ export function validarCantidadComputadoras(cantidad) {
   return null;
 }
 
-export function validarFranjaHoraria(franja) {
-  const franjasValidas = ["disponible", "ocupada", "mantenimiento"];
-  return franjasValidas.includes(franja);
+export function validarEstado(estado) {
+  const estadosValidos = ["disponible", "ocupada", "mantenimiento"];
+  return estadosValidos.includes(estado);
 }
