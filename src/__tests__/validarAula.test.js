@@ -1,4 +1,4 @@
-import { validarNumeroAula, validarCapacidad, validarUbicacion, validarCantidadComputadoras, validarFranjaHoraria } from "../utils/validarAula";
+import { validarNumeroAula, validarCapacidad, validarUbicacion, validarCantidadComputadoras, validarEstado } from "../utils/validarAula";
 
 // Aula tests
 
@@ -70,15 +70,15 @@ test("cantidad de computadoras invalida (no entero)", () => {
   expect(validarCantidadComputadoras(10.5)).toBe("La cantidad de computadoras debe ser un entero positivo.");
 });
 
-// Franja horaria tests
+// Estado tests
 
-test("franja horaria valida", () => {
-  expect(validarFranjaHoraria("disponible")).toBe(true);
-  expect(validarFranjaHoraria("ocupada")).toBe(true);
-  expect(validarFranjaHoraria("mantenimiento")).toBe(true);
+test("estado valido", () => {
+  expect(validarEstado("disponible")).toBe(true);
+  expect(validarEstado("ocupada")).toBe(true);
+  expect(validarEstado("mantenimiento")).toBe(true);
 });
 
-test("franja horaria invalida", () => {
-  expect(validarFranjaHoraria("cerrada")).toBe(false);
-  expect(validarFranjaHoraria("")).toBe(false);
+test("estado invalido", () => {
+  expect(validarEstado("cerrada")).toBe(false);
+  expect(validarEstado("")).toBe(false);
 });
