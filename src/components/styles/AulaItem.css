@@ -1,0 +1,34 @@
+.aula-container {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  width: 600px;
+}
+
+.aula-data {
+  border-radius: 8px;
+  color: #333;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+.numeroAula {
+  font-size: 1.25rem;
+  font-weight: bold;
+  padding: 0.5rem;
+}
+
+/* background-color: rgba(64, 224, 208, 0.5); */
+
+.franjaHoraria {
+  border-radius: 8px;
+  background-color: rgba(64, 224, 208, 0.5);
+  padding: 0.5rem;
+}
