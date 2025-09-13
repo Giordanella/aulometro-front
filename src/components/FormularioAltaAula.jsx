@@ -42,7 +42,7 @@ const FormularioAltaAula = ({ onAulaCreada }) => {
         <h2>Alta de Aula</h2>
 
         <CampoFormulario
-          label="Número de aula"
+          placeholder="Número de aula"
           name="numeroAula"
           type="number"
           value={formData.numeroAula}
@@ -51,7 +51,7 @@ const FormularioAltaAula = ({ onAulaCreada }) => {
         />
 
         <CampoFormulario
-          label="Capacidad"
+          placeholder="Capacidad"
           name="capacidad"
           type="number"
           value={formData.capacidad}
@@ -60,7 +60,7 @@ const FormularioAltaAula = ({ onAulaCreada }) => {
         />
         
         <CampoFormulario
-          label="Ubicación"
+          placeholder="Ubicación"
           name="ubicacion"
           type="text"
           value={formData.ubicacion}
@@ -69,7 +69,7 @@ const FormularioAltaAula = ({ onAulaCreada }) => {
         />
 
         <CampoFormulario
-          label="Cantidad de computadoras"
+          placeholder="Cantidad de computadoras"
           name="cantidadComputadoras"
           type="number"
           value={formData.cantidadComputadoras}
@@ -78,7 +78,7 @@ const FormularioAltaAula = ({ onAulaCreada }) => {
         />
 
         <CampoFormulario
-          label="Estado"
+          placeholder="Estado"
           name="estado"
           type="select"
           value={formData.estado}
