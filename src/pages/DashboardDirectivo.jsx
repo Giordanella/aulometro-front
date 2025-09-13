@@ -8,11 +8,12 @@ import { useAuth } from "../contexts/useAuth";
 import "./styles/Home.css";
 import SelectorFormulario from "../components/SelectorFormulario";
 import ListaAulas from "../components/ListaAulas";
-import { getAulas } from "../api/aulas";
+import { useListaAulas } from "../hooks/useListaAulas";
+import DataLoader from "../components/DataLoader.jsx";
 
 const Home = () => {
   const [docentes, setDocentes] = useState([]);
-  const [aulas, setAulas] = useState([]);
+  const { aulas, setAulas, loading, error } = useListaAulas();
   const [formularioActivo, setFormularioActivo] = useState("usuario");
   const { logout } = useAuth();
 
@@ -29,19 +30,6 @@ const Home = () => {
     fetchDocentes();
   }, []);
 
-  useEffect(() => {
-    const fetchAulas = async () => {
-      try {
-        const response = await getAulas();
-        setAulas(response.data);
-      } catch (error) {
-        console.error("Error al obtener aulas:", error);
-      }
-    };
-
-    fetchAulas();
-  }, []);
-
   return (
     <div className="home-container">
       <h1>Dashboard Directivo</h1>
@@ -52,12 +40,16 @@ const Home = () => {
       {formularioActivo === "usuario" ? (
         <div className="home-container">
           <FormularioAltaUsuario setDocentes={setDocentes} />
-          <ListaDocentes docentes={docentes} />
+          <DataLoader loading={loading} error={error}>
+            <ListaDocentes docentes={docentes} />
+          </DataLoader>
         </div>
       ) : (
         <div className="home-container">
           <FormularioAltaAula setAulas={setAulas} />
-          <ListaAulas aulas={aulas} />
+          <DataLoader loading={loading} error={error}>
+            <ListaAulas aulas={aulas} />
+          </DataLoader>
         </div>
       )}
       <BotonPrimario onClick={logout}>Cerrar sesión</BotonPrimario>
