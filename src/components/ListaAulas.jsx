@@ -5,13 +5,13 @@ const ListaAulas = ({ aulas }) => {
   return (
     <div className="aulas-container">
       <h1>Aulas</h1>
-
       {aulas.length === 0 ? (
         <p className="aulas-empty-message">No hay aulas disponibles.</p>
       ) : (
         aulas.map((aula) => (
           <AulaItem
             key={aula.id}
+            aulaId={aula.id}
             numeroAula={aula.numeroAula}
             email={aula.email}
             ubicacion={aula.ubicacion}

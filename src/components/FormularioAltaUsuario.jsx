@@ -39,7 +39,7 @@ const FormularioAltaUsuario = ({ setDocentes }) => {
         <h2>Alta de Usuario</h2>
 
         <CampoFormulario
-          label="Nombre"
+          placeholder="Nombre"
           name="name"
           value={formData.name}
           onChange={handleChange}
@@ -47,7 +47,7 @@ const FormularioAltaUsuario = ({ setDocentes }) => {
         />
 
         <CampoFormulario
-          label="Correo electrónico"
+          placeholder="Correo electrónico"
           name="email"
           type="email"
           value={formData.email}
@@ -57,7 +57,7 @@ const FormularioAltaUsuario = ({ setDocentes }) => {
         />
         
         <CampoFormulario
-          label="Contraseña"
+          placeholder="Contraseña"
           name="password"
           type="password"
           value={formData.password}
@@ -67,7 +67,7 @@ const FormularioAltaUsuario = ({ setDocentes }) => {
         />
 
         <CampoFormulario
-          label="Rol"
+          placeholder="Rol"
           name="role"
           type="select"
           value={formData.role}

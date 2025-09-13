@@ -1,13 +1,18 @@
 import "./styles/FormularioAlta.css";
 
-const CampoFormulario = ({ label, name, type = "text", value, onChange, error, required = false, children }) => {
+const CampoFormulario = ({ label, placeholder, name, type = "text", value, onChange, error, required = false, children }) => {
   return (
     <div className="form-field">
+      {label && (
+        <label htmlFor={name} className="form-label">
+          {label}
+        </label>
+      )}
       { type !== "select" ? (
         <input
           type={type}
           name={name}
-          placeholder={label}
+          placeholder={placeholder}
           className={"form-input"}
           value={value}
           onChange={onChange}
