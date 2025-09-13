@@ -7,9 +7,12 @@ import BotonPrimario from "../components/BotonPrimario";
 import { useAuth } from "../contexts/useAuth";
 import "./styles/Home.css";
 import SelectorFormulario from "../components/SelectorFormulario";
+import ListaAulas from "../components/ListaAulas";
+import { getAulas } from "../api/aulas";
 
 const Home = () => {
   const [docentes, setDocentes] = useState([]);
+  const [aulas, setAulas] = useState([]);
   const [formularioActivo, setFormularioActivo] = useState("usuario");
   const { logout } = useAuth();
 
@@ -26,11 +29,18 @@ const Home = () => {
     fetchDocentes();
   }, []);
 
-  // Simulación: función para cuando se crea un aula
-  const handleAulaCreada = (aula) => {
-    alert(`Aula creada: ${aula.nombre} (capacidad: ${aula.capacidad})`);
-    // Aquí podrías actualizar una lista de aulas si la tuvieras
-  };
+  useEffect(() => {
+    const fetchAulas = async () => {
+      try {
+        const response = await getAulas();
+        setAulas(response.data);
+      } catch (error) {
+        console.error("Error al obtener aulas:", error);
+      }
+    };
+
+    fetchAulas();
+  }, []);
 
   return (
     <div className="home-container">
@@ -40,11 +50,16 @@ const Home = () => {
         setFormularioActivo={setFormularioActivo}
       />
       {formularioActivo === "usuario" ? (
-        <FormularioAltaUsuario setDocentes={setDocentes} />
+        <div className="home-container">
+          <FormularioAltaUsuario setDocentes={setDocentes} />
+          <ListaDocentes docentes={docentes} />
+        </div>
       ) : (
-        <FormularioAltaAula onAulaCreada={handleAulaCreada} />
+        <div className="home-container">
+          <FormularioAltaAula setAulas={setAulas} />
+          <ListaAulas aulas={aulas} />
+        </div>
       )}
-      <ListaDocentes docentes={docentes} />
       <BotonPrimario onClick={logout}>Cerrar sesión</BotonPrimario>
     </div>
   );
