@@ -7,9 +7,13 @@ import BotonPrimario from "../components/BotonPrimario";
 import { useAuth } from "../contexts/useAuth";
 import "./styles/Home.css";
 import SelectorFormulario from "../components/SelectorFormulario";
+import ListaAulas from "../components/ListaAulas";
+import { useListaAulas } from "../hooks/useListaAulas";
+import DataLoader from "../components/DataLoader.jsx";
 
 const Home = () => {
   const [docentes, setDocentes] = useState([]);
+  const { aulas, setAulas, loading, error } = useListaAulas();
   const [formularioActivo, setFormularioActivo] = useState("usuario");
   const { logout } = useAuth();
 
@@ -26,12 +30,6 @@ const Home = () => {
     fetchDocentes();
   }, []);
 
-  // Simulación: función para cuando se crea un aula
-  const handleAulaCreada = (aula) => {
-    alert(`Aula creada: ${aula.nombre} (capacidad: ${aula.capacidad})`);
-    // Aquí podrías actualizar una lista de aulas si la tuvieras
-  };
-
   return (
     <div className="home-container">
       <h1>Dashboard Directivo</h1>
@@ -40,11 +38,20 @@ const Home = () => {
         setFormularioActivo={setFormularioActivo}
       />
       {formularioActivo === "usuario" ? (
-        <FormularioAltaUsuario setDocentes={setDocentes} />
+        <div className="home-container">
+          <FormularioAltaUsuario setDocentes={setDocentes} />
+          <DataLoader loading={loading} error={error}>
+            <ListaDocentes docentes={docentes} />
+          </DataLoader>
+        </div>
       ) : (
-        <FormularioAltaAula onAulaCreada={handleAulaCreada} />
+        <div className="home-container">
+          <FormularioAltaAula setAulas={setAulas} />
+          <DataLoader loading={loading} error={error}>
+            <ListaAulas aulas={aulas} />
+          </DataLoader>
+        </div>
       )}
-      <ListaDocentes docentes={docentes} />
       <BotonPrimario onClick={logout}>Cerrar sesión</BotonPrimario>
     </div>
   );
