@@ -1,58 +1,24 @@
-import { useState } from "react";
+import { useFormularioAlta } from "../hooks/useFormularioAlta.jsx";
 import { createUser } from "../api/users";
 import "./styles/FormularioAlta.css";
 import BotonPrimario from "./BotonPrimario";
 
 const FormularioAltaUsuario = ({ setDocentes }) => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    role: "",
-  });
-
-  const [mensaje, setMensaje] = useState("");
-  const [tipoMensaje, setTipoMensaje] = useState("");
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      const response = await createUser(formData);
-      const nuevoDocente = response.data;
-
-      setMensaje(`Usuario "${nuevoDocente.name}" creado correctamente.`);
-      setTipoMensaje("success");
-
+  const {
+    formData,
+    mensaje,
+    tipoMensaje,
+    handleChange,
+    handleSubmit
+  } = useFormularioAlta(
+    { name: "", email: "", password: "", role: "" },
+    createUser,
+    (nuevoDocente) => {
       if (nuevoDocente.role === "DOCENTE") {
         setDocentes((prevDocentes) => [...prevDocentes, nuevoDocente]);
       }
-
-      setFormData({ name: "", email: "", password: "", role: "" });
-
-      setTimeout(() => {
-        setMensaje("");
-        setTipoMensaje("");
-      }, 5000);
-    } catch (error) {
-      console.error("Error al crear usuario:", error);
-      setMensaje("Error al crear el usuario.");
-      setTipoMensaje("error");
-
-      setTimeout(() => {
-        setMensaje("");
-        setTipoMensaje("");
-      }, 5000);
     }
-  };
+  );
 
   return (
     <div className="form-container">

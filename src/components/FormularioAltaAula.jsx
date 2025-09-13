@@ -1,68 +1,27 @@
-import { useState } from "react";
+import { useFormularioAlta } from "../hooks/useFormularioAlta";
 import { createAula } from "../api/aulas";
 import "./styles/FormularioAlta.css";
 import BotonPrimario from "./BotonPrimario";
 
 const FormularioAltaAula = ({ onAulaCreada }) => {
-  const [formData, setFormData] = useState({
-    numeroAula: "",
-    capacidad: "",
-    ubicacion: "",
-    cantidadComputadoras: "",
-    tieneProyector: false,
-    franjaHoraria: "disponible",
-  });
-    
-  const [mensaje, setMensaje] = useState("");
-  const [tipoMensaje, setTipoMensaje] = useState("");
-    
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-        
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: type === "checkbox" ? checked : value,
-    }));
-  };
-    
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-        
-    try {
-      const response = await createAula(formData);
-      const nuevaAula = response.data;
-
-      setMensaje(`Aula "${nuevaAula.numeroAula}" creada correctamente.`);
-      setTipoMensaje("success");
-
-      if (onAulaCreada) {
-        onAulaCreada(nuevaAula);
-      }
-      setFormData({
-        numeroAula: "",
-        capacidad: "",
-        ubicacion: "",
-        cantidadComputadoras: "",
-        tieneProyector: false,
-        franjaHoraria: "disponible",
-      });
-
-      setTimeout(() => {
-        setMensaje("");
-        setTipoMensaje("");
-      }, 5000);
-
-    } catch (error) {
-      console.error("Error al crear aula:", error);
-      setMensaje("Error al crear el aula.");
-      setTipoMensaje("error");
-
-      setTimeout(() => {
-        setMensaje("");
-        setTipoMensaje("");
-      }, 5000);
-    }
-  };
+  const {
+    formData,
+    mensaje,
+    tipoMensaje,
+    handleChange,
+    handleSubmit
+  } = useFormularioAlta(
+    {
+      numeroAula: "",
+      capacidad: "",
+      ubicacion: "",
+      cantidadComputadoras: "",
+      tieneProyector: false,
+      franjaHoraria: "disponible"
+    },
+    createAula,
+    onAulaCreada
+  );
 
   return (
     <div className="form-container">
