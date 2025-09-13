@@ -3,6 +3,7 @@ import { createUser } from "../api/users";
 import "./styles/FormularioAlta.css";
 import BotonPrimario from "./BotonPrimario";
 import { validarEmail, validarNombreUsuario, validarPassword, validarRole } from "../utils/validarUsuario.js";
+import CampoFormulario from "./CampoFormulario.jsx";
 
 const FormularioAltaUsuario = ({ setDocentes }) => {
   
@@ -33,52 +34,54 @@ const FormularioAltaUsuario = ({ setDocentes }) => {
 
   return (
     <div className="form-container">
+      
       <form className="form" onSubmit={handleSubmit}>
         <h2>Alta de Usuario</h2>
-        <input
-          type="text"
+
+        <CampoFormulario
+          label="Nombre"
           name="name"
-          placeholder="Nombre"
-          className="form-input"
           value={formData.name}
           onChange={handleChange}
-          required
+          error={errores.name}
         />
-        {errores.name && <p className="error-text">{errores.name}</p>}
-        <input
-          type="email"
+
+        <CampoFormulario
+          label="Correo electrónico"
           name="email"
-          placeholder="Correo electrónico"
-          className="form-input"
+          type="email"
           value={formData.email}
           onChange={handleChange}
+          error={errores.email}
           required
         />
-        {errores.email && <p className="error-text">{errores.email}</p>}
-        <input
-          type="password"
+        
+        <CampoFormulario
+          label="Contraseña"
           name="password"
-          placeholder="Contraseña"
-          className="form-input"
+          type="password"
           value={formData.password}
           onChange={handleChange}
+          error={errores.password}
           required
         />
-        {errores.password && <p className="error-text">{errores.password}</p>}
-        <select
+
+        <CampoFormulario
+          label="Rol"
           name="role"
-          className="form-input"
+          type="select"
           value={formData.role}
           onChange={handleChange}
+          error={errores.role}
           required
         >
           <option value="">Seleccionar rol</option>
           <option value="DOCENTE">Docente</option>
           <option value="DIRECTIVO">Directivo</option>
-        </select>
-        {errores.role && <p className="error-text">{errores.role}</p>}
+        </CampoFormulario>
 
         <BotonPrimario>Dar de alta usuario</BotonPrimario>
+        
       </form>
 
       {mensaje && <p className={`form-message ${tipoMensaje}`}>{mensaje}</p>}

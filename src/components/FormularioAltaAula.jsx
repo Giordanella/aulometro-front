@@ -3,6 +3,7 @@ import { createAula } from "../api/aulas";
 import "./styles/FormularioAlta.css";
 import BotonPrimario from "./BotonPrimario";
 import { validarCapacidad, validarNumeroAula, validarUbicacion, validarCantidadComputadoras, validarFranjaHoraria } from "../utils/validarAula";
+import CampoFormulario from "./CampoFormulario";
 
 const FormularioAltaAula = ({ onAulaCreada }) => {
 
@@ -39,42 +40,55 @@ const FormularioAltaAula = ({ onAulaCreada }) => {
     <div className="form-container">
       <form className="form" onSubmit={handleSubmit}>
         <h2>Alta de Aula</h2>
-        <input
-          type="number"
+
+        <CampoFormulario
+          label="Número de aula"
           name="numeroAula"
-          placeholder="Número de aula"
-          className="form-input"
+          type="number"
           value={formData.numeroAula}
           onChange={handleChange}
+          error={errores.numeroAula}
         />
-        {errores.numeroAula && <p className="error-text">{errores.numeroAula}</p>}
-        <input
-          type="number"
+
+        <CampoFormulario
+          label="Capacidad"
           name="capacidad"
-          placeholder="Capacidad"
-          className="form-input"
+          type="number"
           value={formData.capacidad}
           onChange={handleChange}
+          error={errores.capacidad}
         />
-        {errores.capacidad && <p className="error-text">{errores.capacidad}</p>}
-        <input
-          type="text"
+        
+        <CampoFormulario
+          label="Ubicación"
           name="ubicacion"
-          placeholder="Ubicación"
-          className="form-input"
+          type="text"
           value={formData.ubicacion}
           onChange={handleChange}
+          error={errores.ubicacion}
         />
-        {errores.ubicacion && <p className="error-text">{errores.ubicacion}</p>}
-        <input
-          type="number"
+
+        <CampoFormulario
+          label="Cantidad de computadoras"
           name="cantidadComputadoras"
-          placeholder="Cantidad de computadoras"
-          className="form-input"
+          type="number"
           value={formData.cantidadComputadoras}
           onChange={handleChange}
+          error={errores.cantidadComputadoras}
         />
-        {errores.cantidadComputadoras && <p className="error-text">{errores.cantidadComputadoras}</p>}
+
+        <CampoFormulario
+          label="Franja horaria"
+          name="franjaHoraria"
+          type="select"
+          value={formData.franjaHoraria}
+          onChange={handleChange}
+          error={errores.franjaHoraria}
+        >
+          <option value="disponible">Disponible</option>
+          <option value="no_disponible">No disponible</option>
+        </CampoFormulario>
+
         <label className="form-label">
           <input 
             type="checkbox"
