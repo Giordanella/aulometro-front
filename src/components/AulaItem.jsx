@@ -3,12 +3,13 @@ import { useAuth } from "../contexts/useAuth";
 import { can } from "../permissions";
 import "./styles/AulaItem.css";
 import "./styles/FormularioAlta.css";
-import { updateAulaById } from "../api/aulas";
+import { updateAulaById, deleteAulaById } from "../api/aulas";
 import CampoFormulario from "./CampoFormulario";
 import BotonPrimario from "./BotonPrimario";
 
 const AulaItem = ({ aulaId, numeroAula, capacidad, ubicacion, cantidadComputadoras, tieneProyector, estado }) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const { user } = useAuth();
 
   const [formData, setFormData] = useState({
@@ -30,9 +31,19 @@ const AulaItem = ({ aulaId, numeroAula, capacidad, ubicacion, cantidadComputador
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(`Updarting aula with id ${aulaId}:`, formData);
     updateAulaById(aulaId, formData);
     setIsEditing(false);
+  };
+
+  const handleDelete = () => {
+    deleteAulaById(aulaId)
+      .then(() => {
+        setShowDeleteModal(false);
+      })
+      .catch((error) => {
+        console.error("Error al borrar el aula:", error);
+      });
+    
   };
 
   if (isEditing) {
@@ -113,7 +124,22 @@ const AulaItem = ({ aulaId, numeroAula, capacidad, ubicacion, cantidadComputador
       <span className="aula-data">Con proyector: {tieneProyector ? "Sí" : "No"}</span>
       <span className="estado">Estado: {estado}</span>
 
-      {can(user, "modificarAulas") && <BotonPrimario type="button" onClick={() => {setIsEditing(true);}}>Modificar</BotonPrimario>}
+      <div className="aula-acciones">
+        {can(user, "modificarAulas") && <BotonPrimario type="button" onClick={() => {setIsEditing(true);}}>Modificar</BotonPrimario>}
+        {can(user, "borrarAulas") && <BotonPrimario type="button" onClick={() => {setShowDeleteModal(true);}}>Borrar</BotonPrimario>}
+      </div>
+
+      {showDeleteModal && (
+        <div className="modal">
+          <div className="modal-content">
+            <p>¿Estás seguro de que deseas borrar esta aula?</p>
+            <div className="modal-buttons">
+              <BotonPrimario type="button" onClick={handleDelete}>Confirmar</BotonPrimario>
+              <BotonPrimario type="button" onClick={() => setShowDeleteModal(false)}>Cancelar</BotonPrimario>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
