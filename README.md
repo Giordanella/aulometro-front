@@ -79,11 +79,23 @@ https://github.com/Giordanella/aulometro-back
 
 Forkea el repositorio.
 
-Crea una branch con tu feature: git checkout -b feature/nueva-funcionalidad
+Crea una branch con tu feature:
 
-Haz commit de tus cambios: git commit -m "feat: agrega nueva funcionalidad"
+```bash
+git checkout -b feature/nueva-funcionalidad
+```
 
-Push a tu branch: git push origin feature/nueva-funcionalidad
+Haz commit de tus cambios: 
+
+```bash
+git commit -m "feat: agrega nueva funcionalidad"
+```
+
+Push a tu branch: 
+
+```bash
+git push origin feature/nueva-funcionalidad
+```
 
 Crea un Pull Request.
 
