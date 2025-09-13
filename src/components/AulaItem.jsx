@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "../contexts/useAuth";
+import { can } from "../permissions";
 import "./styles/AulaItem.css";
 import "./styles/FormularioAlta.css";
 import { updateAulaById } from "../api/aulas";
@@ -9,7 +10,6 @@ import BotonPrimario from "./BotonPrimario";
 const AulaItem = ({ aulaId, numeroAula, capacidad, ubicacion, cantidadComputadoras, tieneProyector, estado }) => {
   const [isEditing, setIsEditing] = useState(false);
   const { user } = useAuth();
-  const canEdit = user?.role === "DIRECTIVO";
 
   const [formData, setFormData] = useState({
     numeroAula,
@@ -113,9 +113,7 @@ const AulaItem = ({ aulaId, numeroAula, capacidad, ubicacion, cantidadComputador
       <span className="aula-data">Con proyector: {tieneProyector ? "Sí" : "No"}</span>
       <span className="estado">Estado: {estado}</span>
 
-      {canEdit && (
-        <BotonPrimario type="button" onClick={() => {setIsEditing(true);}}>Modificar</BotonPrimario>
-      )}
+      {can(user, "modificarAulas") && <BotonPrimario type="button" onClick={() => {setIsEditing(true);}}>Modificar</BotonPrimario>}
     </div>
   );
 };
