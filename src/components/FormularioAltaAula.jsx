@@ -2,10 +2,21 @@ import { useFormularioAlta } from "../hooks/useFormularioAlta";
 import { createAula } from "../api/aulas";
 import "./styles/FormularioAlta.css";
 import BotonPrimario from "./BotonPrimario";
+import { validarCapacidad, validarNumeroAula, validarUbicacion, validarCantidadComputadoras, validarFranjaHoraria } from "../utils/validarAula";
 
 const FormularioAltaAula = ({ onAulaCreada }) => {
+
+  const validators = {
+    numeroAula: validarNumeroAula,
+    capacidad: validarCapacidad,
+    ubicacion: validarUbicacion,
+    cantidadComputadoras: validarCantidadComputadoras,
+    franjaHoraria: validarFranjaHoraria
+  };
+
   const {
     formData,
+    errores,
     mensaje,
     tipoMensaje,
     handleChange,
@@ -20,7 +31,8 @@ const FormularioAltaAula = ({ onAulaCreada }) => {
       franjaHoraria: "disponible"
     },
     createAula,
-    onAulaCreada
+    onAulaCreada,
+    validators
   );
 
   return (
@@ -35,6 +47,7 @@ const FormularioAltaAula = ({ onAulaCreada }) => {
           value={formData.numeroAula}
           onChange={handleChange}
         />
+        {errores.numeroAula && <p className="error-text">{errores.numeroAula}</p>}
         <input
           type="number"
           name="capacidad"
@@ -43,6 +56,7 @@ const FormularioAltaAula = ({ onAulaCreada }) => {
           value={formData.capacidad}
           onChange={handleChange}
         />
+        {errores.capacidad && <p className="error-text">{errores.capacidad}</p>}
         <input
           type="text"
           name="ubicacion"
@@ -51,6 +65,7 @@ const FormularioAltaAula = ({ onAulaCreada }) => {
           value={formData.ubicacion}
           onChange={handleChange}
         />
+        {errores.ubicacion && <p className="error-text">{errores.ubicacion}</p>}
         <input
           type="number"
           name="cantidadComputadoras"
@@ -59,6 +74,7 @@ const FormularioAltaAula = ({ onAulaCreada }) => {
           value={formData.cantidadComputadoras}
           onChange={handleChange}
         />
+        {errores.cantidadComputadoras && <p className="error-text">{errores.cantidadComputadoras}</p>}
         <label className="form-label">
           <input 
             type="checkbox"
@@ -67,7 +83,9 @@ const FormularioAltaAula = ({ onAulaCreada }) => {
             checked={formData.tieneProyector}
             onChange={handleChange}
           />
-            ¿Tiene proyector?</label>
+          ¿Tiene proyector?
+        </label>
+        {errores.tieneProyector && <p className="error-text">{errores.tieneProyector}</p>}
         <BotonPrimario>Dar de alta Aula</BotonPrimario>
       </form>
       {mensaje && <p className={`form-message ${tipoMensaje}`}>{mensaje}</p>}

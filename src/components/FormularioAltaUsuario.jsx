@@ -2,10 +2,20 @@ import { useFormularioAlta } from "../hooks/useFormularioAlta.jsx";
 import { createUser } from "../api/users";
 import "./styles/FormularioAlta.css";
 import BotonPrimario from "./BotonPrimario";
+import { validarEmail, validarNombreUsuario, validarPassword, validarRole } from "../utils/validarUsuario.js";
 
 const FormularioAltaUsuario = ({ setDocentes }) => {
+  
+  const validators = {
+    name: validarNombreUsuario,
+    email: validarEmail,
+    password: validarPassword,
+    role: validarRole
+  };
+
   const {
     formData,
+    errores,
     mensaje,
     tipoMensaje,
     handleChange,
@@ -17,7 +27,8 @@ const FormularioAltaUsuario = ({ setDocentes }) => {
       if (nuevoDocente.role === "DOCENTE") {
         setDocentes((prevDocentes) => [...prevDocentes, nuevoDocente]);
       }
-    }
+    },
+    validators
   );
 
   return (
@@ -33,6 +44,7 @@ const FormularioAltaUsuario = ({ setDocentes }) => {
           onChange={handleChange}
           required
         />
+        {errores.name && <p className="error-text">{errores.name}</p>}
         <input
           type="email"
           name="email"
@@ -42,6 +54,7 @@ const FormularioAltaUsuario = ({ setDocentes }) => {
           onChange={handleChange}
           required
         />
+        {errores.email && <p className="error-text">{errores.email}</p>}
         <input
           type="password"
           name="password"
@@ -51,6 +64,7 @@ const FormularioAltaUsuario = ({ setDocentes }) => {
           onChange={handleChange}
           required
         />
+        {errores.password && <p className="error-text">{errores.password}</p>}
         <select
           name="role"
           className="form-input"
@@ -62,6 +76,7 @@ const FormularioAltaUsuario = ({ setDocentes }) => {
           <option value="DOCENTE">Docente</option>
           <option value="DIRECTIVO">Directivo</option>
         </select>
+        {errores.role && <p className="error-text">{errores.role}</p>}
 
         <BotonPrimario>Dar de alta usuario</BotonPrimario>
       </form>

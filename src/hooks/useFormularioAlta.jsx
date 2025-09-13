@@ -1,20 +1,48 @@
 import { useState } from "react";
 
-export function useFormularioAlta(initialState, createFunc, onCreated) {
+export function useFormularioAlta(initialState, createFunc, onCreated, validators = {}) {
   const [formData, setFormData] = useState(initialState);
+  const [ errores, setErrores ] = useState({});
   const [mensaje, setMensaje] = useState("");
   const [tipoMensaje, setTipoMensaje] = useState("");
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
+    const newValue = type === "checkbox" ? checked : value;
+
     setFormData((prevData) => ({
       ...prevData,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: newValue,
     }));
+
+    if (validators[name]) {
+      const error = validators[name](newValue);
+      setErrores((prevErrores) => ({
+        ...prevErrores,
+        [name]: error
+      }));
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validar todos los campos antes de enviar
+    const newErrors = {};
+    for (const field in validators) {
+      const error = validators[field](formData[field]);
+      if (error) {
+        newErrors[field] = error;
+      }
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrores(newErrors);
+      setMensaje("Por favor corrige los errores en el formulario.");
+      setTipoMensaje("error");
+      return;
+    }
+
     try {
       const response = await createFunc(formData);
       const nuevaEntidad = response.data;
@@ -27,6 +55,8 @@ export function useFormularioAlta(initialState, createFunc, onCreated) {
       }
 
       setFormData(initialState);
+
+      setErrores({});
 
       setTimeout(() => {
         setMensaje("");
@@ -48,6 +78,7 @@ export function useFormularioAlta(initialState, createFunc, onCreated) {
   return {
     formData,
     setFormData,
+    errores,
     mensaje,
     tipoMensaje,
     handleChange,
