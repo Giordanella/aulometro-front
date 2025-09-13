@@ -12,6 +12,11 @@
   width: 100%;
 }
 
+.form-field {
+  display: flex;
+  flex-direction: column;
+}
+
 .form-input {
   border: 1px solid #ccc;
   font-size: 1rem;
@@ -37,4 +42,11 @@
   background-color: #f8d7da;
   color: #721c24;
   border: 1px solid #f5c6cb;
+}
+
+.error-text {
+  color: #721c24;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
 }
