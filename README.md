@@ -41,8 +41,8 @@ Aulómetro es la web app para **gestionar aulas y docentes** en la Universidad N
 Cloná el repositorio:
 
 ```bash
-git clone https://github.com/tu-usuario/aulometro-frontend.git
-cd aulometro-frontend
+git clone https://github.com/Giordanella/aulometro-front
+cd aulometro-front
 ```
 
 Instala las dependencias:
