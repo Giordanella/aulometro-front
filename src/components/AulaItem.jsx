@@ -7,16 +7,16 @@ import { updateAulaById, deleteAulaById } from "../api/aulas";
 import CampoFormulario from "./CampoFormulario";
 import BotonPrimario from "./BotonPrimario";
 
-const AulaItem = ({ aulaId, numeroAula, capacidad, ubicacion, cantidadComputadoras, tieneProyector, estado }) => {
+const AulaItem = ({ aulaId, numero, capacidad, ubicacion, computadoras, tieneProyector, estado }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const { user } = useAuth();
 
   const [formData, setFormData] = useState({
-    numeroAula,
+    numero,
     capacidad,
     ubicacion,
-    cantidadComputadoras,
+    computadoras,
     tieneProyector,
     estado
   });
@@ -53,9 +53,9 @@ const AulaItem = ({ aulaId, numeroAula, capacidad, ubicacion, cantidadComputador
 
           <CampoFormulario
             label="Número de Aula"
-            name="numeroAula"
+            name="numero"
             type="text"
-            value={formData.numeroAula}
+            value={formData.numero}
             onChange={handleChange}
           />
 
@@ -77,9 +77,9 @@ const AulaItem = ({ aulaId, numeroAula, capacidad, ubicacion, cantidadComputador
 
           <CampoFormulario
             label="Cantidad de Computadoras"
-            name="cantidadComputadoras"
+            name="computadoras"
             type="number"
-            value={formData.cantidadComputadoras}
+            value={formData.computadoras}
             onChange={handleChange}
           />
 
@@ -117,10 +117,10 @@ const AulaItem = ({ aulaId, numeroAula, capacidad, ubicacion, cantidadComputador
   
   return (
     <div className="aula-container">
-      <span className="numeroAula">Aula {numeroAula}</span>
+      <span className="numeroAula">Aula {numero}</span>
       <span className="aula-data">Capacidad: {capacidad}</span>
       <span className="aula-data">{ubicacion}</span>
-      <span className="aula-data">Cantidad de computadoras: {cantidadComputadoras}</span>
+      <span className="aula-data">Cantidad de computadoras: {computadoras}</span>
       <span className="aula-data">Con proyector: {tieneProyector ? "Sí" : "No"}</span>
       <span className="estado">Estado: {estado}</span>
 

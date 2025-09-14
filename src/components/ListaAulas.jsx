@@ -12,10 +12,10 @@ const ListaAulas = ({ aulas }) => {
           <AulaItem
             key={aula.id}
             aulaId={aula.id}
-            numeroAula={aula.numero}
+            numero={aula.numero}
             ubicacion={aula.ubicacion}
             capacidad={aula.capacidad}
-            cantidadComputadoras={aula.computadoras}
+            computadoras={aula.computadoras}
             tieneProyector={aula.tieneProyector}
             estado={aula.estado}
           />

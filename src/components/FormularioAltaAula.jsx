@@ -45,9 +45,9 @@ const FormularioAltaAula = ({ onAulaCreada }) => {
           placeholder="Número de aula"
           name="numero"
           type="number"
-          value={formData.numeroAula}
+          value={formData.numero}
           onChange={handleChange}
-          error={errores.numeroAula}
+          error={errores.numero}
         />
 
         <CampoFormulario
@@ -72,9 +72,9 @@ const FormularioAltaAula = ({ onAulaCreada }) => {
           placeholder="Cantidad de computadoras"
           name="computadoras"
           type="number"
-          value={formData.cantidadComputadoras}
+          value={formData.computadoras}
           onChange={handleChange}
-          error={errores.cantidadComputadoras}
+          error={errores.computadoras}
         />
 
         <CampoFormulario
