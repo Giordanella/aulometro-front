@@ -35,7 +35,11 @@ const Home = () => {
         </div>
       ) : (
         <div className="home-container">
-          <FormularioAltaAula setAulas={setAulas} />
+          <FormularioAltaAula onAulaCreada={
+            (nuevaAula) => {
+              setAulas((prev) => [...prev, nuevaAula]);
+            }}
+          />
           <DataLoader fetchData={fetchAulas} fallbackLoading="Cargando aulas..." fallbackError="Error al cargar aulas">
             <ListaAulas aulas={aulas} setAulas={setAulas} />
           </DataLoader>
