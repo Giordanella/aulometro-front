@@ -73,12 +73,12 @@ test("cantidad de computadoras invalida (no entero)", () => {
 // Estado tests
 
 test("estado valido", () => {
-  expect(validarEstado("disponible")).toBe(true);
-  expect(validarEstado("ocupada")).toBe(true);
-  expect(validarEstado("mantenimiento")).toBe(true);
+  expect(validarEstado("disponible")).toBe(null);
+  expect(validarEstado("ocupada")).toBe(null);
+  expect(validarEstado("mantenimiento")).toBe(null);
 });
 
 test("estado invalido", () => {
-  expect(validarEstado("cerrada")).toBe(false);
-  expect(validarEstado("")).toBe(false);
+  expect(validarEstado("cerrada")).toBe("El estado debe ser 'disponible', 'ocupada' o 'mantenimiento'.");
+  expect(validarEstado("")).toBe("El estado debe ser 'disponible', 'ocupada' o 'mantenimiento'.");
 });

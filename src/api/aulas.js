@@ -9,5 +9,3 @@ export const createAula = (data) => api.post("/aulas", data);
 export const updateAulaById = (id, data) => api.put(`/aulas/${id}`, data);
 
 export const deleteAulaById = (id) => api.delete(`/aulas/${id}`);
-
-export const deleteAllAulas = () => api.delete("/aulas");

@@ -8,10 +8,10 @@ import CampoFormulario from "./CampoFormulario";
 const FormularioAltaAula = ({ onAulaCreada }) => {
 
   const validators = {
-    numeroAula: validarNumeroAula,
+    numero: validarNumeroAula,
     capacidad: validarCapacidad,
     ubicacion: validarUbicacion,
-    cantidadComputadoras: validarCantidadComputadoras,
+    computadoras: validarCantidadComputadoras,
     estado: validarEstado
   };
 
@@ -24,10 +24,10 @@ const FormularioAltaAula = ({ onAulaCreada }) => {
     handleSubmit
   } = useFormularioAlta(
     {
-      numeroAula: "",
+      numero: "",
       capacidad: "",
       ubicacion: "",
-      cantidadComputadoras: "",
+      computadoras: "",
       tieneProyector: false,
       estado: "disponible"
     },
@@ -43,7 +43,7 @@ const FormularioAltaAula = ({ onAulaCreada }) => {
 
         <CampoFormulario
           placeholder="Número de aula"
-          name="numeroAula"
+          name="numero"
           type="number"
           value={formData.numeroAula}
           onChange={handleChange}
@@ -70,7 +70,7 @@ const FormularioAltaAula = ({ onAulaCreada }) => {
 
         <CampoFormulario
           placeholder="Cantidad de computadoras"
-          name="cantidadComputadoras"
+          name="computadoras"
           type="number"
           value={formData.cantidadComputadoras}
           onChange={handleChange}
@@ -87,7 +87,7 @@ const FormularioAltaAula = ({ onAulaCreada }) => {
         >
           <option value="disponible">Disponible</option>
           <option value="mantenimiento">En mantenimiento</option>
-          <option value="no_disponible">No disponible</option>
+          <option value="ocupada">No disponible</option>
         </CampoFormulario>
 
         <label className="form-label">

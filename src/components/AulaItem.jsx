@@ -102,7 +102,7 @@ const AulaItem = ({ aulaId, numeroAula, capacidad, ubicacion, cantidadComputador
           >
             <option value="disponible">Disponible</option>
             <option value="mantenimiento">En mantenimiento</option>
-            <option value="no_disponible">No disponible</option>
+            <option value="ocupada">No disponible</option>
           </CampoFormulario>
 
           <div className="botones-edicion">

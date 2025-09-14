@@ -29,5 +29,6 @@ export function validarCantidadComputadoras(cantidad) {
 
 export function validarEstado(estado) {
   const estadosValidos = ["disponible", "ocupada", "mantenimiento"];
-  return estadosValidos.includes(estado);
+  if(!estadosValidos.includes(estado)) {return "El estado debe ser 'disponible', 'ocupada' o 'mantenimiento'.";}
+  return null;
 }
