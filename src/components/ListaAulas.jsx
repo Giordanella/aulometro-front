@@ -1,7 +1,20 @@
 import AulaItem from "./AulaItem";
 import "./styles/ListaAulas.css";
 
-const ListaAulas = ({ aulas }) => {
+const ListaAulas = ({ aulas, setAulas }) => {
+
+  const handleUpdateAula = (updatedAula) => {
+    setAulas((prevAulas) =>
+      prevAulas.map((aula) =>
+        aula.id === updatedAula.id ? {...aula, ...updatedAula} : aula
+      )
+    );
+  };
+
+  const handleDeleteAula = (aulaId) => {
+    setAulas((prevAulas) => prevAulas.filter((aula) => aula.id !== aulaId));
+  };
+
   return (
     <div className="aulas-container">
       <h1>Aulas</h1>
@@ -18,6 +31,8 @@ const ListaAulas = ({ aulas }) => {
             computadoras={aula.computadoras}
             tieneProyector={aula.tieneProyector}
             estado={aula.estado}
+            onUpdate={handleUpdateAula}
+            onDelete={handleDeleteAula}
           />
         ))
       )}

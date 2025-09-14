@@ -7,7 +7,7 @@ import { updateAulaById, deleteAulaById } from "../api/aulas";
 import CampoFormulario from "./CampoFormulario";
 import BotonPrimario from "./BotonPrimario";
 
-const AulaItem = ({ aulaId, numero, capacidad, ubicacion, computadoras, tieneProyector, estado }) => {
+const AulaItem = ({ aulaId, numero, capacidad, ubicacion, computadoras, tieneProyector, estado, onUpdate, onDelete }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const { user } = useAuth();
@@ -31,13 +31,20 @@ const AulaItem = ({ aulaId, numero, capacidad, ubicacion, computadoras, tienePro
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    updateAulaById(aulaId, formData);
-    setIsEditing(false);
+    updateAulaById(aulaId, formData)
+      .then(() => {
+        onUpdate({ id: aulaId, ...formData });
+        setIsEditing(false);
+      })
+      .catch((error) => {
+        console.error("Error al actualizar el aula:", error);
+      });
   };
 
   const handleDelete = () => {
     deleteAulaById(aulaId)
       .then(() => {
+        onDelete(aulaId);
         setShowDeleteModal(false);
       })
       .catch((error) => {

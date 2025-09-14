@@ -37,7 +37,7 @@ const Home = () => {
         <div className="home-container">
           <FormularioAltaAula setAulas={setAulas} />
           <DataLoader fetchData={fetchAulas} fallbackLoading="Cargando aulas..." fallbackError="Error al cargar aulas">
-            <ListaAulas aulas={aulas} />
+            <ListaAulas aulas={aulas} setAulas={setAulas} />
           </DataLoader>
         </div>
       )}
