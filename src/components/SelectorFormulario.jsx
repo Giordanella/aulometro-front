@@ -6,13 +6,13 @@ const SelectorFormulario = ({ formularioActivo, setFormularioActivo }) => (
       onClick={() => setFormularioActivo("usuario")}
       style={{ background: formularioActivo === "usuario" ? "#ccc" : undefined }}
     >
-      Dar de alta usuario
+      Gestionar Usuarios
     </BotonPrimario>
     <BotonPrimario
       onClick={() => setFormularioActivo("aula")}
       style={{ background: formularioActivo === "aula" ? "#ccc" : undefined }}
     >
-      Dar de alta aula
+      Gestionar Aulas
     </BotonPrimario>
   </div>
 );
