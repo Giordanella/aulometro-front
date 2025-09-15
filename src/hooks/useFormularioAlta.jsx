@@ -10,18 +10,19 @@ export function useFormularioAlta(initialState, createFunc, onCreated, validator
     const { name, value, type, checked } = e.target;
     const newValue = type === "checkbox" ? checked : value;
 
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: newValue,
-    }));
+    const newFormData = {
+      ...formData,
+      [name]: newValue
+    };
 
-    if (validators[name]) {
-      const error = validators[name](newValue);
-      setErrores((prevErrores) => ({
-        ...prevErrores,
-        [name]: error
-      }));
+    setFormData(newFormData);
+
+    const newErrors = {};
+    for (const field in validators) {
+      const error = validators[field](newFormData);
+      if (error) {newErrors[field] = error;}
     }
+    setErrores(newErrors);
   };
 
   const handleSubmit = async (e) => {
@@ -30,7 +31,7 @@ export function useFormularioAlta(initialState, createFunc, onCreated, validator
     // Validar todos los campos antes de enviar
     const newErrors = {};
     for (const field in validators) {
-      const error = validators[field](formData[field]);
+      const error = validators[field](formData);
       if (error) {
         newErrors[field] = error;
       }
