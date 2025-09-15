@@ -1,5 +1,5 @@
 import { updateAulaById } from "../api/aulas";
-import { useFormularioEdicion } from "../hooks/useFormularioEdicion";
+import { useFormulario } from "../hooks/useFormulario";
 import { validarNumeroAula, validarCapacidad, validarUbicacion, validarCantidadComputadoras, validarEstado } from "../utils/validarAula";
 import BotonPrimario from "./BotonPrimario";
 import CampoFormulario from "./CampoFormulario";
@@ -21,11 +21,12 @@ const FormularioEdicionAula = ({ aula, onAulaActualizada, onCancel }) => {
     tipoMensaje,
     handleChange,
     handleSubmit
-  } = useFormularioEdicion(
+  } = useFormulario(
     aula,
     (data) => updateAulaById(aula.id, data),
     onAulaActualizada,
-    validators
+    validators,
+    { resetOnSuccess: false }
   );
 
   return(

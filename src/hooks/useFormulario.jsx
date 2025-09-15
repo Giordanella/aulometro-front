@@ -1,8 +1,14 @@
 import { useState } from "react";
 
-export function useFormularioAlta(initialState, createFunc, onCreated, validators = {}) {
+export function useFormulario(
+  initialState,
+  submitFunc,
+  onSuccess,
+  validators = {},
+  { resetOnSuccess = false } = {}
+) {
   const [formData, setFormData] = useState(initialState);
-  const [ errores, setErrores ] = useState({});
+  const [errores, setErrores] = useState({});
   const [mensaje, setMensaje] = useState("");
   const [tipoMensaje, setTipoMensaje] = useState("");
 
@@ -28,13 +34,10 @@ export function useFormularioAlta(initialState, createFunc, onCreated, validator
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validar todos los campos antes de enviar
     const newErrors = {};
     for (const field in validators) {
       const error = validators[field](formData);
-      if (error) {
-        newErrors[field] = error;
-      }
+      if (error) {newErrors[field] = error;}
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -45,19 +48,18 @@ export function useFormularioAlta(initialState, createFunc, onCreated, validator
     }
 
     try {
-      const response = await createFunc(formData);
-      const nuevaEntidad = response.data;
+      const response = await submitFunc(formData);
+      const entidad = response?.data ?? formData; // soporta create (devuelve data) o update (no devuelve nada)
 
-      setMensaje("Entidad creada correctamente.");
-      setTipoMensaje("success");
-
-      if (onCreated) {
-        onCreated(nuevaEntidad);
-      }
-
-      setFormData(initialState);
+      if (onSuccess) {onSuccess(entidad);}
 
       setErrores({});
+      setMensaje("Operación realizada correctamente.");
+      setTipoMensaje("success");
+
+      if (resetOnSuccess) {
+        setFormData(initialState);
+      }
 
       setTimeout(() => {
         setMensaje("");
@@ -65,8 +67,8 @@ export function useFormularioAlta(initialState, createFunc, onCreated, validator
       }, 5000);
 
     } catch (error) {
-      console.error("Error al crear entidad:", error);
-      setMensaje("Error al crear la entidad.");
+      console.error("Error en formulario:", error);
+      setMensaje("Error al procesar la operación.");
       setTipoMensaje("error");
 
       setTimeout(() => {

@@ -1,4 +1,4 @@
-import { useFormularioAlta } from "../hooks/useFormularioAlta";
+import { useFormulario } from "../hooks/useFormulario";
 import { createAula } from "../api/aulas";
 import "./styles/FormularioAlta.css";
 import BotonPrimario from "./BotonPrimario";
@@ -22,7 +22,7 @@ const FormularioAltaAula = ({ onAulaCreada }) => {
     tipoMensaje,
     handleChange,
     handleSubmit
-  } = useFormularioAlta(
+  } = useFormulario(
     {
       numero: "",
       capacidad: "",
@@ -33,7 +33,8 @@ const FormularioAltaAula = ({ onAulaCreada }) => {
     },
     createAula,
     onAulaCreada,
-    validators
+    validators,
+    { resetOnSuccess: true }
   );
 
   return (
