@@ -1,12 +1,11 @@
+import { updateAulaById } from "../api/aulas";
 import { useFormulario } from "../hooks/useFormulario";
-import { createAula } from "../api/aulas";
-import "./styles/FormularioAlta.css";
+import { validarNumeroAula, validarCapacidad, validarUbicacion, validarCantidadComputadoras, validarEstado } from "../utils/validarAula";
 import BotonPrimario from "./BotonPrimario";
-import { validarCapacidad, validarNumeroAula, validarUbicacion, validarCantidadComputadoras, validarEstado } from "../utils/validarAula";
 import CamposAula from "./CamposAula";
 
-const FormularioAltaAula = ({ onAulaCreada }) => {
-
+const FormularioEdicionAula = ({ aula, onAulaActualizada, onCancel }) => {
+    
   const validators = {
     numero: validarNumeroAula,
     capacidad: validarCapacidad,
@@ -23,34 +22,30 @@ const FormularioAltaAula = ({ onAulaCreada }) => {
     handleChange,
     handleSubmit
   } = useFormulario(
-    {
-      numero: "",
-      capacidad: "",
-      ubicacion: "",
-      computadoras: "",
-      tieneProyector: false,
-      estado: "disponible"
-    },
-    createAula,
-    onAulaCreada,
+    aula,
+    (data) => updateAulaById(aula.id, data),
+    onAulaActualizada,
     validators,
-    { resetOnSuccess: true }
+    { resetOnSuccess: false }
   );
 
-  return (
+  return(
     <div className="form-container">
       <form className="form" onSubmit={handleSubmit}>
-        <h2>Alta de Aula</h2>
         <CamposAula
           formData={formData}
           handleChange={handleChange}
           errores={errores}
-        />
-        <BotonPrimario>Dar de alta Aula</BotonPrimario>
+        />        
+        {mensaje && <p className={`form-message ${tipoMensaje}`}>{mensaje}</p>}
+
+        <div className="botones-edicion">
+          <BotonPrimario type="submit">Guardar</BotonPrimario>
+          <BotonPrimario type="button" onClick={onCancel}>Cancelar</BotonPrimario>
+        </div>
       </form>
-      {mensaje && <p className={`form-message ${tipoMensaje}`}>{mensaje}</p>}
     </div>
   );
 };
 
-export default FormularioAltaAula;
+export default FormularioEdicionAula;

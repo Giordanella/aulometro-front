@@ -1,4 +1,4 @@
-import { useFormularioAlta } from "../hooks/useFormularioAlta.jsx";
+import { useFormulario } from "../hooks/useFormulario.jsx";
 import { createUser } from "../api/users";
 import "./styles/FormularioAlta.css";
 import BotonPrimario from "./BotonPrimario";
@@ -21,7 +21,7 @@ const FormularioAltaUsuario = ({ setDocentes }) => {
     tipoMensaje,
     handleChange,
     handleSubmit
-  } = useFormularioAlta(
+  } = useFormulario(
     { name: "", email: "", password: "", role: "" },
     createUser,
     (nuevoDocente) => {
@@ -29,7 +29,8 @@ const FormularioAltaUsuario = ({ setDocentes }) => {
         setDocentes((prevDocentes) => [...prevDocentes, nuevoDocente]);
       }
     },
-    validators
+    validators,
+    { resetOnSuccess: true }
   );
 
   return (
