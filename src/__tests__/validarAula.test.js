@@ -5,80 +5,84 @@ import { validarNumeroAula, validarCapacidad, validarUbicacion, validarCantidadC
 // Numero de aula tests
 
 test("numero de aula valido", () => {
-  expect(validarNumeroAula(150)).toBeNull();
+  expect(validarNumeroAula({numero: 150})).toBeNull();
 });
 
 test("numero de aula invalido (negativo)", () => {
-  expect(validarNumeroAula(-5)).toBe("El número de aula debe ser un entero positivo.");
+  expect(validarNumeroAula({numero: -5})).toBe("El número de aula debe ser un número entero no negativo.");
 });
 
 test("numero de aula invalido (fuera de rango)", () => {
-  expect(validarNumeroAula(400)).toBe("El número de aula debe estar entre 1 y 350.");
+  expect(validarNumeroAula({numero: 400})).toBe("El número de aula debe estar entre 1 y 350.");
 });
 
 test("numero de aula invalido (no entero)", () => {
-  expect(validarNumeroAula(25.5)).toBe("El número de aula debe ser un entero positivo.");
+  expect(validarNumeroAula({numero: 25.5})).toBe("El número de aula debe ser un número entero no negativo.");
 });
 
 // Capacidad tests
 
 test("capacidad valida", () => {
-  expect(validarCapacidad(30)).toBeNull();
+  expect(validarCapacidad({capacidad: 30})).toBeNull();
 });
 
 test("capacidad invalida (negativa)", () => {
-  expect(validarCapacidad(-10)).toBe("La capacidad debe ser un entero positivo.");
+  expect(validarCapacidad({capacidad: -10})).toBe("La capacidad debe ser un número entero no negativo.");
 });
 
 test("capacidad invalida (fuera de rango)", () => {
-  expect(validarCapacidad(150)).toBe("La capacidad debe estar entre 1 y 100.");
+  expect(validarCapacidad({capacidad: 150})).toBe("La capacidad debe estar entre 1 y 100.");
 });
 
 test("capacidad invalida (no entero)", () => {
-  expect(validarCapacidad(20.5)).toBe("La capacidad debe ser un entero positivo.");
+  expect(validarCapacidad({capacidad: 20.5})).toBe("La capacidad debe ser un número entero no negativo.");
 });
 
 // Ubicacion tests
 
 test("ubicacion valida", () => {
-  expect(validarUbicacion("Edificio A, Piso 2")).toBeNull();
+  expect(validarUbicacion({ubicacion:"Edificio A, Piso 2"})).toBeNull();
 });
 
 test("ubicacion vacia", () => {
-  expect(validarUbicacion("")).toBe("La ubicación no puede estar vacía.");
+  expect(validarUbicacion({ubicacion:""})).toBe("La ubicación no puede estar vacía.");
 });
 
 test("ubicacion con caracteres invalidos", () => {
-  expect(validarUbicacion("Edificio @123")).toBe("La ubicación contiene caracteres inválidos.");
+  expect(validarUbicacion({ubicacion:"Edificio @123"})).toBe("La ubicación contiene caracteres inválidos.");
 });
 
 // Cantidad de computadoras tests
 
 test("cantidad de computadoras valida", () => {
-  expect(validarCantidadComputadoras(20)).toBeNull();
+  expect(validarCantidadComputadoras({computadoras: 20, capacidad: 20})).toBeNull();
 });
 
 test("cantidad de computadoras invalida (negativa)", () => {
-  expect(validarCantidadComputadoras(-3)).toBe("La cantidad de computadoras debe ser un entero positivo.");
+  expect(validarCantidadComputadoras({computadoras: -3, capacidad: 20})).toBe("La cantidad de computadoras debe ser un número entero no negativo.");
 });
 
 test("cantidad de computadoras invalida (fuera de rango)", () => {
-  expect(validarCantidadComputadoras(60)).toBe("La cantidad de computadoras debe estar entre 0 y 50.");
+  expect(validarCantidadComputadoras({computadoras: 60, capacidad: 80})).toBe("La cantidad de computadoras debe estar entre 0 y 50.");
 });
 
 test("cantidad de computadoras invalida (no entero)", () => {
-  expect(validarCantidadComputadoras(10.5)).toBe("La cantidad de computadoras debe ser un entero positivo.");
+  expect(validarCantidadComputadoras({computadoras: 10.5, capacidad: 20})).toBe("La cantidad de computadoras debe ser un número entero no negativo.");
+});
+
+test("cantidad de computadoras mayor que capacidad", () => {
+  expect(validarCantidadComputadoras({computadoras: 25, capacidad: 20})).toBe("La cantidad de computadoras no puede ser mayor que la capacidad del aula.");
 });
 
 // Estado tests
 
 test("estado valido", () => {
-  expect(validarEstado("disponible")).toBe(null);
-  expect(validarEstado("ocupada")).toBe(null);
-  expect(validarEstado("mantenimiento")).toBe(null);
+  expect(validarEstado({estado: "disponible"})).toBe(null);
+  expect(validarEstado({estado: "ocupada"})).toBe(null);
+  expect(validarEstado({estado: "mantenimiento"})).toBe(null);
 });
 
 test("estado invalido", () => {
-  expect(validarEstado("cerrada")).toBe("El estado debe ser 'disponible', 'ocupada' o 'mantenimiento'.");
-  expect(validarEstado("")).toBe("El estado debe ser 'disponible', 'ocupada' o 'mantenimiento'.");
+  expect(validarEstado({estado: "cerrada"})).toBe("El estado debe ser 'disponible', 'ocupada' o 'mantenimiento'.");
+  expect(validarEstado({estado: ""})).toBe("El estado debe ser 'disponible', 'ocupada' o 'mantenimiento'.");
 });
