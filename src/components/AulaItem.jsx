@@ -3,26 +3,20 @@ import { useAuth } from "../contexts/useAuth";
 import { can } from "../permissions";
 import "./styles/AulaItem.css";
 import "./styles/FormularioAlta.css";
-import { deleteAulaById } from "../api/aulas";
+import { useBorrarAula } from "../hooks/useBorrarAula";
 import BotonPrimario from "./BotonPrimario";
 import FormularioEdicionAula from "./FormularioEdicionAula";
+import ModalConfirmacion from "./ModalConfirmacion";
 
 const AulaItem = ({ aulaId, numero, capacidad, ubicacion, computadoras, tieneProyector, estado, onUpdate, onDelete }) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const { user } = useAuth();
-
-  const handleDelete = () => {
-    deleteAulaById(aulaId)
-      .then(() => {
-        onDelete(aulaId);
-        setShowDeleteModal(false);
-      })
-      .catch((error) => {
-        console.error("Error al borrar el aula:", error);
-      });
-    
-  };
+  const [isEditing, setIsEditing] = useState(false);
+  const {
+    showDeleteModal,
+    setShowDeleteModal,
+    handleDelete,
+    loading
+  } = useBorrarAula(onDelete);
 
   if (isEditing) {
     return (
@@ -51,17 +45,13 @@ const AulaItem = ({ aulaId, numero, capacidad, ubicacion, computadoras, tienePro
         {can(user, "borrarAulas") && <BotonPrimario type="button" onClick={() => {setShowDeleteModal(true);}}>Borrar</BotonPrimario>}
       </div>
 
-      {showDeleteModal && (
-        <div className="modal">
-          <div className="modal-content">
-            <p>¿Estás seguro de que deseas borrar esta aula?</p>
-            <div className="modal-buttons">
-              <BotonPrimario type="button" onClick={handleDelete}>Confirmar</BotonPrimario>
-              <BotonPrimario type="button" onClick={() => setShowDeleteModal(false)}>Cancelar</BotonPrimario>
-            </div>
-          </div>
-        </div>
-      )}
+      <ModalConfirmacion
+        abierto={showDeleteModal}
+        mensaje={"¿Estás seguro de que deseas borrar esta aula?"}
+        onConfirmar={() => handleDelete(aulaId)}
+        onCancelar={() => setShowDeleteModal(false)}
+        loading={loading}
+      />
     </div>
   );
 };
