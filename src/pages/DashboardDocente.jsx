@@ -5,6 +5,7 @@ import { useLista } from "../hooks/useLista.jsx";
 import "./styles/Home.css";
 import DataLoader from "../components/DataLoader.jsx";
 import { getAulas } from "../api/aulas";
+import BarraBusqueda from "../components/BarraBusqueda.jsx";
 
 const DashboardDirectivo = () => {
   const { user, logout } = useAuth();
@@ -13,6 +14,7 @@ const DashboardDirectivo = () => {
   return (
     <div className="home-container">
       <h1>Bienvenido/a {user?.role}</h1>
+      <BarraBusqueda />
       <h2>Lista de Aulas</h2>
       <DataLoader fetchData={fetchAulas} fallbackLoading="Cargando aulas..." fallbackError="Error al cargar aulas">
         <ListaAulas aulas={aulas} />
