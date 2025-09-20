@@ -2,8 +2,9 @@ import { useState } from "react";
 import BotonPrimario from "./BotonPrimario";
 import { validarNumeroAula } from "../utils/validarAula.js";
 import "./styles/BarraBusqueda.css";
+import { searchAulas } from "../api/aulas.js";
 
-const BarraBusqueda = () => {
+const BarraBusqueda = ({ setAulas }) => {
   const [query, setQuery] = useState("");
   const [error, setError] = useState(null);
 
@@ -26,12 +27,15 @@ const BarraBusqueda = () => {
     setError(errorMsg);
   };
 
-  const handleBuscar = () => {
-    if (error) {
-      return;
+  const handleBuscar = async () => {
+    if (error) {return;}
+    setAulas([]);
+    try {
+      const res = await searchAulas({ numero: query });
+      setAulas(res.data);
+    } catch (err) {
+      console.error("Error al buscar aulas:", err);
     }
-
-    console.log("Buscar aula:", query);
   };
 
   const isButtonDisabled = !query || query < 1 || query > 350 || !!error;
