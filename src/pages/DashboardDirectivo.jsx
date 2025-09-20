@@ -41,7 +41,7 @@ const Home = () => {
             }}
           />
           <DataLoader fetchData={fetchAulas} fallbackLoading="Cargando aulas..." fallbackError="Error al cargar aulas">
-            <ListaAulas aulas={aulas} setAulas={setAulas} />
+            <ListaAulas aulas={aulas} setAulas={setAulas} title="Aulas" />
           </DataLoader>
         </div>
       )}

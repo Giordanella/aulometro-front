@@ -4,12 +4,12 @@ import "./styles/BusquedaAulas.css";
 import ListaAulas from "./ListaAulas";
 
 const BusquedaAulas = () => {
-  const [aulas, setAulas] = useState([]);
+  const [aulas, setAulas] = useState(null);
 
   return (
     <div className="busqueda-aulas-container">
       <BarraBusqueda setAulas={setAulas} />
-      <ListaAulas aulas={aulas} />
+      {aulas && <ListaAulas aulas={aulas} msg="No hay aulas que coincidan con la búsqueda." />}
     </div>
   );
 };

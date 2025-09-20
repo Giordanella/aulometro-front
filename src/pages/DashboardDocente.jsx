@@ -17,7 +17,7 @@ const DashboardDirectivo = () => {
       <BusquedaAulas />
       <h2>Lista de Aulas</h2>
       <DataLoader fetchData={fetchAulas} fallbackLoading="Cargando aulas..." fallbackError="Error al cargar aulas">
-        <ListaAulas aulas={aulas} />
+        <ListaAulas aulas={aulas} title="Aulas" />
       </DataLoader>
       <p>Has ingresado con tu email {user?.email}</p>
       <BotonPrimario onClick={logout}>Cerrar sesión</BotonPrimario>

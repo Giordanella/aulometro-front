@@ -27,8 +27,11 @@ const BarraBusqueda = ({ setAulas }) => {
     setError(errorMsg);
   };
 
-  const handleBuscar = async () => {
-    if (error) {return;}
+  const handleBuscar = async (e) => {
+    e.preventDefault();
+    if (error) {
+      return;
+    }
     setAulas([]);
     try {
       const res = await searchAulas({ numero: query });
@@ -42,7 +45,7 @@ const BarraBusqueda = ({ setAulas }) => {
 
   return (
     <div className="barra-busqueda-container">
-      <div className="barra-busqueda">
+      <form className="barra-busqueda" onSubmit={handleBuscar}>
         <input
           className="barra-busqueda__input"
           type="number"
@@ -61,10 +64,8 @@ const BarraBusqueda = ({ setAulas }) => {
           min={1}
           max={350}
         />
-        <BotonPrimario onClick={handleBuscar} disabled={isButtonDisabled}>
-          Buscar
-        </BotonPrimario>
-      </div>
+        <BotonPrimario disabled={isButtonDisabled}>Buscar</BotonPrimario>
+      </form>
       {error && <p className="barra-busqueda__error">{error}</p>}
     </div>
   );

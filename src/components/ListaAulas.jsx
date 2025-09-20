@@ -1,7 +1,7 @@
 import AulaItem from "./AulaItem";
 import "./styles/ListaAulas.css";
 
-const ListaAulas = ({ aulas, setAulas }) => {
+const ListaAulas = ({ aulas, setAulas, title, msg = "No hay aulas disponibles." }) => {
 
   const handleUpdateAula = (updatedAula) => {
     setAulas((prevAulas) =>
@@ -17,9 +17,9 @@ const ListaAulas = ({ aulas, setAulas }) => {
 
   return (
     <div className="aulas-container">
-      <h1>Aulas</h1>
+      {title && <h1>{title}</h1>}
       {aulas.length === 0 ? (
-        <p className="aulas-empty-message">No hay aulas disponibles.</p>
+        <p className="aulas-empty-message">{msg}</p>
       ) : (
         aulas.map((aula) => (
           <AulaItem
