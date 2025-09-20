@@ -9,7 +9,13 @@ const BusquedaAulas = () => {
   return (
     <div className="busqueda-aulas-container">
       <BarraBusqueda setAulas={setAulas} />
-      {aulas && <ListaAulas aulas={aulas} msg="No hay aulas que coincidan con la búsqueda." />}
+      {aulas && (
+        <ListaAulas
+          aulas={aulas}
+          title="Resultados de búsqueda"
+          msg="No hay aulas que coincidan con la búsqueda."
+        />
+      )}
     </div>
   );
 };
