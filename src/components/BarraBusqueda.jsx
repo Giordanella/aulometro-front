@@ -8,7 +8,12 @@ const BarraBusqueda = () => {
   const [error, setError] = useState(null);
 
   const handleChange = (e) => {
-    const value = e.target.value;
+    let value = e.target.value;
+
+    if (value.startsWith("0")) {
+      value = "";
+    }
+
     setQuery(value);
 
     if (value.trim() === "") {
@@ -22,10 +27,14 @@ const BarraBusqueda = () => {
   };
 
   const handleBuscar = () => {
-    if (error) {return;}
+    if (error) {
+      return;
+    }
 
     console.log("Buscar aula:", query);
   };
+
+  const isButtonDisabled = !query || query < 1 || query > 350 || !!error;
 
   return (
     <div className="barra-busqueda-container">
@@ -36,15 +45,6 @@ const BarraBusqueda = () => {
           placeholder="Ingrese el número de aula..."
           value={query}
           onChange={handleChange}
-          onKeyDown={(e) => {
-            const invalidChars = ["-", "+", "e", "E", ".", ","];
-            if (invalidChars.includes(e.key)) {
-              e.preventDefault();
-            }
-            if (query.length >= 3 && !["Backspace", "Delete", "ArrowLeft", "ArrowRight"].includes(e.key)) {
-              e.preventDefault();
-            }
-          }}
           onBeforeInput={(e) => {
             const invalidPattern = /[+\-eE.,]/;
             if (invalidPattern.test(e.data)) {
@@ -57,7 +57,7 @@ const BarraBusqueda = () => {
           min={1}
           max={350}
         />
-        <BotonPrimario onClick={handleBuscar} disabled={!!error}>
+        <BotonPrimario onClick={handleBuscar} disabled={isButtonDisabled}>
           Buscar
         </BotonPrimario>
       </div>
