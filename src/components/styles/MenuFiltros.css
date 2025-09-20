@@ -1,0 +1,9 @@
+.menu-filtros-container {
+  background-color: whitesmoke;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  width: 100%;
+}

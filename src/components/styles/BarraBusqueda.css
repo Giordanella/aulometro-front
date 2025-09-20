@@ -1,8 +1,16 @@
 .barra-busqueda-container {
   align-items: center;
+  background-color: whitesmoke;
+  border-radius: 8px;
   display: flex;
   flex-direction: column;
+}
+
+.barra-busqueda__top {
+  align-items: center;
+  display: flex;
   gap: 8px;
+  padding: 1rem;
 }
 
 .barra-busqueda {
@@ -22,8 +30,24 @@
   width: 28ch;
 }
 
+.menu-filtros-toggle {
+  align-items: center;
+  background-color: gainsboro;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  padding: 8px;
+  transition: transform 0.2s ease;
+}
+
+.menu-filtros-toggle:active {
+  transform: scale(0.95);
+}
+
 .barra-busqueda__error {
   color: red;
   font-size: 14px;
-  margin: 0;
+  margin: 0 0 1rem 0;
 }

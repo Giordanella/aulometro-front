@@ -3,10 +3,13 @@ import BotonPrimario from "./BotonPrimario";
 import { validarNumeroAula } from "../utils/validarAula.js";
 import "./styles/BarraBusqueda.css";
 import { searchAulas } from "../api/aulas.js";
+import MenuFiltros from "./MenuFiltros.jsx";
+import menuIcon from "../assets/menu.svg";
 
 const BarraBusqueda = ({ setAulas }) => {
   const [query, setQuery] = useState("");
   const [error, setError] = useState(null);
+  const [mostrarFiltros, setMostrarFiltros] = useState(false);
 
   const handleChange = (e) => {
     let value = e.target.value;
@@ -45,28 +48,42 @@ const BarraBusqueda = ({ setAulas }) => {
 
   return (
     <div className="barra-busqueda-container">
-      <form className="barra-busqueda" onSubmit={handleBuscar}>
-        <input
-          className="barra-busqueda__input"
-          type="number"
-          placeholder="Ingrese el número de aula..."
-          value={query}
-          onChange={handleChange}
-          onBeforeInput={(e) => {
-            const invalidPattern = /[+\-eE.,]/;
-            if (invalidPattern.test(e.data)) {
-              e.preventDefault();
-            }
-            if ((query + e.data).length > 3) {
-              e.preventDefault();
-            }
-          }}
-          min={1}
-          max={350}
-        />
-        <BotonPrimario disabled={isButtonDisabled}>Buscar</BotonPrimario>
-      </form>
+      <div className="barra-busqueda__top">
+        <form className="barra-busqueda" onSubmit={handleBuscar}>
+          <input
+            className="barra-busqueda__input"
+            type="number"
+            placeholder="Ingrese el número de aula..."
+            value={query}
+            onChange={handleChange}
+            onBeforeInput={(e) => {
+              const invalidPattern = /[+\-eE.,]/;
+              if (invalidPattern.test(e.data)) {
+                e.preventDefault();
+              }
+              if ((query + e.data).length > 3) {
+                e.preventDefault();
+              }
+            }}
+            min={1}
+            max={350}
+          />
+          <BotonPrimario disabled={isButtonDisabled}>Buscar</BotonPrimario>
+        </form>
+
+        <button
+          className="menu-filtros-toggle"
+          onClick={() => setMostrarFiltros(!mostrarFiltros)}
+          type="button"
+          title="Mostrar/Ocultar filtros"
+        >
+          <img src={menuIcon} alt="Menú filtros" />
+        </button>
+      </div>
+
       {error && <p className="barra-busqueda__error">{error}</p>}
+
+      {mostrarFiltros && <MenuFiltros />}
     </div>
   );
 };

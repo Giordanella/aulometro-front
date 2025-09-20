@@ -1,0 +1,14 @@
+.boton-filtro {
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  border: none;
+  background: radial-gradient(circle at 30% 30%, #444444, #2e2e2e, #121212);
+  cursor: pointer;
+  transition: background 0.6s ease-in-out, transform 0.25s ease-in-out;
+}
+
+.activo {
+  background: radial-gradient(circle at 30% 30%, #ff5c7a, var(--philippine-red), #5a0914);
+  transform: scale(0.9) translateY(1px);
+}
