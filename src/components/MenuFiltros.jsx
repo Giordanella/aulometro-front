@@ -1,13 +1,11 @@
-import React from "react";
 import "./styles/MenuFiltros.css";
 
 /**
  * Props:
  *  - filters: objeto actual de filtros
  *  - setFilters: setter para actualizar filtros
- *  - onApply: función opcional para cerrar el menú o aplicar (no hace la búsqueda)
  */
-const MenuFiltros = ({ filters, setFilters, onApply }) => {
+const MenuFiltros = ({ filters, setFilters }) => {
   const handleChange = (field) => (e) => {
     let value;
     if (e.target.type === "checkbox") {
@@ -48,7 +46,7 @@ const MenuFiltros = ({ filters, setFilters, onApply }) => {
       </div>
 
       <div className="menu-filtros__row">
-        <label>Capacidad mínima</label>
+        <label>Capacidad (mín.)</label>
         <input
           type="number"
           min={1}
@@ -59,7 +57,7 @@ const MenuFiltros = ({ filters, setFilters, onApply }) => {
       </div>
 
       <div className="menu-filtros__row">
-        <label>Computadoras mínimas</label>
+        <label>Computadoras (mín.)</label>
         <input
           type="number"
           min={0}
@@ -96,14 +94,6 @@ const MenuFiltros = ({ filters, setFilters, onApply }) => {
       <div className="menu-filtros__actions">
         <button type="button" onClick={handleLimpiar}>
           Limpiar
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            if (onApply) {onApply();}
-          }}
-        >
-          Aplicar filtros
         </button>
       </div>
     </div>

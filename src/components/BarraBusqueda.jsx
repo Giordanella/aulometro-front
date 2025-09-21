@@ -138,7 +138,6 @@ const BarraBusqueda = ({ setAulas, filters, setFilters }) => {
         <MenuFiltros
           filters={filters}
           setFilters={setFilters}
-          onApply={() => setMostrarFiltros(false)} // cierra el menú cuando se aplica
         />
       )}
     </div>
