@@ -59,7 +59,7 @@ test("cantidad de computadoras valida", () => {
 });
 
 test("cantidad de computadoras invalida (negativa)", () => {
-  expect(validarCantidadComputadoras({computadoras: -3, capacidad: 20})).toBe("La cantidad de computadoras debe ser un número entero no negativo.");
+  expect(validarCantidadComputadoras({computadoras: -3, capacidad: 20})).toBe("Las computadoras deben ser un número entero no negativo.");
 });
 
 test("cantidad de computadoras invalida (fuera de rango)", () => {
@@ -67,11 +67,11 @@ test("cantidad de computadoras invalida (fuera de rango)", () => {
 });
 
 test("cantidad de computadoras invalida (no entero)", () => {
-  expect(validarCantidadComputadoras({computadoras: 10.5, capacidad: 20})).toBe("La cantidad de computadoras debe ser un número entero no negativo.");
+  expect(validarCantidadComputadoras({computadoras: 10.5, capacidad: 20})).toBe("Las computadoras deben ser un número entero no negativo.");
 });
 
 test("cantidad de computadoras mayor que capacidad", () => {
-  expect(validarCantidadComputadoras({computadoras: 25, capacidad: 20})).toBe("La cantidad de computadoras no puede ser mayor que la capacidad del aula.");
+  expect(validarCantidadComputadoras({computadoras: 25, capacidad: 20})).toBe("Las computadoras no deben exceder la capacidad del aula.");
 });
 
 // Estado tests
