@@ -41,3 +41,9 @@
 .limpiar-btn:hover {
   opacity: 0.85;
 }
+
+.error {
+  color: red;
+  font-size: 0.85rem;
+  margin: 0;
+}

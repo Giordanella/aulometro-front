@@ -23,9 +23,9 @@ export function validarUbicacion(formData) {
 }
 
 export function validarCantidadComputadoras(formData) {
-  if (!validarNumeroNoNegativo(formData.computadoras)) {return "La cantidad de computadoras debe ser un número entero no negativo.";}
+  if (!validarNumeroNoNegativo(formData.computadoras)) {return "Las computadoras deben ser un número entero no negativo.";}
   if (formData.computadoras < 0 || formData.computadoras > 50) {return "La cantidad de computadoras debe estar entre 0 y 50.";}
-  if (formData.computadoras > formData.capacidad) {return "La cantidad de computadoras no puede ser mayor que la capacidad del aula.";}
+  if (formData.computadoras > formData.capacidad) {return "Las computadoras no deben exceder la capacidad del aula.";}
   return null;
 }
 
