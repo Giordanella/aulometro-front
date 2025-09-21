@@ -92,7 +92,7 @@ const MenuFiltros = ({ filters, setFilters }) => {
       </div>
 
       <div className="menu-filtros__actions">
-        <button type="button" onClick={handleLimpiar}>
+        <button className="limpiar-btn" type="button" onClick={handleLimpiar}>
           Limpiar
         </button>
       </div>

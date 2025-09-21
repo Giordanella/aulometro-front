@@ -27,3 +27,17 @@
   justify-content: flex-end;
   padding-top: 1rem;
 }
+
+.limpiar-btn {
+  background-color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0.75rem;
+  transition: opacity 0.3s;
+}
+
+.limpiar-btn:hover {
+  opacity: 0.85;
+}
