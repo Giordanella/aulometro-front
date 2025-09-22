@@ -1,6 +1,10 @@
 import { useState, useMemo } from "react";
 import BotonPrimario from "./BotonPrimario";
-import { validarNumeroAula, validarFiltros, hasErrors } from "../utils/validarAula.js";
+import {
+  validarNumeroAula,
+  validarFiltros,
+  hasErrors,
+} from "../utils/validarAula.js";
 import "./styles/BarraBusqueda.css";
 import { searchAulas } from "../api/aulas.js";
 import MenuFiltros from "./MenuFiltros.jsx";
@@ -13,7 +17,9 @@ const BarraBusqueda = ({ setAulas, filters, setFilters }) => {
 
   const handleChange = (e) => {
     let value = e.target.value;
-    if (value.startsWith("0")) {value = "";}
+    if (value.startsWith("0")) {
+      value = "";
+    }
 
     setQuery(value);
 
@@ -27,7 +33,6 @@ const BarraBusqueda = ({ setAulas, filters, setFilters }) => {
     setError(errorMsg);
   };
 
-  // ✅ Validación global de filtros
   const filtersValidation = useMemo(() => validarFiltros(filters), [filters]);
   const hasFilterValidationErrors = hasErrors(filtersValidation);
 
@@ -37,9 +42,13 @@ const BarraBusqueda = ({ setAulas, filters, setFilters }) => {
       out.numero = numero;
     }
     Object.entries(restFilters).forEach(([k, v]) => {
-      if (v === undefined || v === null) {return;}
+      if (v === undefined || v === null) {
+        return;
+      }
       if (typeof v === "string") {
-        if (v.trim() === "") {return;}
+        if (v.trim() === "") {
+          return;
+        }
         out[k] = v;
         return;
       }
@@ -50,14 +59,18 @@ const BarraBusqueda = ({ setAulas, filters, setFilters }) => {
 
   const handleBuscar = async (e) => {
     e.preventDefault();
-    if (error || hasFilterValidationErrors) {return;}
+    if (error || hasFilterValidationErrors) {
+      return;
+    }
 
     const combined = { ...filters };
-    if (query && query !== "") {combined.numero = Number(query);}
+    if (query && query !== "") {
+      combined.numero = Number(query);
+    }
 
     const payload = buildPayload(combined);
 
-    setAulas([]); // indicamos carga
+    setAulas([]);
 
     try {
       const res = await searchAulas(payload);
@@ -68,22 +81,25 @@ const BarraBusqueda = ({ setAulas, filters, setFilters }) => {
         setAulas([]);
         return;
       }
-      console.error("Error al buscar aulas:", err);
       setAulas(null);
     }
   };
 
   const hasNumeroValido = query && query >= 1 && query <= 350 && !error;
 
-  const hasFilters =
-    (filters.ubicacion && filters.ubicacion.trim() !== "") ||
-    (filters.capacidadMin && filters.capacidadMin > 0) ||
-    (filters.computadorasMin && filters.computadorasMin > 0) ||
-    filters.tieneProyector === true ||
-    (filters.estado && filters.estado.trim() !== "");
+  // helpers locales
+  const isAppliedString = (v) => typeof v === "string" && v.trim() !== "";
+  const isAppliedNumber = (v) => v !== "" && v !== null;
 
-  // ✅ ahora también depende de si hay errores de validación en filtros
-  const isButtonDisabled = (!hasNumeroValido && !hasFilters) || hasFilterValidationErrors;
+  const hasFilters =
+    isAppliedString(filters.ubicacion) ||
+    isAppliedNumber(filters.capacidadMin) ||
+    isAppliedNumber(filters.computadorasMin) ||
+    filters.tieneProyector === true ||
+    isAppliedString(filters.estado);
+
+  const isButtonDisabled =
+    (!hasNumeroValido && !hasFilters) || hasFilterValidationErrors;
 
   return (
     <div className="barra-busqueda-container">
@@ -97,8 +113,12 @@ const BarraBusqueda = ({ setAulas, filters, setFilters }) => {
             onChange={handleChange}
             onBeforeInput={(e) => {
               const invalidPattern = /[+\-eE.,]/;
-              if (invalidPattern.test(e.data)) {e.preventDefault();}
-              if ((query + e.data).length > 3) {e.preventDefault();}
+              if (invalidPattern.test(e.data)) {
+                e.preventDefault();
+              }
+              if ((query + e.data).length > 3) {
+                e.preventDefault();
+              }
             }}
             min={1}
             max={350}
@@ -119,7 +139,11 @@ const BarraBusqueda = ({ setAulas, filters, setFilters }) => {
       {error && <p className="barra-busqueda__error">{error}</p>}
 
       {mostrarFiltros && (
-        <MenuFiltros filters={filters} setFilters={setFilters} errors={filtersValidation} />
+        <MenuFiltros
+          filters={filters}
+          setFilters={setFilters}
+          errors={filtersValidation}
+        />
       )}
     </div>
   );
