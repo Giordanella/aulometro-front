@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import BotonPrimario from "./BotonPrimario";
-import { validarNumeroAula } from "../utils/validarAula.js";
+import { validarNumeroAula, validarFiltros, hasErrors } from "../utils/validarAula.js";
 import "./styles/BarraBusqueda.css";
 import { searchAulas } from "../api/aulas.js";
 import MenuFiltros from "./MenuFiltros.jsx";
@@ -13,10 +13,7 @@ const BarraBusqueda = ({ setAulas, filters, setFilters }) => {
 
   const handleChange = (e) => {
     let value = e.target.value;
-
-    if (value.startsWith("0")) {
-      value = "";
-    }
+    if (value.startsWith("0")) {value = "";}
 
     setQuery(value);
 
@@ -30,15 +27,15 @@ const BarraBusqueda = ({ setAulas, filters, setFilters }) => {
     setError(errorMsg);
   };
 
-  // Quita claves vacías/indeseadas del objeto filters antes de enviar
+  // ✅ Validación global de filtros
+  const filtersValidation = useMemo(() => validarFiltros(filters), [filters]);
+  const hasFilterValidationErrors = hasErrors(filtersValidation);
+
   function buildPayload({ numero, ...restFilters }) {
     const out = {};
-    // incluir numero si existe y es no vacío
     if (numero !== undefined && numero !== "" && numero !== null) {
-      // si viene string, mandamos tal cual; backend normaliza
       out.numero = numero;
     }
-    // recorrer filtros del menu
     Object.entries(restFilters).forEach(([k, v]) => {
       if (v === undefined || v === null) {return;}
       if (typeof v === "string") {
@@ -46,7 +43,6 @@ const BarraBusqueda = ({ setAulas, filters, setFilters }) => {
         out[k] = v;
         return;
       }
-      // boolean o number
       out[k] = v;
     });
     return out;
@@ -54,39 +50,31 @@ const BarraBusqueda = ({ setAulas, filters, setFilters }) => {
 
   const handleBuscar = async (e) => {
     e.preventDefault();
-    if (error) {
-      return;
-    }
+    if (error || hasFilterValidationErrors) {return;}
 
-    // construir payload combinando query (numero) y filtros del MenuFiltros
     const combined = { ...filters };
     if (query && query !== "") {combined.numero = Number(query);}
 
     const payload = buildPayload(combined);
 
-    // Indicar carga visualmente poniendo [] primero (igual que antes)
-    setAulas([]);
+    setAulas([]); // indicamos carga
 
     try {
       const res = await searchAulas(payload);
       setAulas(res.data);
     } catch (err) {
-      // Si el backend devuelve 404 (no hay resultados), lo manejamos y mostramos array vacío
       const status = err?.response?.status;
       if (status === 404) {
         setAulas([]);
         return;
       }
       console.error("Error al buscar aulas:", err);
-      // opcional: podés setear un estado para mostrar error al usuario
       setAulas(null);
     }
   };
 
-  // Chequea si hay número válido
   const hasNumeroValido = query && query >= 1 && query <= 350 && !error;
 
-  // Chequea si hay al menos un filtro aplicado
   const hasFilters =
     (filters.ubicacion && filters.ubicacion.trim() !== "") ||
     (filters.capacidadMin && filters.capacidadMin > 0) ||
@@ -94,8 +82,8 @@ const BarraBusqueda = ({ setAulas, filters, setFilters }) => {
     filters.tieneProyector === true ||
     (filters.estado && filters.estado.trim() !== "");
 
-  // El botón se habilita si hay número válido o filtros
-  const isButtonDisabled = !hasNumeroValido && !hasFilters;
+  // ✅ ahora también depende de si hay errores de validación en filtros
+  const isButtonDisabled = (!hasNumeroValido && !hasFilters) || hasFilterValidationErrors;
 
   return (
     <div className="barra-busqueda-container">
@@ -109,12 +97,8 @@ const BarraBusqueda = ({ setAulas, filters, setFilters }) => {
             onChange={handleChange}
             onBeforeInput={(e) => {
               const invalidPattern = /[+\-eE.,]/;
-              if (invalidPattern.test(e.data)) {
-                e.preventDefault();
-              }
-              if ((query + e.data).length > 3) {
-                e.preventDefault();
-              }
+              if (invalidPattern.test(e.data)) {e.preventDefault();}
+              if ((query + e.data).length > 3) {e.preventDefault();}
             }}
             min={1}
             max={350}
@@ -135,10 +119,7 @@ const BarraBusqueda = ({ setAulas, filters, setFilters }) => {
       {error && <p className="barra-busqueda__error">{error}</p>}
 
       {mostrarFiltros && (
-        <MenuFiltros
-          filters={filters}
-          setFilters={setFilters}
-        />
+        <MenuFiltros filters={filters} setFilters={setFilters} errors={filtersValidation} />
       )}
     </div>
   );

@@ -3,34 +3,80 @@ function validarNumeroNoNegativo(valor) {
 }
 
 export function validarNumeroAula(formData) {
-  console.log(formData);
-  if (!validarNumeroNoNegativo(formData.numero)) {return "El número de aula debe ser un número entero no negativo.";}
-  if (formData.numero < 1 || formData.numero > 350) {return "El número de aula debe estar entre 1 y 350.";}
+  if (!validarNumeroNoNegativo(formData.numero)) {
+    return "El número de aula debe ser un número entero no negativo.";
+  }
+  if (formData.numero < 1 || formData.numero > 350) {
+    return "El número de aula debe estar entre 1 y 350.";
+  }
   return null;
 }
 
 export function validarCapacidad(formData) {
-  if (!validarNumeroNoNegativo(formData.capacidad)) {return "La capacidad debe ser un número entero no negativo.";}
-  if (formData.capacidad < 1 || formData.capacidad > 100) {return "La capacidad debe estar entre 1 y 100.";}
+  if (!validarNumeroNoNegativo(formData.capacidad)) {
+    return "La capacidad debe ser un número entero no negativo.";
+  }
+  if (formData.capacidad < 1 || formData.capacidad > 100) {
+    return "La capacidad debe estar entre 1 y 100.";
+  }
   return null;
 }
 
 export function validarUbicacion(formData) {
   const regex = /^[a-zA-Z0-9\s,.-]+$/;
-  if (!formData.ubicacion || formData.ubicacion.trim().length === 0) {return "La ubicación no puede estar vacía.";}
-  if (!regex.test(formData.ubicacion)) {return "La ubicación contiene caracteres inválidos.";}
+  if (!formData.ubicacion || formData.ubicacion.trim().length === 0) {
+    return "La ubicación no puede estar vacía.";
+  }
+  if (!regex.test(formData.ubicacion)) {
+    return "La ubicación contiene caracteres inválidos.";
+  }
   return null;
 }
 
 export function validarCantidadComputadoras(formData) {
-  if (!validarNumeroNoNegativo(formData.computadoras)) {return "Las computadoras deben ser un número entero no negativo.";}
-  if (formData.computadoras < 0 || formData.computadoras > 50) {return "La cantidad de computadoras debe estar entre 0 y 50.";}
-  if (formData.computadoras > formData.capacidad) {return "Las computadoras no deben exceder la capacidad del aula.";}
+  if (!validarNumeroNoNegativo(formData.computadoras)) {
+    return "Las computadoras deben ser un número entero no negativo.";
+  }
+  if (formData.computadoras < 0 || formData.computadoras > 50) {
+    return "La cantidad de computadoras debe estar entre 0 y 50.";
+  }
+  if (formData.capacidad && formData.computadoras > formData.capacidad) {
+    return "Las computadoras no deben exceder la capacidad del aula.";
+  }
   return null;
 }
 
 export function validarEstado(formData) {
   const estadosValidos = ["disponible", "ocupada", "mantenimiento"];
-  if(!estadosValidos.includes(formData.estado)) {return "El estado debe ser 'disponible', 'ocupada' o 'mantenimiento'.";}
+  if (!estadosValidos.includes(formData.estado)) {
+    return "El estado debe ser 'disponible', 'ocupada' o 'mantenimiento'.";
+  }
   return null;
+}
+
+// ✅ Helpers globales para validar todo junto
+export function validarFiltros(filters = {}) {
+  const errors = {};
+
+  if (filters.ubicacion) {
+    errors.ubicacion = validarUbicacion({ ubicacion: filters.ubicacion });
+  }
+  if (filters.capacidadMin !== "" && filters.capacidadMin !== undefined) {
+    errors.capacidadMin = validarCapacidad({ capacidad: filters.capacidadMin });
+  }
+  if (filters.computadorasMin !== "" && filters.computadorasMin !== undefined) {
+    errors.computadorasMin = validarCantidadComputadoras({
+      computadoras: filters.computadorasMin,
+      capacidad: filters.capacidadMin,
+    });
+  }
+  if (filters.estado) {
+    errors.estado = validarEstado({ estado: filters.estado });
+  }
+
+  return errors;
+}
+
+export function hasErrors(errors) {
+  return Object.values(errors).some((msg) => msg !== null);
 }
