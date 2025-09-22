@@ -14,6 +14,7 @@ const BarraBusqueda = ({ setAulas, filters, setFilters }) => {
   const [query, setQuery] = useState("");
   const [error, setError] = useState(null);
   const [mostrarFiltros, setMostrarFiltros] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
 
   const handleChange = (e) => {
     let value = e.target.value;
@@ -71,10 +72,25 @@ const BarraBusqueda = ({ setAulas, filters, setFilters }) => {
     const payload = buildPayload(combined);
 
     setAulas([]);
+    setSuccessMessage("");
 
     try {
       const res = await searchAulas(payload);
       setAulas(res.data);
+
+      if (res.data && res.data.length > 0) {
+        const cantidad = res.data.length;
+        const mensaje =
+          cantidad === 1
+            ? "Se encontró 1 resultado."
+            : `Se encontraron ${cantidad} resultados.`;
+
+        setSuccessMessage(mensaje);
+
+        setTimeout(() => {
+          setSuccessMessage("");
+        }, 5000);
+      }
     } catch (err) {
       const status = err?.response?.status;
       if (status === 404) {
@@ -102,50 +118,53 @@ const BarraBusqueda = ({ setAulas, filters, setFilters }) => {
     (!hasNumeroValido && !hasFilters) || hasFilterValidationErrors;
 
   return (
-    <div className="barra-busqueda-container">
-      <div className="barra-busqueda__top">
-        <form className="barra-busqueda" onSubmit={handleBuscar}>
-          <input
-            className="barra-busqueda__input"
-            type="number"
-            placeholder="Ingrese el número de aula..."
-            value={query}
-            onChange={handleChange}
-            onBeforeInput={(e) => {
-              const invalidPattern = /[+\-eE.,]/;
-              if (invalidPattern.test(e.data)) {
-                e.preventDefault();
-              }
-              if ((query + e.data).length > 3) {
-                e.preventDefault();
-              }
-            }}
-            min={1}
-            max={350}
+    <>
+      <div className="barra-busqueda-container">
+        <div className="barra-busqueda__top">
+          <form className="barra-busqueda" onSubmit={handleBuscar}>
+            <input
+              className="barra-busqueda__input"
+              type="number"
+              placeholder="Ingrese el número de aula..."
+              value={query}
+              onChange={handleChange}
+              onBeforeInput={(e) => {
+                const invalidPattern = /[+\-eE.,]/;
+                if (invalidPattern.test(e.data)) {
+                  e.preventDefault();
+                }
+                if ((query + e.data).length > 3) {
+                  e.preventDefault();
+                }
+              }}
+              min={1}
+              max={350}
+            />
+            <BotonPrimario disabled={isButtonDisabled}>Buscar</BotonPrimario>
+          </form>
+
+          <button
+            className="menu-filtros-toggle"
+            onClick={() => setMostrarFiltros(!mostrarFiltros)}
+            type="button"
+            title="Mostrar/Ocultar filtros"
+          >
+            <img src={menuIcon} alt="Menú filtros" />
+          </button>
+        </div>
+
+        {error && <p className="barra-busqueda__error">{error}</p>}
+
+        {mostrarFiltros && (
+          <MenuFiltros
+            filters={filters}
+            setFilters={setFilters}
+            errors={filtersValidation}
           />
-          <BotonPrimario disabled={isButtonDisabled}>Buscar</BotonPrimario>
-        </form>
-
-        <button
-          className="menu-filtros-toggle"
-          onClick={() => setMostrarFiltros(!mostrarFiltros)}
-          type="button"
-          title="Mostrar/Ocultar filtros"
-        >
-          <img src={menuIcon} alt="Menú filtros" />
-        </button>
+        )}
       </div>
-
-      {error && <p className="barra-busqueda__error">{error}</p>}
-
-      {mostrarFiltros && (
-        <MenuFiltros
-          filters={filters}
-          setFilters={setFilters}
-          errors={filtersValidation}
-        />
-      )}
-    </div>
+      {successMessage && <p className="barra-busqueda__success">{successMessage}</p>}
+    </>
   );
 };
 
