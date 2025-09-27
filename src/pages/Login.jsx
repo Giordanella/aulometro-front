@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import BotonPrimario from "../components/BotonPrimario";
 import { loginRequest } from "../api/auth";
 import { useAuth } from "../contexts/useAuth";
-import { setAuthRole } from "../api/axios";
 import "./styles/Login.css";
 
 const Login = () => {
@@ -11,33 +10,26 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const { user, login } = useAuth();
 
-  const { user, setUser } = useAuth();
-
-  // Si ya hay usuario logueado, redirigir a su dashboard
   useEffect(() => {
     if (user) {
       navigate(user.role === "DOCENTE" ? "/dashboard/docente" : "/dashboard/directivo");
     }
   }, [user, navigate]);
 
-  async function handleSubmit(e) {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
 
     try {
       const data = await loginRequest(email, password);
-
-      // Guardar usuario en contexto + configurar rol en axios
-      setUser(data.user);
-      setAuthRole(data.user.role);
-
-      // No hace falta redirigir acá, el useEffect se encarga
+      login(data); // guardar token y user en contexto
     } catch (err) {
-      const msg = err?.response?.data?.message || "Credenciales inválidas";
+      const msg = err?.response?.data?.error || "Credenciales inválidas";
       setError(msg);
     }
-  }
+  };
 
   return (
     <div className="login-container">

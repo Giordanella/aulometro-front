@@ -1,38 +1,53 @@
 import { createContext, useState, useEffect } from "react";
-import { setAuthRole } from "../api/axios";
+import { setAuthToken } from "../api/axios";
+import { getCurrentUser } from "../api/users";
 
 const AuthContext = createContext(null);
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [token, setToken] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // Al montar: cargar usuario desde localStorage
+  // Al montar: cargar token y obtener usuario
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      const parsedUser = JSON.parse(storedUser);
-      setUser(parsedUser);
-      setAuthRole(parsedUser.role); // configurar axios con su rol
+    const storedToken = localStorage.getItem("token");
+    if (storedToken) {
+      setToken(storedToken);
+      setAuthToken(storedToken);
+
+      getCurrentUser()
+        .then(({ data }) => setUser(data))
+        .catch(() => logout()) // token inválido o expirado
+        .finally(() => setLoading(false));
+    } else {
+      setLoading(false);
     }
   }, []);
 
-  // Cada vez que cambia el usuario: actualizar localStorage
+  // Guardar token en localStorage
   useEffect(() => {
-    if (user) {
-      localStorage.setItem("user", JSON.stringify(user));
+    if (token) {
+      localStorage.setItem("token", token);
     } else {
-      localStorage.removeItem("user");
+      localStorage.removeItem("token");
     }
-  }, [user]);
+  }, [token]);
 
-  // Función para cerrar sesión
+  const login = (data) => {
+    setToken(data.token);
+    setAuthToken(data.token);
+    setUser(data.user);
+  };
+
   const logout = () => {
+    setToken(null);
     setUser(null);
-    setAuthRole(null); // limpiamos header en axios
+    setAuthToken(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, setUser, logout }}>
+    <AuthContext.Provider value={{ user, token, login, logout, loading }}>
       {children}
     </AuthContext.Provider>
   );

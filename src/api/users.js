@@ -12,4 +12,6 @@ export const deleteUserById = (id) => api.delete(`/users/${id}`);
 
 export const deleteAllUsers = () => api.delete("/users");
 
+export const getCurrentUser = () => api.get("/users/current");
+
 export const getDocentes = () => api.get("/users/docentes");
