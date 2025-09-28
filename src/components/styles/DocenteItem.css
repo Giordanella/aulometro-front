@@ -1,3 +1,9 @@
+.docente-item-container {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+}
+
 .docente-container {
   background-color: white;
   border-radius: 8px;
@@ -24,4 +30,10 @@
 
 .email {
   background-color: rgba(255, 99, 71, 0.5);
+}
+
+.buttons-container {
+  align-items: center;
+  display: flex;
+  gap: 8px;
 }
