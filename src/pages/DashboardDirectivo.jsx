@@ -11,9 +11,7 @@ import SelectorFormulario from "../components/SelectorFormulario";
 import ListaAulas from "../components/ListaAulas";
 import { useLista } from "../hooks/useLista.jsx";
 import DataLoader from "../components/DataLoader.jsx";
-
-
-import Ruedita from "../components/ruedita"; 
+import Ruedita from "../components/Ruedita.jsx";
 
 const Home = () => {
   const { items: aulas, setItems: setAulas, fetchItems: fetchAulas } = useLista(getAulas);
@@ -34,7 +32,7 @@ const Home = () => {
           <FormularioAltaUsuario setDocentes={setDocentes} />
           <DataLoader
             fetchData={fetchDocentes}
-            fallbackLoading={<Ruedita />}         
+            fallbackLoading={<Ruedita />}
             fallbackError="Error al cargar docentes"
           >
             <ListaDocentes docentes={docentes} setDocentes={setDocentes} />
@@ -49,7 +47,7 @@ const Home = () => {
           />
           <DataLoader
             fetchData={fetchAulas}
-            fallbackLoading={<Ruedita />}   //       
+            fallbackLoading={<Ruedita />}
             fallbackError="Error al cargar aulas"
           >
             <ListaAulas aulas={aulas} setAulas={setAulas} title="Aulas" />
