@@ -15,7 +15,11 @@ const DashboardDirectivo = () => {
     <div className="home-container">
       <h1>Bienvenido/a {user?.role}</h1>
       <BusquedaAulas />
-      <DataLoader fetchData={fetchAulas} fallbackLoading="Cargando aulas..." fallbackError="Error al cargar aulas">
+      <DataLoader
+        fetchData={fetchAulas}
+        fallbackLoading={<Ruedita />}          
+        fallbackError="Error al cargar aulas"
+      >
         <ListaAulas aulas={aulas} title="Lista de aulas" />
       </DataLoader>
       <p>Has ingresado con tu email {user?.email}</p>
