@@ -11,7 +11,7 @@ import SelectorFormulario from "../components/SelectorFormulario";
 import ListaAulas from "../components/ListaAulas";
 import { useLista } from "../hooks/useLista.jsx";
 import DataLoader from "../components/DataLoader.jsx";
-
+import Ruedita from "../components/Ruedita.jsx";
 
 const Home = () => {
   const { items: aulas, setItems: setAulas, fetchItems: fetchAulas } = useLista(getAulas);
@@ -26,25 +26,35 @@ const Home = () => {
         formularioActivo={formularioActivo}
         setFormularioActivo={setFormularioActivo}
       />
+
       {formularioActivo === "usuario" ? (
         <div className="home-container">
           <FormularioAltaUsuario setDocentes={setDocentes} />
-          <DataLoader fetchData={fetchDocentes} fallbackLoading="Cargando docentes..." fallbackError="Error al cargar docentes">
+          <DataLoader
+            fetchData={fetchDocentes}
+            fallbackLoading={<Ruedita />}
+            fallbackError="Error al cargar docentes"
+          >
             <ListaDocentes docentes={docentes} setDocentes={setDocentes} />
           </DataLoader>
         </div>
       ) : (
         <div className="home-container">
-          <FormularioAltaAula onAulaCreada={
-            (nuevaAula) => {
+          <FormularioAltaAula
+            onAulaCreada={(nuevaAula) => {
               setAulas((prev) => [...prev, nuevaAula]);
             }}
           />
-          <DataLoader fetchData={fetchAulas} fallbackLoading="Cargando aulas..." fallbackError="Error al cargar aulas">
+          <DataLoader
+            fetchData={fetchAulas}
+            fallbackLoading={<Ruedita />}
+            fallbackError="Error al cargar aulas"
+          >
             <ListaAulas aulas={aulas} setAulas={setAulas} title="Aulas" />
           </DataLoader>
         </div>
       )}
+
       <BotonPrimario onClick={logout}>Cerrar sesión</BotonPrimario>
     </div>
   );
