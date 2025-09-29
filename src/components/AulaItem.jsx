@@ -3,10 +3,11 @@ import { useAuth } from "../contexts/useAuth";
 import { can } from "../permissions";
 import "./styles/AulaItem.css";
 import "./styles/FormularioAlta.css";
-import { useBorrarAula } from "../hooks/useBorrarAula";
+import useBorrarItem from "../hooks/useBorrarItem";
 import BotonPrimario from "./BotonPrimario";
 import FormularioEdicionAula from "./FormularioEdicionAula";
 import ModalConfirmacion from "./ModalConfirmacion";
+import { deleteAulaById } from "../api/aulas";
 
 const AulaItem = ({ aulaId, numero, capacidad, ubicacion, computadoras, tieneProyector, estado, onUpdate, onDelete }) => {
   const { user } = useAuth();
@@ -15,8 +16,8 @@ const AulaItem = ({ aulaId, numero, capacidad, ubicacion, computadoras, tienePro
     showDeleteModal,
     setShowDeleteModal,
     handleDelete,
-    loading
-  } = useBorrarAula(onDelete);
+    loading,
+  } = useBorrarItem(deleteAulaById, onDelete);
 
   if (isEditing) {
     return (

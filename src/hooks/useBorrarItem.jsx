@@ -1,18 +1,17 @@
 import { useState } from "react";
-import { deleteAulaById } from "../api/aulas";
 
-export function useBorrarAula(onDelete) {
+const useBorrarItem = (deleteItemById, onDelete) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleDelete = async (aulaId) => {
+  const handleDelete = async (itemId) => {
     setLoading(true);
     try {
-      await deleteAulaById(aulaId);
-      onDelete(aulaId);
+      await deleteItemById(itemId);
+      onDelete(itemId);
       setShowDeleteModal(false);
     } catch (error) {
-      console.error("Error al borrar el aula:", error);
+      console.error("Error deleting the item:", error);
     } finally {
       setLoading(false);
     }
@@ -22,6 +21,8 @@ export function useBorrarAula(onDelete) {
     showDeleteModal,
     setShowDeleteModal,
     handleDelete,
-    loading
+    loading,
   };
-}
+};
+
+export default useBorrarItem;
