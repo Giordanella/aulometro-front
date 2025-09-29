@@ -37,7 +37,7 @@ const Home = () => {
             fallbackLoading={<Ruedita />}         
             fallbackError="Error al cargar docentes"
           >
-            <ListaDocentes docentes={docentes} />
+            <ListaDocentes docentes={docentes} setDocentes={setDocentes} />
           </DataLoader>
         </div>
       ) : (
