@@ -1,7 +1,22 @@
 import DocenteItem from "./DocenteItem";
 import "./styles/ListaDocentes.css";
 
-const ListaDocentes = ({ docentes }) => {
+const ListaDocentes = ({ docentes, setDocentes }) => {
+
+  const handleUpdateDocente = (updatedDocente) => {
+    setDocentes((prevDocentes) =>
+      prevDocentes.map((docente) =>
+        docente.id === updatedDocente.id ? { ...docente, ...updatedDocente } : docente
+      )
+    );
+  };
+
+  const handleDeleteDocente = (docenteId) => {
+    setDocentes((prevDocentes) =>
+      prevDocentes.filter((docente) => docente.id !== docenteId)
+    );
+  };
+
   return (
     <div className="docentes-container">
       <h1>Docentes</h1>
@@ -12,8 +27,9 @@ const ListaDocentes = ({ docentes }) => {
         docentes.map((docente) => (
           <DocenteItem
             key={docente.id}
-            name={docente.name}
-            email={docente.email}
+            docente={docente}
+            onUpdate={handleUpdateDocente}
+            onDelete={handleDeleteDocente}
           />
         ))
       )}
