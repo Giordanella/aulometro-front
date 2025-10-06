@@ -12,16 +12,27 @@ import ListaAulas from "../components/ListaAulas";
 import { useLista } from "../hooks/useLista.jsx";
 import DataLoader from "../components/DataLoader.jsx";
 import Ruedita from "../components/Ruedita.jsx";
-
+import { Link } from "react-router-dom";
 const Home = () => {
-  const { items: aulas, setItems: setAulas, fetchItems: fetchAulas } = useLista(getAulas);
-  const { items: docentes, setItems: setDocentes, fetchItems: fetchDocentes } = useLista(getDocentes);
+  const {
+    items: aulas,
+    setItems: setAulas,
+    fetchItems: fetchAulas,
+  } = useLista(getAulas);
+  const {
+    items: docentes,
+    setItems: setDocentes,
+    fetchItems: fetchDocentes,
+  } = useLista(getDocentes);
   const [formularioActivo, setFormularioActivo] = useState("usuario");
   const { logout } = useAuth();
 
   return (
     <div className="home-container">
       <h1>Dashboard Directivo</h1>
+      <BotonPrimario as={Link} to="/reservas/pendientes">
+        Ver reservas pendientes
+      </BotonPrimario>
       <SelectorFormulario
         formularioActivo={formularioActivo}
         setFormularioActivo={setFormularioActivo}

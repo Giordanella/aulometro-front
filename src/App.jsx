@@ -4,7 +4,8 @@ import DashboardDirectivo from "./pages/DashboardDirectivo";
 import DashboardDocente from "./pages/DashboardDocente";
 import Login from "./pages/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
-
+import MisReservas from "./pages/ReservasDocente";
+import ReservasPendientes from "./pages/ReservasPendientes";
 const App = () => {
   return (
     <>
@@ -21,6 +22,15 @@ const App = () => {
             </ProtectedRoute>
           }
         />
+        {/* Mis reservas (DOCENTE) */}
+        <Route
+          path="/reservas/mias"
+          element={
+            <ProtectedRoute role="DOCENTE">
+              <MisReservas />
+            </ProtectedRoute>
+          }
+        />
 
         {/* Ruta solo para directivos */}
         <Route
@@ -28,6 +38,15 @@ const App = () => {
           element={
             <ProtectedRoute role="DIRECTIVO">
               <DashboardDirectivo />
+            </ProtectedRoute>
+          }
+        />
+        {/* Pendientes (DIRECTIVO) */}
+        <Route
+          path="/reservas/pendientes"
+          element={
+            <ProtectedRoute role="DIRECTIVO">
+              <ReservasPendientes />
             </ProtectedRoute>
           }
         />

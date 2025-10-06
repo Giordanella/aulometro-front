@@ -7,6 +7,7 @@ import DataLoader from "../components/DataLoader.jsx";
 import { getAulas } from "../api/aulas";
 import BusquedaAulas from "../components/BusquedaAulas.jsx";
 import Ruedita from "../components/Ruedita.jsx";
+import { Link } from "react-router-dom";
 
 const DashboardDirectivo = () => {
   const { user, logout } = useAuth();
@@ -15,6 +16,9 @@ const DashboardDirectivo = () => {
   return (
     <div className="home-container">
       <h1>Bienvenido/a {user?.role}</h1>
+      <BotonPrimario as={Link} to="/reservas/mias">
+        Ver reservas
+      </BotonPrimario>
       <BusquedaAulas />
       <DataLoader
         fetchData={fetchAulas}
