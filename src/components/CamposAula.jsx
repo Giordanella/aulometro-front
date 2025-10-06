@@ -40,11 +40,10 @@ export default function CamposAula({ formData, handleChange, errores }) {
         error={errores.computadoras}
       />
 
-      <label className="form-label">
+      <label className="form-label checkbox-label">
         <input
           type="checkbox"
           name="tieneProyector"
-          className="form-input"
           checked={formData.tieneProyector}
           onChange={handleChange}
         />

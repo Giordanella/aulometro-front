@@ -22,6 +22,10 @@
   font-size: 1rem;
   padding: 0.75rem;
   border-radius: 8px;
+  /* Asegura que inputs y selects ocupen el mismo ancho */
+  width: 100%;
+  box-sizing: border-box;
+  display: block;
 }
 
 .form-message {
@@ -49,4 +53,11 @@
   font-size: 0.875rem;
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
+}
+
+/* Checkbox alineado con su texto */
+.checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
 }

@@ -58,16 +58,15 @@ export default function CamposReserva({
         error={errores.horaFin}
       />
 
-      <div className="md:col-span-2">
-        <label className="form-label">Observaciones (opcional)</label>
-        <CampoFormulario
-          name="observaciones"
-          as="textarea"
-          value={formData.observaciones}
-          onChange={handleChange}
-          error={errores.observaciones}
-        />
-      </div>
+      <label className="form-label">Observaciones (opcional)</label>
+      <CampoFormulario
+        name="observaciones"
+        as="textarea"
+        value={formData.observaciones}
+        onChange={handleChange}
+        error={errores.observaciones}
+      />
+
     </>
   );
 }
