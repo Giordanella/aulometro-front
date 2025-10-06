@@ -12,7 +12,9 @@ const BusquedaAulas = () => {
     capacidadMin: "",
     computadorasMin: "",
     tieneProyector: undefined, // boolean o undefined
-    estado: "",
+    diaSemana: "", // 1-6
+    horaInicio: "", // "HH:mm"
+    horaFin: "", // "HH:mm"
   });
 
   return (

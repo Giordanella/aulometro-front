@@ -1,20 +1,24 @@
 import "./styles/MenuFiltros.css";
 
+const DIAS = [
+  { value: 1, label: "Lunes" },
+  { value: 2, label: "Martes" },
+  { value: 3, label: "Miércoles" },
+  { value: 4, label: "Jueves" },
+  { value: 5, label: "Viernes" },
+  { value: 6, label: "Sábado" },
+];
+
 const MenuFiltros = ({ filters, setFilters, errors = {} }) => {
   const handleChange = (field) => (e) => {
+    const { type, value: raw, checked } = e.target;
     let value;
-    if (e.target.type === "checkbox") {
-      value = e.target.checked;
-    } else if (e.target.type === "number") {
-      value = e.target.value === "" ? "" : Number(e.target.value);
-    } else {
-      value = e.target.value;
-    }
+    if (type === "checkbox") {value = checked ? true : undefined;}
+    else if (type === "number") {value = raw === "" ? "" : Number(raw);}
+    else if (field === "diaSemana") {value = raw === "" ? "" : Number(raw);}
+    else {value = raw;}
 
-    setFilters((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
+    setFilters((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleLimpiar = () => {
@@ -23,7 +27,9 @@ const MenuFiltros = ({ filters, setFilters, errors = {} }) => {
       capacidadMin: "",
       computadorasMin: "",
       tieneProyector: undefined,
-      estado: "",
+      diaSemana: "",
+      horaInicio: "",
+      horaFin: "",
     });
   };
 
@@ -64,7 +70,9 @@ const MenuFiltros = ({ filters, setFilters, errors = {} }) => {
           placeholder="Ej: 5"
         />
       </div>
-      {errors.computadorasMin && <p className="error">{errors.computadorasMin}</p>}
+      {errors.computadorasMin && (
+        <p className="error">{errors.computadorasMin}</p>
+      )}
 
       <div className="menu-filtros__row">
         <label>
@@ -77,16 +85,43 @@ const MenuFiltros = ({ filters, setFilters, errors = {} }) => {
         </label>
       </div>
 
+      <hr className="menu-filtros__divider" />
       <div className="menu-filtros__row">
-        <label>Estado</label>
-        <select value={filters.estado || ""} onChange={handleChange("estado")}>
+        <label>Día de la semana</label>
+        <select
+          value={filters.diaSemana === "" ? "" : Number(filters.diaSemana)}
+          onChange={handleChange("diaSemana")}
+        >
           <option value="">Cualquiera</option>
-          <option value="disponible">Disponible</option>
-          <option value="ocupada">Ocupada</option>
-          <option value="mantenimiento">Mantenimiento</option>
+          {DIAS.map((d) => (
+            <option key={d.value} value={d.value}>
+              {d.label}
+            </option>
+          ))}
         </select>
       </div>
-      {errors.estado && <p className="error">{errors.estado}</p>}
+      {errors.diaSemana && <p className="error">{errors.diaSemana}</p>}
+
+      <div className="menu-filtros__row menu-filtros__row--inline">
+        <div>
+          <label>Hora inicio</label>
+          <input
+            type="time"
+            value={filters.horaInicio || ""}
+            onChange={handleChange("horaInicio")}
+          />
+          {errors.horaInicio && <p className="error">{errors.horaInicio}</p>}
+        </div>
+        <div>
+          <label>Hora fin</label>
+          <input
+            type="time"
+            value={filters.horaFin || ""}
+            onChange={handleChange("horaFin")}
+          />
+          {errors.horaFin && <p className="error">{errors.horaFin}</p>}
+        </div>
+      </div>
 
       <div className="menu-filtros__actions">
         <button className="limpiar-btn" type="button" onClick={handleLimpiar}>

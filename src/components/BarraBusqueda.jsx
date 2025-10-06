@@ -6,7 +6,7 @@ import {
   hasErrors,
 } from "../utils/validarAula.js";
 import "./styles/BarraBusqueda.css";
-import { searchAulas } from "../api/aulas.js";
+import { searchAulas, searchAulasDisponibles } from "../api/aulas.js";
 import MenuFiltros from "./MenuFiltros.jsx";
 import menuIcon from "../assets/menu.svg";
 
@@ -54,9 +54,28 @@ const BarraBusqueda = ({ setAulas, filters, setFilters }) => {
         return;
       }
       out[k] = v;
+      if (typeof v === "boolean") {
+        if (v === true) {out[k] = true;}
+        return;
+      }
     });
+
+    // Normalizaciones suaves para la franja
+    if (out.diaSemana !== undefined && out.diaSemana !== "") {
+      out.diaSemana = Number(out.diaSemana);
+    }
+    if (typeof out.horaInicio === "string")
+    {out.horaInicio = out.horaInicio.slice(0, 5);} // "HH:mm"
+    if (typeof out.horaFin === "string") {out.horaFin = out.horaFin.slice(0, 5);}
     return out;
   }
+  const hasfranjaHoraria =
+    Number(filters.diaSemana) >= 1 &&
+    Number(filters.diaSemana) <= 6 &&
+    typeof filters.horaInicio === "string" &&
+    filters.horaInicio.trim() !== "" &&
+    typeof filters.horaFin === "string" &&
+    filters.horaFin.trim() !== "";
 
   const handleBuscar = async (e) => {
     e.preventDefault();
@@ -75,7 +94,8 @@ const BarraBusqueda = ({ setAulas, filters, setFilters }) => {
     setSuccessMessage("");
 
     try {
-      const res = await searchAulas(payload);
+      const apiFunc = hasfranjaHoraria ? searchAulasDisponibles : searchAulas;
+      const res = await apiFunc(payload);
       setAulas(res.data);
 
       if (res.data && res.data.length > 0) {
@@ -108,11 +128,11 @@ const BarraBusqueda = ({ setAulas, filters, setFilters }) => {
   const isAppliedNumber = (v) => v !== "" && v !== null;
 
   const hasFilters =
+    hasfranjaHoraria ||
     isAppliedString(filters.ubicacion) ||
     isAppliedNumber(filters.capacidadMin) ||
     isAppliedNumber(filters.computadorasMin) ||
-    filters.tieneProyector === true ||
-    isAppliedString(filters.estado);
+    filters.tieneProyector === true;
 
   const isButtonDisabled =
     (!hasNumeroValido && !hasFilters) || hasFilterValidationErrors;
@@ -163,7 +183,9 @@ const BarraBusqueda = ({ setAulas, filters, setFilters }) => {
           />
         )}
       </div>
-      {successMessage && <p className="barra-busqueda__success">{successMessage}</p>}
+      {successMessage && (
+        <p className="barra-busqueda__success">{successMessage}</p>
+      )}
     </>
   );
 };

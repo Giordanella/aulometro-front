@@ -11,7 +11,16 @@
   font-family: sans-serif;
   font-size: 0.9rem;
 }
-
+.menu-filtros__row--inline {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+.menu-filtros__divider {
+  border: 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  margin: 0.5rem 0 1rem;
+}
 .menu-filtros__row {
   display: grid;
   gap: 0.4rem;
@@ -37,7 +46,9 @@
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 0.9rem;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
 }
 
 .menu-filtros__row input:focus,
@@ -60,7 +71,9 @@
   cursor: pointer;
   font-size: 0.9rem;
   padding: 0.4rem 0.8rem;
-  transition: background-color 0.2s, border-color 0.2s;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s;
 }
 
 .limpiar-btn:hover {

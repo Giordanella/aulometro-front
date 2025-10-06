@@ -1,7 +1,7 @@
 import CampoFormulario from "./CampoFormulario";
 import "./styles/FormularioAlta.css";
 
-export default function CamposAula({ formData, handleChange, errores }){
+export default function CamposAula({ formData, handleChange, errores }) {
   return (
     <>
       <CampoFormulario
@@ -21,7 +21,7 @@ export default function CamposAula({ formData, handleChange, errores }){
         onChange={handleChange}
         error={errores.capacidad}
       />
-            
+
       <CampoFormulario
         placeholder="Ubicación"
         name="ubicacion"
@@ -40,30 +40,19 @@ export default function CamposAula({ formData, handleChange, errores }){
         error={errores.computadoras}
       />
 
-      <CampoFormulario
-        placeholder="Estado"
-        name="estado"
-        type="select"
-        value={formData.estado}
-        onChange={handleChange}
-        error={errores.estado}
-      >
-        <option value="disponible">Disponible</option>
-        <option value="mantenimiento">En mantenimiento</option>
-        <option value="ocupada">No disponible</option>
-      </CampoFormulario>
-
       <label className="form-label">
-        <input 
+        <input
           type="checkbox"
           name="tieneProyector"
           className="form-input"
           checked={formData.tieneProyector}
           onChange={handleChange}
         />
-            ¿Tiene proyector?
+        ¿Tiene proyector?
       </label>
-      {errores.tieneProyector && <p className="error-text">{errores.tieneProyector}</p>}
+      {errores.tieneProyector && (
+        <p className="error-text">{errores.tieneProyector}</p>
+      )}
     </>
   );
 }
