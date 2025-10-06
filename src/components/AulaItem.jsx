@@ -93,6 +93,7 @@ const AulaItem = ({
       {abrirReserva && (
         <FormReserva
           aulaId={aulaId}
+          aulaNumero={numero}
           onOk={() => {
             setAbrirReserva(false);
             // opcional: mostrar toast y/o navegar a “Mis reservas”

@@ -1,44 +1,97 @@
+// src/pages/DashboardDirectivo.jsx
 import { useState } from "react";
 import { getDocentes } from "../api/users";
 import { getAulas } from "../api/aulas";
+import {
+  getPendientes,
+  aprobarReserva,
+  rechazarReserva,
+} from "../api/reservas";
 import FormularioAltaUsuario from "../components/FormularioAltaUsuario";
 import FormularioAltaAula from "../components/FormularioAltaAula";
 import ListaDocentes from "../components/ListaDocentes";
-import BotonPrimario from "../components/BotonPrimario";
-import { useAuth } from "../contexts/useAuth";
-import "./styles/Home.css";
-import SelectorFormulario from "../components/SelectorFormulario";
 import ListaAulas from "../components/ListaAulas";
-import { useLista } from "../hooks/useLista.jsx";
+import BotonPrimario from "../components/BotonPrimario";
+import CampoFormulario from "../components/CampoFormulario";
 import DataLoader from "../components/DataLoader.jsx";
 import Ruedita from "../components/Ruedita.jsx";
-import { Link } from "react-router-dom";
-const Home = () => {
+import { useAuth } from "../contexts/useAuth";
+import { useLista } from "../hooks/useLista.jsx";
+import "./styles/Home.css";
+import "./styles/Reservas.css";
+
+const getPendientesRows = () =>
+  getPendientes().then(({ data }) => ({
+    data: { rows: Array.isArray(data) ? data : (data?.rows ?? []) },
+  }));
+
+const DashboardDirectivo = () => {
+  const { logout } = useAuth();
+
+  // pestañas internas
+  const [vista, setVista] = useState("usuario"); // 'usuario' | 'aula' | 'reservas'
+
+  // Aulas
   const {
     items: aulas,
     setItems: setAulas,
     fetchItems: fetchAulas,
   } = useLista(getAulas);
+
+  // Docentes
   const {
     items: docentes,
     setItems: setDocentes,
     fetchItems: fetchDocentes,
   } = useLista(getDocentes);
-  const [formularioActivo, setFormularioActivo] = useState("usuario");
-  const { logout } = useAuth();
+
+  // Reservas pendientes
+  const {
+    items: pendientes,
+    setItems: setPendientes,
+    fetchItems: fetchPendientes,
+  } = useLista(getPendientesRows);
+  const [motivos, setMotivos] = useState({});
+  const [msg, setMsg] = useState("");
+
+  async function onAprobar(id) {
+    try {
+      await aprobarReserva(id);
+      setPendientes((prev) => prev.filter((r) => r.id !== id));
+    } catch (e) {
+      setMsg(e?.response?.data?.error || e.message || "No se pudo aprobar.");
+    }
+  }
+
+  async function onRechazar(id) {
+    try {
+      await rechazarReserva(id, motivos[id] || "");
+      setPendientes((prev) => prev.filter((r) => r.id !== id));
+    } catch (e) {
+      setMsg(e?.response?.data?.error || e.message || "No se pudo rechazar.");
+    }
+  }
 
   return (
     <div className="home-container">
       <h1>Dashboard Directivo</h1>
-      <BotonPrimario as={Link} to="/reservas/pendientes">
-        Ver reservas pendientes
-      </BotonPrimario>
-      <SelectorFormulario
-        formularioActivo={formularioActivo}
-        setFormularioActivo={setFormularioActivo}
-      />
 
-      {formularioActivo === "usuario" ? (
+      <div
+        className="home-actions"
+        style={{ display: "flex", gap: 8, marginBottom: 12 }}
+      >
+        <BotonPrimario onClick={() => setVista("usuario")}>
+          Gestión de usuarios
+        </BotonPrimario>
+        <BotonPrimario onClick={() => setVista("aula")}>
+          Gestión de aulas
+        </BotonPrimario>
+        <BotonPrimario onClick={() => setVista("reservas")}>
+          Reservas pendientes
+        </BotonPrimario>
+      </div>
+
+      {vista === "usuario" && (
         <div className="home-container">
           <FormularioAltaUsuario setDocentes={setDocentes} />
           <DataLoader
@@ -49,12 +102,14 @@ const Home = () => {
             <ListaDocentes docentes={docentes} setDocentes={setDocentes} />
           </DataLoader>
         </div>
-      ) : (
+      )}
+
+      {vista === "aula" && (
         <div className="home-container">
           <FormularioAltaAula
-            onAulaCreada={(nuevaAula) => {
-              setAulas((prev) => [...prev, nuevaAula]);
-            }}
+            onAulaCreada={(nuevaAula) =>
+              setAulas((prev) => [...prev, nuevaAula])
+            }
           />
           <DataLoader
             fetchData={fetchAulas}
@@ -66,9 +121,72 @@ const Home = () => {
         </div>
       )}
 
+      {vista === "reservas" && (
+        <div className="home-container">
+          {msg && <p className="reservas-error">{msg}</p>}
+          <DataLoader
+            fetchData={fetchPendientes}
+            fallbackLoading={<Ruedita />}
+            fallbackError="Error al cargar pendientes"
+          >
+            {!pendientes?.length && (
+              <p className="reservas-empty">No hay pendientes.</p>
+            )}
+
+            <div className="reservas-list">
+              {(pendientes || []).map((r) => (
+                <div key={r.id} className="reserva-card">
+                  <div className="reserva-info">
+                    <div className="reserva-aula">Aula #{r.aulaId}</div>
+                    <div className="reserva-detalle">
+                      {
+                        [
+                          "",
+                          "Lunes",
+                          "Martes",
+                          "Miércoles",
+                          "Jueves",
+                          "Viernes",
+                          "Sábado",
+                          "Domingo",
+                        ][r.diaSemana]
+                      }{" "}
+                      {r.horaInicio}–{r.horaFin}
+                    </div>
+                    {r.observaciones && (
+                      <div className="reserva-obs">{r.observaciones}</div>
+                    )}
+                  </div>
+
+                  <div className="reserva-actions">
+                    <CampoFormulario
+                      placeholder="Motivo de rechazo (opcional)"
+                      name={`motivo_${r.id}`}
+                      as="textarea"
+                      value={motivos[r.id] || ""}
+                      onChange={(e) =>
+                        setMotivos((m) => ({ ...m, [r.id]: e.target.value }))
+                      }
+                    />
+                    <div className="reserva-buttons">
+                      <BotonPrimario onClick={() => onAprobar(r.id)}>
+                        Aprobar
+                      </BotonPrimario>
+                      <BotonPrimario onClick={() => onRechazar(r.id)}>
+                        Rechazar
+                      </BotonPrimario>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </DataLoader>
+        </div>
+      )}
+
       <BotonPrimario onClick={logout}>Cerrar sesión</BotonPrimario>
     </div>
   );
 };
 
-export default Home;
+export default DashboardDirectivo;
