@@ -12,3 +12,6 @@ export const deleteAulaById = (id) => api.delete(`/aulas/${id}`);
 
 export const searchAulas = (filters = {}) =>
   api.get("/busqueda/aulas", { params: filters });
+
+export const searchAulasDisponibles = (filters = {}) =>
+  api.get("/busqueda/aulas-disponibles", { params: filters });

@@ -4,7 +4,6 @@ import DashboardDirectivo from "./pages/DashboardDirectivo";
 import DashboardDocente from "./pages/DashboardDocente";
 import Login from "./pages/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
-
 const App = () => {
   return (
     <>
