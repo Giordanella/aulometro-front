@@ -2,17 +2,22 @@ import { useFormulario } from "../hooks/useFormulario";
 import { createAula } from "../api/aulas";
 import "./styles/FormularioAlta.css";
 import BotonPrimario from "./BotonPrimario";
-import { validarCapacidad, validarNumeroAula, validarUbicacion, validarCantidadComputadoras, validarEstado } from "../utils/validarAula";
+import {
+  validarCapacidad,
+  validarNumeroAula,
+  validarUbicacion,
+  validarCantidadComputadoras,
+  validarEstado,
+} from "../utils/validarAula";
 import CamposAula from "./CamposAula";
 
 const FormularioAltaAula = ({ onAulaCreada }) => {
-
   const validators = {
     numero: validarNumeroAula,
     capacidad: validarCapacidad,
     ubicacion: validarUbicacion,
     computadoras: validarCantidadComputadoras,
-    estado: validarEstado
+    estado: validarEstado,
   };
 
   const {
@@ -21,7 +26,7 @@ const FormularioAltaAula = ({ onAulaCreada }) => {
     mensaje,
     tipoMensaje,
     handleChange,
-    handleSubmit
+    handleSubmit,
   } = useFormulario(
     {
       numero: "",
@@ -29,7 +34,7 @@ const FormularioAltaAula = ({ onAulaCreada }) => {
       ubicacion: "",
       computadoras: "",
       tieneProyector: false,
-      estado: "disponible"
+      estado: "disponible",
     },
     createAula,
     onAulaCreada,

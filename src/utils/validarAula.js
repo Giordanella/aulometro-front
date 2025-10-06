@@ -54,7 +54,8 @@ export function validarEstado(formData) {
   return null;
 }
 
-// ✅ Helpers globales para validar todo junto
+const TIME_RX = /^\d{2}:\d{2}$/;
+
 export function validarFiltros(filters = {}) {
   const errors = {};
 
@@ -70,8 +71,21 @@ export function validarFiltros(filters = {}) {
       capacidad: filters.capacidadMin,
     });
   }
-  if (filters.estado) {
-    errors.estado = validarEstado({ estado: filters.estado });
+
+  if (filters.diaSemana !== "" && filters.diaSemana !== undefined) {
+    const d = Number(filters.diaSemana);
+    if (!Number.isFinite(d) || d < 1 || d > 6) {
+      errors.diaSemana = "El día debe ser Lunes a Sábado.";
+    }
+  }
+
+  const hi = filters.horaInicio;
+  const hf = filters.horaFin;
+  if ((hi && !TIME_RX.test(hi)) || (hf && !TIME_RX.test(hf))) {
+    if (hi && !TIME_RX.test(hi)) {errors.horaInicio = "Formato HH:mm";}
+    if (hf && !TIME_RX.test(hf)) {errors.horaFin = "Formato HH:mm";}
+  } else if (hi && hf) {
+    if (hf <= hi) {errors.horaFin = "La hora fin debe ser mayor que inicio";}
   }
 
   return errors;

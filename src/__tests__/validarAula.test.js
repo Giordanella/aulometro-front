@@ -1,6 +1,6 @@
 import { validarNumeroAula, validarCapacidad, validarUbicacion, validarCantidadComputadoras, validarEstado } from "../utils/validarAula";
 
-// Aula tests
+// Aula tests Lunes enum 1..6 8:00 a 9:00
 
 // Numero de aula tests
 

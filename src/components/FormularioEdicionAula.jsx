@@ -36,6 +36,7 @@ const FormularioEdicionAula = ({ aula, onAulaActualizada, onCancel }) => {
           formData={formData}
           handleChange={handleChange}
           errores={errores}
+          mostrarLabels
         />        
         {mensaje && <p className={`form-message ${tipoMensaje}`}>{mensaje}</p>}
 

@@ -1,10 +1,11 @@
 import "./styles/FormularioAlta.css";
 import CampoFormulario from "./CampoFormulario";
 
-const CamposUsuario = ({ formData, handleChange, errores }) => {
+const CamposUsuario = ({ formData, handleChange, errores, mostrarLabels = false }) => {
   return (
     <>
       <CampoFormulario
+        label={mostrarLabels ? "Nombre" : undefined}
         placeholder="Nombre"
         name="name"
         value={formData.name}
@@ -13,6 +14,7 @@ const CamposUsuario = ({ formData, handleChange, errores }) => {
       />
 
       <CampoFormulario
+        label={mostrarLabels ? "Correo electrónico" : undefined}
         placeholder="Correo electrónico"
         name="email"
         type="email"
@@ -23,6 +25,7 @@ const CamposUsuario = ({ formData, handleChange, errores }) => {
       />
 
       <CampoFormulario
+        label={mostrarLabels ? "Contraseña" : undefined}
         placeholder="Contraseña"
         name="password"
         type="password"
@@ -33,6 +36,7 @@ const CamposUsuario = ({ formData, handleChange, errores }) => {
       />
 
       <CampoFormulario
+        label={mostrarLabels ? "Rol" : undefined}
         placeholder="Rol"
         name="role"
         type="select"
