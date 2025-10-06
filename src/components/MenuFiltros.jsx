@@ -13,10 +13,15 @@ const MenuFiltros = ({ filters, setFilters, errors = {} }) => {
   const handleChange = (field) => (e) => {
     const { type, value: raw, checked } = e.target;
     let value;
-    if (type === "checkbox") {value = checked ? true : undefined;}
-    else if (type === "number") {value = raw === "" ? "" : Number(raw);}
-    else if (field === "diaSemana") {value = raw === "" ? "" : Number(raw);}
-    else {value = raw;}
+    if (type === "checkbox") {
+      value = checked ? true : undefined;
+    } else if (type === "number") {
+      value = raw === "" ? "" : Number(raw);
+    } else if (field === "diaSemana") {
+      value = raw === "" ? "" : Number(raw);
+    } else {
+      value = raw;
+    }
 
     setFilters((prev) => ({ ...prev, [field]: value }));
   };
@@ -74,7 +79,7 @@ const MenuFiltros = ({ filters, setFilters, errors = {} }) => {
         <p className="error">{errors.computadorasMin}</p>
       )}
 
-      <div className="menu-filtros__row">
+      <div className="checkbox-row">
         <label>
           <input
             type="checkbox"
