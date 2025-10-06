@@ -1,10 +1,11 @@
 import CampoFormulario from "./CampoFormulario";
 import "./styles/FormularioAlta.css";
 
-export default function CamposAula({ formData, handleChange, errores }) {
+export default function CamposAula({ formData, handleChange, errores, mostrarLabels = false }) {
   return (
     <>
       <CampoFormulario
+        label={mostrarLabels ? "Número de aula" : undefined}
         placeholder="Número de aula"
         name="numero"
         type="number"
@@ -14,6 +15,7 @@ export default function CamposAula({ formData, handleChange, errores }) {
       />
 
       <CampoFormulario
+        label={mostrarLabels ? "Capacidad" : undefined}
         placeholder="Capacidad"
         name="capacidad"
         type="number"
@@ -23,6 +25,7 @@ export default function CamposAula({ formData, handleChange, errores }) {
       />
 
       <CampoFormulario
+        label={mostrarLabels ? "Ubicación" : undefined}
         placeholder="Ubicación"
         name="ubicacion"
         type="text"
@@ -32,6 +35,7 @@ export default function CamposAula({ formData, handleChange, errores }) {
       />
 
       <CampoFormulario
+        label={mostrarLabels ? "Cantidad de computadoras" : undefined}
         placeholder="Cantidad de computadoras"
         name="computadoras"
         type="number"
