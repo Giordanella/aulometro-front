@@ -9,6 +9,7 @@ import FormularioEdicionAula from "./FormularioEdicionAula";
 import ModalConfirmacion from "./ModalConfirmacion";
 import { deleteAulaById } from "../api/aulas";
 import FormReserva from "./FormularioReserva";
+import FormularioReservaExamen from "./FormularioReservaExamen"; 
 
 const AulaItem = ({
   aulaId,
@@ -25,10 +26,14 @@ const AulaItem = ({
   const [isEditing, setIsEditing] = useState(false);
   const { showDeleteModal, setShowDeleteModal, handleDelete, loading } =
     useBorrarItem(deleteAulaById, onDelete);
+
   const [abrirReserva, setAbrirReserva] = useState(false);
+  const [abrirReservaExamen, setAbrirReservaExamen] = useState(false); 
+
   const puedeReservar =
     (typeof can === "function" && can(user, "crearReservas")) ||
     user?.role === "DOCENTE";
+
   if (isEditing) {
     return (
       <FormularioEdicionAula
@@ -55,32 +60,18 @@ const AulaItem = ({
       <span className="numeroAula">Aula {numero}</span>
       <span className="aula-data">Capacidad: {capacidad}</span>
       <span className="aula-data">{ubicacion}</span>
-      <span className="aula-data">
-        Cantidad de computadoras: {computadoras}
-      </span>
-      <span className="aula-data">
-        Con proyector: {tieneProyector ? "Sí" : "No"}
-      </span>
+      <span className="aula-data">Cantidad de computadoras: {computadoras}</span>
+      <span className="aula-data">Con proyector: {tieneProyector ? "Sí" : "No"}</span>
       <span className="estado">Estado: {estado}</span>
 
       <div className="aula-acciones">
         {can(user, "modificarAulas") && (
-          <BotonPrimario
-            type="button"
-            onClick={() => {
-              setIsEditing(true);
-            }}
-          >
+          <BotonPrimario type="button" onClick={() => setIsEditing(true)}>
             Modificar
           </BotonPrimario>
         )}
         {can(user, "borrarAulas") && (
-          <BotonPrimario
-            type="button"
-            onClick={() => {
-              setShowDeleteModal(true);
-            }}
-          >
+          <BotonPrimario type="button" onClick={() => setShowDeleteModal(true)}>
             Borrar
           </BotonPrimario>
         )}
@@ -89,19 +80,38 @@ const AulaItem = ({
             Reservar
           </BotonPrimario>
         )}
+        {puedeReservar && (
+          <BotonPrimario type="button" onClick={() => setAbrirReservaExamen(true)}>
+            Reservar de Examen
+          </BotonPrimario>
+        )}
       </div>
+
       {abrirReserva && (
         <FormReserva
           aulaId={aulaId}
           aulaNumero={numero}
           onOk={() => {
             setAbrirReserva(false);
-            // opcional: mostrar toast y/o navegar a “Mis reservas”
-            //navigate("/reservas/mias");
+            // opcional: toast / navegar a “Mis reservas”
           }}
           onCancel={() => setAbrirReserva(false)}
         />
       )}
+
+      {abrirReservaExamen && (
+        <FormularioReservaExamen
+          aulaId={aulaId}
+          aulaNumero={numero}
+          titulo="Solicitar reserva de examen"
+          onOk={() => {
+            setAbrirReservaExamen(false);
+            // opcional: toast / navegar a “Mis reservas”
+          }}
+          onCancel={() => setAbrirReservaExamen(false)}
+        />
+      )}
+
       <ModalConfirmacion
         abierto={showDeleteModal}
         mensaje={"¿Estás seguro de que deseas borrar esta aula?"}

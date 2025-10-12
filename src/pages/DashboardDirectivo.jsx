@@ -15,10 +15,11 @@ import BotonPrimario from "../components/BotonPrimario";
 import CampoFormulario from "../components/CampoFormulario";
 import DataLoader from "../components/DataLoader.jsx";
 import Ruedita from "../components/Ruedita.jsx";
-import { useAuth } from "../contexts/useAuth";
+
 import { useLista } from "../hooks/useLista.jsx";
 import "./styles/Home.css";
 import "./styles/Reservas.css";
+import NavBarAdmin from "../components/NavBarAdmin";
 
 const getPendientesRows = () =>
   getPendientes().then(({ data }) => ({
@@ -26,26 +27,25 @@ const getPendientesRows = () =>
   }));
 
 const DashboardDirectivo = () => {
-  const { logout } = useAuth();
+  
 
-  // pestañas internas
-  const [vista, setVista] = useState("usuario"); // 'usuario' | 'aula' | 'reservas'
+  
+  const [vista, setVista] = useState("usuario"); 
 
-  // Aulas
+ 
   const {
     items: aulas,
     setItems: setAulas,
     fetchItems: fetchAulas,
   } = useLista(getAulas);
 
-  // Docentes
+
   const {
     items: docentes,
     setItems: setDocentes,
     fetchItems: fetchDocentes,
   } = useLista(getDocentes);
 
-  // Reservas pendientes
   const {
     items: pendientes,
     setItems: setPendientes,
@@ -71,25 +71,14 @@ const DashboardDirectivo = () => {
       setMsg(e?.response?.data?.error || e.message || "No se pudo rechazar.");
     }
   }
+  
 
   return (
     <div className="home-container">
+      <NavBarAdmin vista={vista} onChange={setVista} />
       <h1>Dashboard Directivo</h1>
 
-      <div
-        className="home-actions"
-        style={{ display: "flex", gap: 8, marginBottom: 12 }}
-      >
-        <BotonPrimario onClick={() => setVista("usuario")}>
-          Gestión de usuarios
-        </BotonPrimario>
-        <BotonPrimario onClick={() => setVista("aula")}>
-          Gestión de aulas
-        </BotonPrimario>
-        <BotonPrimario onClick={() => setVista("reservas")}>
-          Reservas pendientes
-        </BotonPrimario>
-      </div>
+     
 
       {vista === "usuario" && (
         <div className="home-container">
@@ -184,7 +173,7 @@ const DashboardDirectivo = () => {
         </div>
       )}
 
-      <BotonPrimario onClick={logout}>Cerrar sesión</BotonPrimario>
+      
     </div>
   );
 };

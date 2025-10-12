@@ -20,3 +20,8 @@ export const getDisponibilidad = (params) =>
   api.get("/reservas/disponibilidad", { params });
 
 export const getReservaById = (id) => api.get(`/reservas/${id}`);
+
+export function createReservaExamen(payload) {
+  
+  return api.post("/reservas/examen", payload);
+}
