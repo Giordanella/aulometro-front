@@ -17,3 +17,9 @@
 .boton-primario:hover:not(:disabled) {
   opacity: 0.85;
 }
+
+/* opcional si tu BotonPrimario tiene márgenes por defecto */
+.nav .btn,
+.nav .BotonPrimario {
+  margin: 0;
+}
