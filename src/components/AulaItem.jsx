@@ -62,7 +62,6 @@ const AulaItem = ({
       <span className="aula-data">{ubicacion}</span>
       <span className="aula-data">Cantidad de computadoras: {computadoras}</span>
       <span className="aula-data">Con proyector: {tieneProyector ? "Sí" : "No"}</span>
-      <span className="estado">Estado: {estado}</span>
 
       <div className="aula-acciones">
         {can(user, "modificarAulas") && (
@@ -76,12 +75,30 @@ const AulaItem = ({
           </BotonPrimario>
         )}
         {puedeReservar && (
-          <BotonPrimario type="button" onClick={() => setAbrirReserva(true)}>
+          <BotonPrimario
+            type="button"
+            onClick={() => {
+              setAbrirReserva((prev) => {
+                const next = !prev; // toggle
+                if (next) {setAbrirReservaExamen(false);} // mutual exclusión
+                return next;
+              });
+            }}
+          >
             Reservar
           </BotonPrimario>
         )}
         {puedeReservar && (
-          <BotonPrimario type="button" onClick={() => setAbrirReservaExamen(true)}>
+          <BotonPrimario
+            type="button"
+            onClick={() => {
+              setAbrirReservaExamen((prev) => {
+                const next = !prev; // toggle
+                if (next) {setAbrirReserva(false);} // mutual exclusión
+                return next;
+              });
+            }}
+          >
             Reservar de Examen
           </BotonPrimario>
         )}

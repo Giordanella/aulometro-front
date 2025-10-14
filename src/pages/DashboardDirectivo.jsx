@@ -6,6 +6,8 @@ import {
   getPendientes,
   aprobarReserva,
   rechazarReserva,
+  aprobarReservaExamen,
+  rechazarReservaExamen,
 } from "../api/reservas";
 import FormularioAltaUsuario from "../components/FormularioAltaUsuario";
 import FormularioAltaAula from "../components/FormularioAltaAula";
@@ -13,6 +15,7 @@ import ListaDocentes from "../components/ListaDocentes";
 import ListaAulas from "../components/ListaAulas";
 import BotonPrimario from "../components/BotonPrimario";
 import CampoFormulario from "../components/CampoFormulario";
+import ModalConfirmacion from "../components/ModalConfirmacion";
 import DataLoader from "../components/DataLoader.jsx";
 import Ruedita from "../components/Ruedita.jsx";
 
@@ -52,23 +55,48 @@ const DashboardDirectivo = () => {
     fetchItems: fetchPendientes,
   } = useLista(getPendientesRows);
   const [motivos, setMotivos] = useState({});
+  const [rechazoAbierto, setRechazoAbierto] = useState(null); // guarda reserva r a rechazar o null
+  const [rechazando, setRechazando] = useState(false);
   const [msg, setMsg] = useState("");
 
-  async function onAprobar(id) {
+  const aulaNumMap = Object.fromEntries((aulas || []).map((a) => [a.id, a.numero]));
+  const formatFecha = (iso) => {
+    if (!iso || typeof iso !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(iso)) {return iso || "";}
+    const [y, m, d] = iso.split("-");
+    return `${d}/${m}/${y}`;
+  };
+  const formatHora = (h) => (typeof h === "string" ? h.slice(0,5) : h);
+
+  async function onAprobar(r) {
     try {
-      await aprobarReserva(id);
-      setPendientes((prev) => prev.filter((r) => r.id !== id));
+      if (r.tipo === "EXAMEN") {
+        await aprobarReservaExamen(r.id);
+      } else {
+        await aprobarReserva(r.id);
+      }
+      setPendientes((prev) => prev.filter((x) => x.id !== r.id));
     } catch (e) {
       setMsg(e?.response?.data?.error || e.message || "No se pudo aprobar.");
     }
   }
 
-  async function onRechazar(id) {
+  async function onRechazarConfirmado() {
+    if (!rechazoAbierto) {return;}
     try {
-      await rechazarReserva(id, motivos[id] || "");
-      setPendientes((prev) => prev.filter((r) => r.id !== id));
+      setRechazando(true);
+      const r = rechazoAbierto;
+      const motivo = motivos[r.id] || "";
+      if (r.tipo === "EXAMEN") {
+        await rechazarReservaExamen(r.id, motivo);
+      } else {
+        await rechazarReserva(r.id, motivo);
+      }
+      setPendientes((prev) => prev.filter((x) => x.id !== r.id));
+      setRechazoAbierto(null);
     } catch (e) {
       setMsg(e?.response?.data?.error || e.message || "No se pudo rechazar.");
+    } finally {
+      setRechazando(false);
     }
   }
   
@@ -113,63 +141,90 @@ const DashboardDirectivo = () => {
       {vista === "reservas" && (
         <div className="home-container">
           {msg && <p className="reservas-error">{msg}</p>}
-          <DataLoader
-            fetchData={fetchPendientes}
-            fallbackLoading={<Ruedita />}
-            fallbackError="Error al cargar pendientes"
-          >
-            {!pendientes?.length && (
-              <p className="reservas-empty">No hay pendientes.</p>
-            )}
+          {/* Cargamos aulas primero para poder mostrar el número */}
+          <DataLoader fetchData={fetchAulas} fallbackLoading={<Ruedita />} fallbackError="Error al cargar aulas">
+            <DataLoader
+              fetchData={fetchPendientes}
+              fallbackLoading={<Ruedita />}
+              fallbackError="Error al cargar pendientes"
+            >
+              {!pendientes?.length && (
+                <p className="reservas-empty">No hay pendientes.</p>
+              )}
 
-            <div className="reservas-list">
-              {(pendientes || []).map((r) => (
-                <div key={r.id} className="reserva-card">
-                  <div className="reserva-info">
-                    <div className="reserva-aula">Aula #{r.aulaId}</div>
-                    <div className="reserva-detalle">
-                      {
-                        [
-                          "",
-                          "Lunes",
-                          "Martes",
-                          "Miércoles",
-                          "Jueves",
-                          "Viernes",
-                          "Sábado",
-                          "Domingo",
-                        ][r.diaSemana]
-                      }{" "}
-                      {r.horaInicio}–{r.horaFin}
+              <div className="reservas-list">
+                {(pendientes || []).map((r) => (
+                  <div key={r.id} className="reserva-card">
+                    <div className="reserva-info">
+                      <div className="reserva-aula">Aula {aulaNumMap[r.aulaId] ?? r.aulaId}</div>
+                      {r.tipo === "EXAMEN" ? (
+                        <>
+                          <div className="reserva-detalle">
+                            <span className="reserva-badge reserva-examen">Examen</span>
+                          </div>
+                          <div className="reserva-detalle">
+                            {formatFecha(r.fecha)}
+                          </div>
+                          <div className="reserva-detalle">
+                            {formatHora(r.horaInicio)}–{formatHora(r.horaFin)}
+                          </div>
+                          <div className="reserva-obs">
+                            {r.materia} {r.mesa ? `- ${r.mesa}` : ""}
+                          </div>
+                        </>
+                      ) : (
+                        <div className="reserva-detalle">
+                          {[
+                            "",
+                            "Lunes",
+                            "Martes",
+                            "Miércoles",
+                            "Jueves",
+                            "Viernes",
+                            "Sábado",
+                            "Domingo",
+                          ][r.diaSemana]} {formatHora(r.horaInicio)}–{formatHora(r.horaFin)}
+                        </div>
+                      )}
+                      {r.observaciones && (
+                        <div className="reserva-obs">{r.observaciones}</div>
+                      )}
                     </div>
-                    {r.observaciones && (
-                      <div className="reserva-obs">{r.observaciones}</div>
-                    )}
-                  </div>
 
-                  <div className="reserva-actions">
-                    <CampoFormulario
-                      placeholder="Motivo de rechazo (opcional)"
-                      name={`motivo_${r.id}`}
-                      as="textarea"
-                      value={motivos[r.id] || ""}
-                      onChange={(e) =>
-                        setMotivos((m) => ({ ...m, [r.id]: e.target.value }))
-                      }
-                    />
-                    <div className="reserva-buttons">
-                      <BotonPrimario onClick={() => onAprobar(r.id)}>
+                    <div className="reserva-actions">
+                      <div className="reserva-buttons">
+                        <BotonPrimario onClick={() => onAprobar(r)}>
                         Aprobar
-                      </BotonPrimario>
-                      <BotonPrimario onClick={() => onRechazar(r.id)}>
+                        </BotonPrimario>
+                        <BotonPrimario onClick={() => setRechazoAbierto(r)}>
                         Rechazar
-                      </BotonPrimario>
+                        </BotonPrimario>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            </DataLoader>
           </DataLoader>
+          <ModalConfirmacion
+            abierto={!!rechazoAbierto}
+            mensaje={rechazoAbierto?.tipo === "EXAMEN" ? "¿Seguro que desea rechazar la solicitud de reserva de examen?" : "¿Seguro que desea rechazar la solicitud de reserva?"}
+            onConfirmar={onRechazarConfirmado}
+            onCancelar={() => setRechazoAbierto(null)}
+            loading={rechazando}
+            confirmLabel="Rechazar"
+            cancelLabel="Cancelar"
+          >
+            <CampoFormulario
+              placeholder="Motivo del rechazo (opcional)"
+              name={`motivo_${rechazoAbierto?.id ?? ""}`}
+              as="textarea"
+              value={(rechazoAbierto && motivos[rechazoAbierto.id]) || ""}
+              onChange={(e) =>
+                setMotivos((m) => ({ ...m, [rechazoAbierto.id]: e.target.value }))
+              }
+            />
+          </ModalConfirmacion>
         </div>
       )}
 

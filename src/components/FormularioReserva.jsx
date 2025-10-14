@@ -9,7 +9,6 @@ const TIME_RX = /^\d{2}:\d{2}$/;
 
 export default function FormularioReserva({
   aulaId,
-  aulaNumero,
   onOk,
   onCancel,
   titulo = "Solicitar reserva",
@@ -19,6 +18,8 @@ export default function FormularioReserva({
   const [available, setAvailable] = useState(null); // null sin chequear, true/false resultado
   const [msgDisp, setMsgDisp] = useState("");
 
+  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
   // Validadores
   const validators = {
     diaSemana: (fd) =>
@@ -27,20 +28,25 @@ export default function FormularioReserva({
     horaFin: (fd) => {
       if (!TIME_RX.test(fd.horaFin)) {return "Formato HH:mm";}
       if (TIME_RX.test(fd.horaInicio) && fd.horaFin <= fd.horaInicio)
-      {return "Fin > Inicio";}
+      {return "La hora de inicio no puede ser posterior o igual a la hora de fin";}
       return null;
     },
   };
 
   const submitFunc = async (fd) => {
     if (available !== true) {throw new Error("Primero chequeá disponibilidad.");}
-    return createReserva({
+    const payload = {
       aulaId: Number(aulaId),
       diaSemana: fd.diaSemana,
       horaInicio: fd.horaInicio,
       horaFin: fd.horaFin,
       observaciones: fd.observaciones || undefined,
-    });
+    };
+    const [resp] = await Promise.all([
+      createReserva(payload),
+      delay(800), // mínimo tiempo visible de "Enviando..."
+    ]);
+    return resp;
   };
 
   const {
@@ -48,12 +54,16 @@ export default function FormularioReserva({
     errores,
     mensaje,
     tipoMensaje,
+    submitting,
     handleChange,
     handleSubmit,
   } = useFormulario(
     { diaSemana: 1, horaInicio: "08:00", horaFin: "10:00", observaciones: "" },
     submitFunc,
-    (reservaCreada) => onOk?.(reservaCreada),
+    (reservaCreada) => {
+      // Mostrar mensaje de éxito un instante antes de cerrar el formulario
+      setTimeout(() => onOk?.(reservaCreada), 1800);
+    },
     validators,
     { resetOnSuccess: false }
   );
@@ -104,7 +114,6 @@ export default function FormularioReserva({
             formData={formData}
             handleChange={handleChangeInvalidate}
             errores={errores}
-            aulaNumero={aulaNumero}
           />
 
           <div
@@ -119,8 +128,8 @@ export default function FormularioReserva({
               {checking ? "Chequeando..." : "Chequear disponibilidad"}
             </BotonPrimario>
 
-            <BotonPrimario type="submit" disabled={available !== true}>
-              Solicitar
+            <BotonPrimario type="submit" disabled={available !== true || submitting}>
+              {submitting ? "Enviando..." : "Solicitar"}
             </BotonPrimario>
 
             <BotonPrimario type="button" className="btn" onClick={onCancel}>

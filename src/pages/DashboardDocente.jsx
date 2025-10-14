@@ -6,12 +6,14 @@ import { useLista } from "../hooks/useLista.jsx";
 import DataLoader from "../components/DataLoader.jsx";
 import Ruedita from "../components/Ruedita.jsx";
 import { getAulas } from "../api/aulas";
-import { getMisReservas, cancelarReserva } from "../api/reservas";
+import { getMisReservas, cancelarReserva, cancelarReservaExamen } from "../api/reservas";
+import FormularioEdicionReserva from "../components/FormularioEdicionReserva.jsx";
+import FormularioEdicionReservaExamen from "../components/FormularioEdicionReservaExamen.jsx";
 import "./styles/Home.css";
 import "./styles/Reservas.css";
 import NavBar from "../components/NavBar.jsx";
 
-const DIA_LABEL = ["", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+const DIA_LABEL = ["", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
 
 const getMisReservasRows = () =>
   getMisReservas().then(({ data }) => ({
@@ -27,15 +29,28 @@ const DashboardDirectivo = () => {
     useLista(getMisReservasRows);
 
   const [msg, setMsg] = useState("");
+  const [editando, setEditando] = useState(null); // reserva seleccionada o null
 
-  async function onCancelar(id) {
+  async function onCancelar(r) {
     try {
-      await cancelarReserva(id);
-      setReservas((prev) => prev.map((r) => (r.id === id ? { ...r, estado: "CANCELADA" } : r)));
+      if (r.tipo === "EXAMEN") {
+        await cancelarReservaExamen(r.id);
+      } else {
+        await cancelarReserva(r.id);
+      }
+      setReservas((prev) => prev.map((x) => (x.id === r.id ? { ...x, estado: "CANCELADA" } : x)));
     } catch (e) {
       setMsg(e?.response?.data?.error || e.message || "No se pudo cancelar.");
     }
   }
+
+  const aulaNumMap = Object.fromEntries((aulas || []).map((a) => [a.id, a.numero]));
+  const formatFecha = (iso) => {
+    if (!iso || typeof iso !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(iso)) {return iso || "";}
+    const [y, m, d] = iso.split("-");
+    return `${d}/${m}/${y}`;
+  };
+  const formatHora = (h) => (typeof h === "string" ? h.slice(0,5) : h);
 
   return (
     <>
@@ -61,20 +76,62 @@ const DashboardDirectivo = () => {
               {!reservas?.length && <p className="reservas-empty">No tenés reservas.</p>}
               <div className="reservas-list">
                 {(reservas || []).map((r) => (
-                  <div key={r.id} className="reserva-card">
-                    <div className="reserva-info">
-                      <div className="reserva-aula">Aula #{r.aulaId}</div>
-                      <div className="reserva-detalle">
-                        {DIA_LABEL[r.diaSemana]} {r.horaInicio}–{r.horaFin}
+                  <div key={r.id}>
+                    <div className="reserva-card">
+                      <div className="reserva-info">
+                        <div className="reserva-aula">Aula {aulaNumMap[r.aulaId] ?? r.aulaId}</div>
+                        {r.tipo === "EXAMEN" ? (
+                          <>
+                            <div className="reserva-detalle">
+                              <span className="reserva-badge reserva-examen">Examen</span>
+                            </div>
+                            <div className="reserva-detalle">{formatFecha(r.fecha)}</div>
+                            <div className="reserva-detalle">
+                              {formatHora(r.horaInicio)}–{formatHora(r.horaFin)}
+                            </div>
+                            <div className="reserva-obs">
+                              {r.materia} {r.mesa ? `- ${r.mesa}` : ""}
+                            </div>
+                          </>
+                        ) : (
+                          <div className="reserva-detalle">
+                            {DIA_LABEL[r.diaSemana]} {formatHora(r.horaInicio)}–{formatHora(r.horaFin)}
+                          </div>
+                        )}
+                        {r.observaciones && <div className="reserva-obs">{r.observaciones}</div>}
                       </div>
-                      {r.observaciones && <div className="reserva-obs">{r.observaciones}</div>}
+                      <div className="reserva-actions">
+                        <span className={`reserva-badge reserva-${r.estado?.toLowerCase()}`}>{r.estado}</span>
+                        {(r.estado === "PENDIENTE" || r.estado === "APROBADA") && (
+                          <div className="reserva-buttons">
+                            <BotonPrimario onClick={() => setEditando(r)}>Editar</BotonPrimario>
+                            <BotonPrimario onClick={() => onCancelar(r)}>Cancelar</BotonPrimario>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                    <div className="reserva-actions">
-                      <span className={`reserva-badge reserva-${r.estado?.toLowerCase()}`}>{r.estado}</span>
-                      {(r.estado === "PENDIENTE" || r.estado === "APROBADA") && (
-                        <BotonPrimario onClick={() => onCancelar(r.id)}>Cancelar</BotonPrimario>
-                      )}
-                    </div>
+
+                    {editando?.id === r.id && (
+                      r.tipo === "EXAMEN" ? (
+                        <FormularioEdicionReservaExamen
+                          reserva={editando}
+                          onOk={(entidad) => {
+                            setReservas((prev) => prev.map((x) => (x.id === entidad.id ? entidad : x)));
+                            setEditando(null);
+                          }}
+                          onCancel={() => setEditando(null)}
+                        />
+                      ) : (
+                        <FormularioEdicionReserva
+                          reserva={editando}
+                          onOk={(entidad) => {
+                            setReservas((prev) => prev.map((x) => (x.id === entidad.id ? entidad : x)));
+                            setEditando(null);
+                          }}
+                          onCancel={() => setEditando(null)}
+                        />
+                      )
+                    )}
                   </div>
                 ))}
               </div>
