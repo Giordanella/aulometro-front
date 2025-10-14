@@ -1,35 +1,16 @@
 import CampoFormulario from "./CampoFormulario";
 
-const DIAS = [
-  { value: 1, label: "Lunes" },
-  { value: 2, label: "Martes" },
-  { value: 3, label: "Miércoles" },
-  { value: 4, label: "Jueves" },
-  { value: 5, label: "Viernes" },
-  { value: 6, label: "Sábado" },
-];
-
-export default function CamposReserva({
-  formData,
-  handleChange,
-  errores,
-}) {
+export default function CamposReservaExamen({ formData, handleChange, errores }) {
   return (
     <>
       <CampoFormulario
-        label="Día de la semana"
-        name="diaSemana"
-        type="select"
-        value={formData.diaSemana}
+        label="Fecha"
+        name="fecha"
+        type="date"
+        value={formData.fecha}
         onChange={handleChange}
-        error={errores.diaSemana}
-      >
-        {DIAS.map((d) => (
-          <option key={d.value} value={d.value}>
-            {d.label}
-          </option>
-        ))}
-      </CampoFormulario>
+        error={errores.fecha}
+      />
 
       <CampoFormulario
         label="Hora inicio"
@@ -57,7 +38,6 @@ export default function CamposReserva({
         onChange={handleChange}
         error={errores.observaciones}
       />
-
     </>
   );
 }

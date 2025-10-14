@@ -76,6 +76,13 @@
   font-weight: 600;
 }
 
+/* badge para tipo de reserva */
+.reserva-examen {
+  background: #fee2e2; /* rojo claro */
+  color: #b91c1c;      /* rojo intenso para texto */
+  border: 1px solid #fecaca;
+}
+
 /* badges por estado */
 .reserva-pendiente {
   background: #fef3c7;
