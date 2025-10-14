@@ -28,7 +28,7 @@ export default function FormularioReserva({
     horaFin: (fd) => {
       if (!TIME_RX.test(fd.horaFin)) {return "Formato HH:mm";}
       if (TIME_RX.test(fd.horaInicio) && fd.horaFin <= fd.horaInicio)
-      {return "Fin > Inicio";}
+      {return "La hora de inicio no puede ser posterior o igual a la hora de fin";}
       return null;
     },
   };
