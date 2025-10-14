@@ -62,7 +62,6 @@ const AulaItem = ({
       <span className="aula-data">{ubicacion}</span>
       <span className="aula-data">Cantidad de computadoras: {computadoras}</span>
       <span className="aula-data">Con proyector: {tieneProyector ? "Sí" : "No"}</span>
-      <span className="estado">Estado: {estado}</span>
 
       <div className="aula-acciones">
         {can(user, "modificarAulas") && (
