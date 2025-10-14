@@ -41,6 +41,13 @@ const DashboardDirectivo = () => {
     }
   }
 
+  const aulaNumMap = Object.fromEntries((aulas || []).map((a) => [a.id, a.numero]));
+  const formatFecha = (iso) => {
+    if (!iso || typeof iso !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(iso)) {return iso || "";}
+    const [y, m, d] = iso.split("-");
+    return `${d}/${m}/${y}`;
+  };
+
   return (
     <>
  
@@ -67,11 +74,11 @@ const DashboardDirectivo = () => {
                 {(reservas || []).map((r) => (
                   <div key={r.id} className="reserva-card">
                     <div className="reserva-info">
-                      <div className="reserva-aula">Aula #{r.aulaId}</div>
+                      <div className="reserva-aula">Aula {aulaNumMap[r.aulaId] ?? r.aulaId}</div>
                       {r.tipo === "EXAMEN" ? (
                         <>
                           <div className="reserva-detalle">
-                            {new Date(r.fecha + "T00:00:00").toLocaleDateString()}
+                            {formatFecha(r.fecha)}
                           </div>
                           <div className="reserva-detalle">
                             {r.horaInicio}–{r.horaFin}

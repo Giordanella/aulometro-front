@@ -56,6 +56,13 @@ const DashboardDirectivo = () => {
   const [motivos, setMotivos] = useState({});
   const [msg, setMsg] = useState("");
 
+  const aulaNumMap = Object.fromEntries((aulas || []).map((a) => [a.id, a.numero]));
+  const formatFecha = (iso) => {
+    if (!iso || typeof iso !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(iso)) {return iso || "";}
+    const [y, m, d] = iso.split("-");
+    return `${d}/${m}/${y}`;
+  };
+
   async function onAprobar(r) {
     try {
       if (r.tipo === "EXAMEN") {
@@ -123,73 +130,76 @@ const DashboardDirectivo = () => {
       {vista === "reservas" && (
         <div className="home-container">
           {msg && <p className="reservas-error">{msg}</p>}
-          <DataLoader
-            fetchData={fetchPendientes}
-            fallbackLoading={<Ruedita />}
-            fallbackError="Error al cargar pendientes"
-          >
-            {!pendientes?.length && (
-              <p className="reservas-empty">No hay pendientes.</p>
-            )}
+          {/* Cargamos aulas primero para poder mostrar el número */}
+          <DataLoader fetchData={fetchAulas} fallbackLoading={<Ruedita />} fallbackError="Error al cargar aulas">
+            <DataLoader
+              fetchData={fetchPendientes}
+              fallbackLoading={<Ruedita />}
+              fallbackError="Error al cargar pendientes"
+            >
+              {!pendientes?.length && (
+                <p className="reservas-empty">No hay pendientes.</p>
+              )}
 
-            <div className="reservas-list">
-              {(pendientes || []).map((r) => (
-                <div key={r.id} className="reserva-card">
-                  <div className="reserva-info">
-                    <div className="reserva-aula">Aula #{r.aulaId}</div>
-                    {r.tipo === "EXAMEN" ? (
-                      <>
+              <div className="reservas-list">
+                {(pendientes || []).map((r) => (
+                  <div key={r.id} className="reserva-card">
+                    <div className="reserva-info">
+                      <div className="reserva-aula">Aula {aulaNumMap[r.aulaId] ?? r.aulaId}</div>
+                      {r.tipo === "EXAMEN" ? (
+                        <>
+                          <div className="reserva-detalle">
+                            {formatFecha(r.fecha)}
+                          </div>
+                          <div className="reserva-detalle">
+                            {r.horaInicio}–{r.horaFin}
+                          </div>
+                          <div className="reserva-obs">
+                            {r.materia} {r.mesa ? `- ${r.mesa}` : ""}
+                          </div>
+                        </>
+                      ) : (
                         <div className="reserva-detalle">
-                          {new Date(r.fecha + "T00:00:00").toLocaleDateString()}
+                          {[
+                            "",
+                            "Lunes",
+                            "Martes",
+                            "Miércoles",
+                            "Jueves",
+                            "Viernes",
+                            "Sábado",
+                            "Domingo",
+                          ][r.diaSemana]} {r.horaInicio}–{r.horaFin}
                         </div>
-                        <div className="reserva-detalle">
-                          {r.horaInicio}–{r.horaFin}
-                        </div>
-                        <div className="reserva-obs">
-                          {r.materia} {r.mesa ? `- ${r.mesa}` : ""}
-                        </div>
-                      </>
-                    ) : (
-                      <div className="reserva-detalle">
-                        {[
-                          "",
-                          "Lunes",
-                          "Martes",
-                          "Miércoles",
-                          "Jueves",
-                          "Viernes",
-                          "Sábado",
-                          "Domingo",
-                        ][r.diaSemana]} {r.horaInicio}–{r.horaFin}
-                      </div>
-                    )}
-                    {r.observaciones && (
-                      <div className="reserva-obs">{r.observaciones}</div>
-                    )}
-                  </div>
+                      )}
+                      {r.observaciones && (
+                        <div className="reserva-obs">{r.observaciones}</div>
+                      )}
+                    </div>
 
-                  <div className="reserva-actions">
-                    <CampoFormulario
-                      placeholder="Motivo de rechazo (opcional)"
-                      name={`motivo_${r.id}`}
-                      as="textarea"
-                      value={motivos[r.id] || ""}
-                      onChange={(e) =>
-                        setMotivos((m) => ({ ...m, [r.id]: e.target.value }))
-                      }
-                    />
-                    <div className="reserva-buttons">
-                      <BotonPrimario onClick={() => onAprobar(r)}>
+                    <div className="reserva-actions">
+                      <CampoFormulario
+                        placeholder="Motivo de rechazo (opcional)"
+                        name={`motivo_${r.id}`}
+                        as="textarea"
+                        value={motivos[r.id] || ""}
+                        onChange={(e) =>
+                          setMotivos((m) => ({ ...m, [r.id]: e.target.value }))
+                        }
+                      />
+                      <div className="reserva-buttons">
+                        <BotonPrimario onClick={() => onAprobar(r)}>
                         Aprobar
-                      </BotonPrimario>
-                      <BotonPrimario onClick={() => onRechazar(r)}>
+                        </BotonPrimario>
+                        <BotonPrimario onClick={() => onRechazar(r)}>
                         Rechazar
-                      </BotonPrimario>
+                        </BotonPrimario>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            </DataLoader>
           </DataLoader>
         </div>
       )}
