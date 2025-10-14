@@ -76,12 +76,30 @@ const AulaItem = ({
           </BotonPrimario>
         )}
         {puedeReservar && (
-          <BotonPrimario type="button" onClick={() => setAbrirReserva(true)}>
+          <BotonPrimario
+            type="button"
+            onClick={() => {
+              setAbrirReserva((prev) => {
+                const next = !prev; // toggle
+                if (next) {setAbrirReservaExamen(false);} // mutual exclusión
+                return next;
+              });
+            }}
+          >
             Reservar
           </BotonPrimario>
         )}
         {puedeReservar && (
-          <BotonPrimario type="button" onClick={() => setAbrirReservaExamen(true)}>
+          <BotonPrimario
+            type="button"
+            onClick={() => {
+              setAbrirReservaExamen((prev) => {
+                const next = !prev; // toggle
+                if (next) {setAbrirReserva(false);} // mutual exclusión
+                return next;
+              });
+            }}
+          >
             Reservar de Examen
           </BotonPrimario>
         )}
