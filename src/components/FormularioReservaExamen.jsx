@@ -9,7 +9,6 @@ const DATE_RX = /^\d{4}-\d{2}-\d{2}$/;
 
 export default function FormularioReservaExamen({
   aulaId,
-  aulaNumero,
   onOk,
   onCancel,
   titulo = "Solicitar reserva de examen",
@@ -30,7 +29,8 @@ export default function FormularioReservaExamen({
   };
 
   const submitFunc = async (fd) => {
-    return createReservaExamen({
+    const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+    const payload = {
       aulaId: Number(aulaId),
       fecha: fd.fecha,
       horaInicio: fd.horaInicio,
@@ -38,7 +38,12 @@ export default function FormularioReservaExamen({
       materia: fd.materia || undefined,
       mesa: fd.mesa || undefined,
       observaciones: fd.observaciones || undefined,
-    });
+    };
+    const [resp] = await Promise.all([
+      createReservaExamen(payload),
+      delay(800), // mínimo tiempo visible de "Enviando..."
+    ]);
+    return resp;
   };
 
   const {
@@ -46,6 +51,7 @@ export default function FormularioReservaExamen({
     errores,
     mensaje,
     tipoMensaje,
+    submitting,
     handleChange,
     handleSubmit,
   } = useFormulario(
@@ -58,7 +64,9 @@ export default function FormularioReservaExamen({
       observaciones: "",
     },
     submitFunc,
-    (reservaCreada) => onOk?.(reservaCreada),
+    (reservaCreada) => {
+      setTimeout(() => onOk?.(reservaCreada), 1800);
+    },
     validators,
     { resetOnSuccess: false }
   );
@@ -74,7 +82,6 @@ export default function FormularioReservaExamen({
             formData={formData}
             handleChange={handleChange}
             errores={errores}
-            aulaNumero={aulaNumero}
           />
 
        
@@ -103,7 +110,9 @@ export default function FormularioReservaExamen({
           </div>
 
           <div className="form-actions" style={{ display: "flex", gap: 8, marginTop: 8 }}>
-            <BotonPrimario type="submit">Solicitar</BotonPrimario>
+            <BotonPrimario type="submit" disabled={submitting}>
+              {submitting ? "Enviando..." : "Solicitar"}
+            </BotonPrimario>
             <BotonPrimario type="button" className="btn" onClick={onCancel}>
               Cancelar
             </BotonPrimario>

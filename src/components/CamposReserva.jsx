@@ -13,7 +13,6 @@ export default function CamposReserva({
   formData,
   handleChange,
   errores,
-  aulaNumero,
 }) {
   return (
     <>
@@ -31,14 +30,6 @@ export default function CamposReserva({
           </option>
         ))}
       </CampoFormulario>
-
-      <label className="form-label">Número de aula</label>
-      <CampoFormulario
-        name="aulaNumero"
-        type="number"
-        value={aulaNumero}
-        readOnly
-      />
 
       <label className="form-label">Hora inicio </label>
       <CampoFormulario

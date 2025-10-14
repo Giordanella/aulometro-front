@@ -11,6 +11,7 @@ export function useFormulario(
   const [errores, setErrores] = useState({});
   const [mensaje, setMensaje] = useState("");
   const [tipoMensaje, setTipoMensaje] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -48,6 +49,7 @@ export function useFormulario(
     }
 
     try {
+      setSubmitting(true);
       const response = await submitFunc(formData);
       const entidad = response?.data ?? formData; // soporta create (devuelve data) o update (no devuelve nada)
 
@@ -75,6 +77,8 @@ export function useFormulario(
         setMensaje("");
         setTipoMensaje("");
       }, 5000);
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -84,6 +88,7 @@ export function useFormulario(
     errores,
     mensaje,
     tipoMensaje,
+    submitting,
     handleChange,
     handleSubmit
   };

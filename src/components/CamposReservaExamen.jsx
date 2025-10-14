@@ -1,6 +1,6 @@
 import CampoFormulario from "./CampoFormulario";
 
-export default function CamposReservaExamen({ formData, handleChange, errores, aulaNumero }) {
+export default function CamposReservaExamen({ formData, handleChange, errores }) {
   return (
     <>
       <label className="form-label">Fecha</label>
@@ -11,9 +11,6 @@ export default function CamposReservaExamen({ formData, handleChange, errores, a
         onChange={handleChange}
         error={errores.fecha}
       />
-
-      <label className="form-label">Número de aula</label>
-      <CampoFormulario name="aulaNumero" type="number" value={aulaNumero} readOnly />
 
       <label className="form-label">Hora inicio</label>
       <CampoFormulario
