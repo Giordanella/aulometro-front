@@ -9,7 +9,6 @@ import { getAulas } from "../api/aulas";
 import { getMisReservas, cancelarReserva, cancelarReservaExamen } from "../api/reservas";
 import FormularioEdicionReserva from "../components/FormularioEdicionReserva.jsx";
 import FormularioEdicionReservaExamen from "../components/FormularioEdicionReservaExamen.jsx";
-import ModalConfirmacion from "../components/ModalConfirmacion.jsx";
 import "./styles/Home.css";
 import "./styles/Reservas.css";
 import NavBar from "../components/NavBar.jsx";
@@ -83,6 +82,9 @@ const DashboardDirectivo = () => {
                         <div className="reserva-aula">Aula {aulaNumMap[r.aulaId] ?? r.aulaId}</div>
                         {r.tipo === "EXAMEN" ? (
                           <>
+                            <div className="reserva-detalle">
+                              <span className="reserva-badge reserva-examen">Examen</span>
+                            </div>
                             <div className="reserva-detalle">{formatFecha(r.fecha)}</div>
                             <div className="reserva-detalle">
                               {formatHora(r.horaInicio)}–{formatHora(r.horaFin)}
@@ -138,29 +140,6 @@ const DashboardDirectivo = () => {
         )}
 
         <p>Has ingresado con tu email {user?.email}</p>
-
-        {editando && (
-          editando.tipo === "EXAMEN" ? (
-            <FormularioEdicionReservaExamen
-              reserva={editando}
-              onOk={({ data }) => {
-                // Reemplazar en la lista
-                setReservas((prev) => prev.map((x) => (x.id === data.id ? data : x)));
-                setEditando(null);
-              }}
-              onCancel={() => setEditando(null)}
-            />
-          ) : (
-            <FormularioEdicionReserva
-              reserva={editando}
-              onOk={({ data }) => {
-                setReservas((prev) => prev.map((x) => (x.id === data.id ? data : x)));
-                setEditando(null);
-              }}
-              onCancel={() => setEditando(null)}
-            />
-          )
-        )}
         
       </div>
     </>

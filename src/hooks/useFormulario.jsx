@@ -51,7 +51,8 @@ export function useFormulario(
     try {
       setSubmitting(true);
       const response = await submitFunc(formData);
-      const entidad = response?.data ?? formData; // soporta create (devuelve data) o update (no devuelve nada)
+      // Soporta: axios response (response.data) o entidad directa (response)
+      const entidad = (response && response.data) ? response.data : (response ?? formData);
 
       if (onSuccess) {onSuccess(entidad);}
 
