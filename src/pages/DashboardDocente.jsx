@@ -6,12 +6,12 @@ import { useLista } from "../hooks/useLista.jsx";
 import DataLoader from "../components/DataLoader.jsx";
 import Ruedita from "../components/Ruedita.jsx";
 import { getAulas } from "../api/aulas";
-import { getMisReservas, cancelarReserva } from "../api/reservas";
+import { getMisReservas, cancelarReserva, cancelarReservaExamen } from "../api/reservas";
 import "./styles/Home.css";
 import "./styles/Reservas.css";
 import NavBar from "../components/NavBar.jsx";
 
-const DIA_LABEL = ["", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+const DIA_LABEL = ["", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
 
 const getMisReservasRows = () =>
   getMisReservas().then(({ data }) => ({
@@ -28,10 +28,14 @@ const DashboardDirectivo = () => {
 
   const [msg, setMsg] = useState("");
 
-  async function onCancelar(id) {
+  async function onCancelar(r) {
     try {
-      await cancelarReserva(id);
-      setReservas((prev) => prev.map((r) => (r.id === id ? { ...r, estado: "CANCELADA" } : r)));
+      if (r.tipo === "EXAMEN") {
+        await cancelarReservaExamen(r.id);
+      } else {
+        await cancelarReserva(r.id);
+      }
+      setReservas((prev) => prev.map((x) => (x.id === r.id ? { ...x, estado: "CANCELADA" } : x)));
     } catch (e) {
       setMsg(e?.response?.data?.error || e.message || "No se pudo cancelar.");
     }
@@ -64,15 +68,29 @@ const DashboardDirectivo = () => {
                   <div key={r.id} className="reserva-card">
                     <div className="reserva-info">
                       <div className="reserva-aula">Aula #{r.aulaId}</div>
-                      <div className="reserva-detalle">
-                        {DIA_LABEL[r.diaSemana]} {r.horaInicio}–{r.horaFin}
-                      </div>
+                      {r.tipo === "EXAMEN" ? (
+                        <>
+                          <div className="reserva-detalle">
+                            {new Date(r.fecha + "T00:00:00").toLocaleDateString()}
+                          </div>
+                          <div className="reserva-detalle">
+                            {r.horaInicio}–{r.horaFin}
+                          </div>
+                          <div className="reserva-obs">
+                            {r.materia} {r.mesa ? `- ${r.mesa}` : ""}
+                          </div>
+                        </>
+                      ) : (
+                        <div className="reserva-detalle">
+                          {DIA_LABEL[r.diaSemana]} {r.horaInicio}–{r.horaFin}
+                        </div>
+                      )}
                       {r.observaciones && <div className="reserva-obs">{r.observaciones}</div>}
                     </div>
                     <div className="reserva-actions">
                       <span className={`reserva-badge reserva-${r.estado?.toLowerCase()}`}>{r.estado}</span>
                       {(r.estado === "PENDIENTE" || r.estado === "APROBADA") && (
-                        <BotonPrimario onClick={() => onCancelar(r.id)}>Cancelar</BotonPrimario>
+                        <BotonPrimario onClick={() => onCancelar(r)}>Cancelar</BotonPrimario>
                       )}
                     </div>
                   </div>

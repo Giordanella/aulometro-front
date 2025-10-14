@@ -22,6 +22,9 @@ export const getDisponibilidad = (params) =>
 export const getReservaById = (id) => api.get(`/reservas/${id}`);
 
 export function createReservaExamen(payload) {
-  
   return api.post("/reservas/examen", payload);
 }
+
+export const aprobarReservaExamen = (id) => api.post(`/reservas/examen/${id}/aprobar`);
+export const rechazarReservaExamen = (id, motivo) => api.post(`/reservas/examen/${id}/rechazar`, { motivo });
+export const cancelarReservaExamen = (id) => api.post(`/reservas/examen/${id}/cancelar`);

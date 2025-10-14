@@ -1,10 +1,11 @@
 import { useFormulario } from "../hooks/useFormulario";
 import { createReservaExamen } from "../api/reservas";
 import BotonPrimario from "./BotonPrimario";
-import CamposReserva from "./CamposReserva";
+import CamposReservaExamen from "./CamposReservaExamen";
 import "./styles/FormularioReserva.css";
 
 const TIME_RX = /^\d{2}:\d{2}$/;
+const DATE_RX = /^\d{4}-\d{2}-\d{2}$/;
 
 export default function FormularioReservaExamen({
   aulaId,
@@ -15,8 +16,7 @@ export default function FormularioReservaExamen({
 }) {
   // Validadores (para examen NO pedimos disponibilidad)
   const validators = {
-    diaSemana: (fd) =>
-      fd.diaSemana >= 1 && fd.diaSemana <= 7 ? null : "Día 1..7 (Lun..Dom)",
+    fecha: (fd) => (DATE_RX.test(fd.fecha) ? null : "Fecha inválida (YYYY-MM-DD)"),
     horaInicio: (fd) => (TIME_RX.test(fd.horaInicio) ? null : "Formato HH:mm"),
     horaFin: (fd) => {
       if (!TIME_RX.test(fd.horaFin)) {return "Formato HH:mm";}
@@ -32,7 +32,7 @@ export default function FormularioReservaExamen({
   const submitFunc = async (fd) => {
     return createReservaExamen({
       aulaId: Number(aulaId),
-      diaSemana: fd.diaSemana,
+      fecha: fd.fecha,
       horaInicio: fd.horaInicio,
       horaFin: fd.horaFin,
       materia: fd.materia || undefined,
@@ -50,7 +50,7 @@ export default function FormularioReservaExamen({
     handleSubmit,
   } = useFormulario(
     {
-      diaSemana: 1,
+      fecha: "",
       horaInicio: "08:00",
       horaFin: "10:00",
       materia: "",
@@ -70,7 +70,7 @@ export default function FormularioReservaExamen({
           <h2>{titulo}</h2>
 
       
-          <CamposReserva
+          <CamposReservaExamen
             formData={formData}
             handleChange={handleChange}
             errores={errores}

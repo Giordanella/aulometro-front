@@ -6,6 +6,8 @@ import {
   getPendientes,
   aprobarReserva,
   rechazarReserva,
+  aprobarReservaExamen,
+  rechazarReservaExamen,
 } from "../api/reservas";
 import FormularioAltaUsuario from "../components/FormularioAltaUsuario";
 import FormularioAltaAula from "../components/FormularioAltaAula";
@@ -54,19 +56,27 @@ const DashboardDirectivo = () => {
   const [motivos, setMotivos] = useState({});
   const [msg, setMsg] = useState("");
 
-  async function onAprobar(id) {
+  async function onAprobar(r) {
     try {
-      await aprobarReserva(id);
-      setPendientes((prev) => prev.filter((r) => r.id !== id));
+      if (r.tipo === "EXAMEN") {
+        await aprobarReservaExamen(r.id);
+      } else {
+        await aprobarReserva(r.id);
+      }
+      setPendientes((prev) => prev.filter((x) => x.id !== r.id));
     } catch (e) {
       setMsg(e?.response?.data?.error || e.message || "No se pudo aprobar.");
     }
   }
 
-  async function onRechazar(id) {
+  async function onRechazar(r) {
     try {
-      await rechazarReserva(id, motivos[id] || "");
-      setPendientes((prev) => prev.filter((r) => r.id !== id));
+      if (r.tipo === "EXAMEN") {
+        await rechazarReservaExamen(r.id, motivos[r.id] || "");
+      } else {
+        await rechazarReserva(r.id, motivos[r.id] || "");
+      }
+      setPendientes((prev) => prev.filter((x) => x.id !== r.id));
     } catch (e) {
       setMsg(e?.response?.data?.error || e.message || "No se pudo rechazar.");
     }
@@ -127,9 +137,21 @@ const DashboardDirectivo = () => {
                 <div key={r.id} className="reserva-card">
                   <div className="reserva-info">
                     <div className="reserva-aula">Aula #{r.aulaId}</div>
-                    <div className="reserva-detalle">
-                      {
-                        [
+                    {r.tipo === "EXAMEN" ? (
+                      <>
+                        <div className="reserva-detalle">
+                          {new Date(r.fecha + "T00:00:00").toLocaleDateString()}
+                        </div>
+                        <div className="reserva-detalle">
+                          {r.horaInicio}–{r.horaFin}
+                        </div>
+                        <div className="reserva-obs">
+                          {r.materia} {r.mesa ? `- ${r.mesa}` : ""}
+                        </div>
+                      </>
+                    ) : (
+                      <div className="reserva-detalle">
+                        {[
                           "",
                           "Lunes",
                           "Martes",
@@ -138,10 +160,9 @@ const DashboardDirectivo = () => {
                           "Viernes",
                           "Sábado",
                           "Domingo",
-                        ][r.diaSemana]
-                      }{" "}
-                      {r.horaInicio}–{r.horaFin}
-                    </div>
+                        ][r.diaSemana]} {r.horaInicio}–{r.horaFin}
+                      </div>
+                    )}
                     {r.observaciones && (
                       <div className="reserva-obs">{r.observaciones}</div>
                     )}
@@ -158,10 +179,10 @@ const DashboardDirectivo = () => {
                       }
                     />
                     <div className="reserva-buttons">
-                      <BotonPrimario onClick={() => onAprobar(r.id)}>
+                      <BotonPrimario onClick={() => onAprobar(r)}>
                         Aprobar
                       </BotonPrimario>
-                      <BotonPrimario onClick={() => onRechazar(r.id)}>
+                      <BotonPrimario onClick={() => onRechazar(r)}>
                         Rechazar
                       </BotonPrimario>
                     </div>
