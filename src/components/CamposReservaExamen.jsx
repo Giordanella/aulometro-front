@@ -3,8 +3,8 @@ import CampoFormulario from "./CampoFormulario";
 export default function CamposReservaExamen({ formData, handleChange, errores }) {
   return (
     <>
-      <label className="form-label">Fecha</label>
       <CampoFormulario
+        label="Fecha"
         name="fecha"
         type="date"
         value={formData.fecha}
@@ -12,8 +12,8 @@ export default function CamposReservaExamen({ formData, handleChange, errores })
         error={errores.fecha}
       />
 
-      <label className="form-label">Hora inicio</label>
       <CampoFormulario
+        label="Hora inicio"
         name="horaInicio"
         type="time"
         value={formData.horaInicio}
@@ -21,8 +21,8 @@ export default function CamposReservaExamen({ formData, handleChange, errores })
         error={errores.horaInicio}
       />
 
-      <label className="form-label">Hora fin</label>
       <CampoFormulario
+        label="Hora fin"
         name="horaFin"
         type="time"
         value={formData.horaFin}
@@ -30,8 +30,8 @@ export default function CamposReservaExamen({ formData, handleChange, errores })
         error={errores.horaFin}
       />
 
-      <label className="form-label">Observaciones (opcional)</label>
       <CampoFormulario
+        label="Observaciones (opcional)"
         name="observaciones"
         as="textarea"
         value={formData.observaciones}

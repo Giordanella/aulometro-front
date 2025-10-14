@@ -16,8 +16,8 @@ export default function CamposReserva({
 }) {
   return (
     <>
-      <label className="form-label">Día de la semana</label>
       <CampoFormulario
+        label="Día de la semana"
         name="diaSemana"
         type="select"
         value={formData.diaSemana}
@@ -31,8 +31,8 @@ export default function CamposReserva({
         ))}
       </CampoFormulario>
 
-      <label className="form-label">Hora inicio </label>
       <CampoFormulario
+        label="Hora inicio"
         name="horaInicio"
         type="time"
         value={formData.horaInicio}
@@ -40,8 +40,8 @@ export default function CamposReserva({
         error={errores.horaInicio}
       />
 
-      <label className="form-label">Hora fin </label>
       <CampoFormulario
+        label="Hora fin"
         name="horaFin"
         type="time"
         value={formData.horaFin}
@@ -49,8 +49,8 @@ export default function CamposReserva({
         error={errores.horaFin}
       />
 
-      <label className="form-label">Observaciones (opcional)</label>
       <CampoFormulario
+        label="Observaciones (opcional)"
         name="observaciones"
         as="textarea"
         value={formData.observaciones}

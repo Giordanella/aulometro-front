@@ -2,6 +2,7 @@ import { useFormulario } from "../hooks/useFormulario";
 import { createReservaExamen } from "../api/reservas";
 import BotonPrimario from "./BotonPrimario";
 import CamposReservaExamen from "./CamposReservaExamen";
+import CampoFormulario from "./CampoFormulario";
 import "./styles/FormularioReserva.css";
 
 const TIME_RX = /^\d{2}:\d{2}$/;
@@ -85,29 +86,23 @@ export default function FormularioReservaExamen({
           />
 
        
-          <div className="form-field">
-            <label htmlFor="materia">Materia</label>
-            <input
-              id="materia"
-              name="materia"
-              value={formData.materia}
-              onChange={handleChange}
-              placeholder="Ej: Álgebra I"
-            />
-            {errores.materia && <span className="error">{errores.materia}</span>}
-          </div>
+          <CampoFormulario
+            label="Materia"
+            name="materia"
+            placeholder="Ej: Álgebra I"
+            value={formData.materia}
+            onChange={handleChange}
+            error={errores.materia}
+          />
 
-          <div className="form-field">
-            <label htmlFor="mesa">Mesa</label>
-            <input
-              id="mesa"
-              name="mesa"
-              value={formData.mesa}
-              onChange={handleChange}
-              placeholder="Ej: Octubre - 1er llamado"
-            />
-            {errores.mesa && <span className="error">{errores.mesa}</span>}
-          </div>
+          <CampoFormulario
+            label="Mesa"
+            name="mesa"
+            placeholder="Ej: Octubre - 1er llamado"
+            value={formData.mesa}
+            onChange={handleChange}
+            error={errores.mesa}
+          />
 
           <div className="form-actions" style={{ display: "flex", gap: 8, marginTop: 8 }}>
             <BotonPrimario type="submit" disabled={submitting}>
