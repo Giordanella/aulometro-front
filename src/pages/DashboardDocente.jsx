@@ -7,6 +7,9 @@ import DataLoader from "../components/DataLoader.jsx";
 import Ruedita from "../components/Ruedita.jsx";
 import { getAulas } from "../api/aulas";
 import { getMisReservas, cancelarReserva, cancelarReservaExamen } from "../api/reservas";
+import FormularioEdicionReserva from "../components/FormularioEdicionReserva.jsx";
+import FormularioEdicionReservaExamen from "../components/FormularioEdicionReservaExamen.jsx";
+import ModalConfirmacion from "../components/ModalConfirmacion.jsx";
 import "./styles/Home.css";
 import "./styles/Reservas.css";
 import NavBar from "../components/NavBar.jsx";
@@ -27,6 +30,7 @@ const DashboardDirectivo = () => {
     useLista(getMisReservasRows);
 
   const [msg, setMsg] = useState("");
+  const [editando, setEditando] = useState(null); // reserva seleccionada o null
 
   async function onCancelar(r) {
     try {
@@ -73,34 +77,59 @@ const DashboardDirectivo = () => {
               {!reservas?.length && <p className="reservas-empty">No tenés reservas.</p>}
               <div className="reservas-list">
                 {(reservas || []).map((r) => (
-                  <div key={r.id} className="reserva-card">
-                    <div className="reserva-info">
-                      <div className="reserva-aula">Aula {aulaNumMap[r.aulaId] ?? r.aulaId}</div>
-                      {r.tipo === "EXAMEN" ? (
-                        <>
+                  <div key={r.id}>
+                    <div className="reserva-card">
+                      <div className="reserva-info">
+                        <div className="reserva-aula">Aula {aulaNumMap[r.aulaId] ?? r.aulaId}</div>
+                        {r.tipo === "EXAMEN" ? (
+                          <>
+                            <div className="reserva-detalle">{formatFecha(r.fecha)}</div>
+                            <div className="reserva-detalle">
+                              {formatHora(r.horaInicio)}–{formatHora(r.horaFin)}
+                            </div>
+                            <div className="reserva-obs">
+                              {r.materia} {r.mesa ? `- ${r.mesa}` : ""}
+                            </div>
+                          </>
+                        ) : (
                           <div className="reserva-detalle">
-                            {formatFecha(r.fecha)}
+                            {DIA_LABEL[r.diaSemana]} {formatHora(r.horaInicio)}–{formatHora(r.horaFin)}
                           </div>
-                          <div className="reserva-detalle">
-                            {formatHora(r.horaInicio)}–{formatHora(r.horaFin)}
+                        )}
+                        {r.observaciones && <div className="reserva-obs">{r.observaciones}</div>}
+                      </div>
+                      <div className="reserva-actions">
+                        <span className={`reserva-badge reserva-${r.estado?.toLowerCase()}`}>{r.estado}</span>
+                        {(r.estado === "PENDIENTE" || r.estado === "APROBADA") && (
+                          <div className="reserva-buttons">
+                            <BotonPrimario onClick={() => setEditando(r)}>Editar</BotonPrimario>
+                            <BotonPrimario onClick={() => onCancelar(r)}>Cancelar</BotonPrimario>
                           </div>
-                          <div className="reserva-obs">
-                            {r.materia} {r.mesa ? `- ${r.mesa}` : ""}
-                          </div>
-                        </>
+                        )}
+                      </div>
+                    </div>
+
+                    {editando?.id === r.id && (
+                      r.tipo === "EXAMEN" ? (
+                        <FormularioEdicionReservaExamen
+                          reserva={editando}
+                          onOk={(entidad) => {
+                            setReservas((prev) => prev.map((x) => (x.id === entidad.id ? entidad : x)));
+                            setEditando(null);
+                          }}
+                          onCancel={() => setEditando(null)}
+                        />
                       ) : (
-                        <div className="reserva-detalle">
-                          {DIA_LABEL[r.diaSemana]} {formatHora(r.horaInicio)}–{formatHora(r.horaFin)}
-                        </div>
-                      )}
-                      {r.observaciones && <div className="reserva-obs">{r.observaciones}</div>}
-                    </div>
-                    <div className="reserva-actions">
-                      <span className={`reserva-badge reserva-${r.estado?.toLowerCase()}`}>{r.estado}</span>
-                      {(r.estado === "PENDIENTE" || r.estado === "APROBADA") && (
-                        <BotonPrimario onClick={() => onCancelar(r)}>Cancelar</BotonPrimario>
-                      )}
-                    </div>
+                        <FormularioEdicionReserva
+                          reserva={editando}
+                          onOk={(entidad) => {
+                            setReservas((prev) => prev.map((x) => (x.id === entidad.id ? entidad : x)));
+                            setEditando(null);
+                          }}
+                          onCancel={() => setEditando(null)}
+                        />
+                      )
+                    )}
                   </div>
                 ))}
               </div>
@@ -109,6 +138,29 @@ const DashboardDirectivo = () => {
         )}
 
         <p>Has ingresado con tu email {user?.email}</p>
+
+        {editando && (
+          editando.tipo === "EXAMEN" ? (
+            <FormularioEdicionReservaExamen
+              reserva={editando}
+              onOk={({ data }) => {
+                // Reemplazar en la lista
+                setReservas((prev) => prev.map((x) => (x.id === data.id ? data : x)));
+                setEditando(null);
+              }}
+              onCancel={() => setEditando(null)}
+            />
+          ) : (
+            <FormularioEdicionReserva
+              reserva={editando}
+              onOk={({ data }) => {
+                setReservas((prev) => prev.map((x) => (x.id === data.id ? data : x)));
+                setEditando(null);
+              }}
+              onCancel={() => setEditando(null)}
+            />
+          )
+        )}
         
       </div>
     </>
