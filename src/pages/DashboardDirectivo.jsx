@@ -62,6 +62,7 @@ const DashboardDirectivo = () => {
     const [y, m, d] = iso.split("-");
     return `${d}/${m}/${y}`;
   };
+  const formatHora = (h) => (typeof h === "string" ? h.slice(0,5) : h);
 
   async function onAprobar(r) {
     try {
@@ -149,10 +150,13 @@ const DashboardDirectivo = () => {
                       {r.tipo === "EXAMEN" ? (
                         <>
                           <div className="reserva-detalle">
+                            <span className="reserva-badge reserva-examen">Examen</span>
+                          </div>
+                          <div className="reserva-detalle">
                             {formatFecha(r.fecha)}
                           </div>
                           <div className="reserva-detalle">
-                            {r.horaInicio}–{r.horaFin}
+                            {formatHora(r.horaInicio)}–{formatHora(r.horaFin)}
                           </div>
                           <div className="reserva-obs">
                             {r.materia} {r.mesa ? `- ${r.mesa}` : ""}
@@ -169,7 +173,7 @@ const DashboardDirectivo = () => {
                             "Viernes",
                             "Sábado",
                             "Domingo",
-                          ][r.diaSemana]} {r.horaInicio}–{r.horaFin}
+                          ][r.diaSemana]} {formatHora(r.horaInicio)}–{formatHora(r.horaFin)}
                         </div>
                       )}
                       {r.observaciones && (

@@ -47,6 +47,7 @@ const DashboardDirectivo = () => {
     const [y, m, d] = iso.split("-");
     return `${d}/${m}/${y}`;
   };
+  const formatHora = (h) => (typeof h === "string" ? h.slice(0,5) : h);
 
   return (
     <>
@@ -81,7 +82,7 @@ const DashboardDirectivo = () => {
                             {formatFecha(r.fecha)}
                           </div>
                           <div className="reserva-detalle">
-                            {r.horaInicio}–{r.horaFin}
+                            {formatHora(r.horaInicio)}–{formatHora(r.horaFin)}
                           </div>
                           <div className="reserva-obs">
                             {r.materia} {r.mesa ? `- ${r.mesa}` : ""}
@@ -89,7 +90,7 @@ const DashboardDirectivo = () => {
                         </>
                       ) : (
                         <div className="reserva-detalle">
-                          {DIA_LABEL[r.diaSemana]} {r.horaInicio}–{r.horaFin}
+                          {DIA_LABEL[r.diaSemana]} {formatHora(r.horaInicio)}–{formatHora(r.horaFin)}
                         </div>
                       )}
                       {r.observaciones && <div className="reserva-obs">{r.observaciones}</div>}
