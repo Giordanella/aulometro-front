@@ -12,6 +12,7 @@ import FormularioEdicionReservaExamen from "../components/FormularioEdicionReser
 import "./styles/Home.css";
 import "./styles/Reservas.css";
 import Navbar from "../components/Navbar.jsx";
+import BusquedaAulas from "../components/BusquedaAulas.jsx";
 
 const DIA_LABEL = ["", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
 
@@ -57,6 +58,8 @@ const DashboardDirectivo = () => {
       <Navbar vista={vista} setVista={setVista} />
       <div className="home-container">
         <h1>Bienvenido/a {user?.role}</h1>
+
+        <BusquedaAulas />
 
         {vista === "aulas" && (
           <>
