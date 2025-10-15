@@ -22,7 +22,7 @@ import Ruedita from "../components/Ruedita.jsx";
 import { useLista } from "../hooks/useLista.jsx";
 import "./styles/Home.css";
 import "./styles/Reservas.css";
-import NavBarAdmin from "../components/NavBarAdmin";
+import Navbar from "../components/Navbar.jsx";
 
 const getPendientesRows = () =>
   getPendientes().then(({ data }) => ({
@@ -33,7 +33,7 @@ const DashboardDirectivo = () => {
   
 
   
-  const [vista, setVista] = useState("usuario"); 
+  const [vista, setVista] = useState("usuarios"); 
 
  
   const {
@@ -103,10 +103,10 @@ const DashboardDirectivo = () => {
 
   return (
     <>
-      <NavBarAdmin vista={vista} onChange={setVista} />
+      <Navbar vista={vista} setVista={setVista} />
       <div className="home-container">
         <h1>Dashboard Directivo</h1>
-        {vista === "usuario" && (
+        {vista === "usuarios" && (
           <div className="home-container">
             <FormularioAltaUsuario setDocentes={setDocentes} />
             <DataLoader
@@ -119,7 +119,7 @@ const DashboardDirectivo = () => {
           </div>
         )}
 
-        {vista === "aula" && (
+        {vista === "aulas" && (
           <div className="home-container">
             <FormularioAltaAula
               onAulaCreada={(nuevaAula) =>

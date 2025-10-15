@@ -11,7 +11,7 @@ import FormularioEdicionReserva from "../components/FormularioEdicionReserva.jsx
 import FormularioEdicionReservaExamen from "../components/FormularioEdicionReservaExamen.jsx";
 import "./styles/Home.css";
 import "./styles/Reservas.css";
-import NavBarDocente from "../components/NavBarDocente.jsx";
+import Navbar from "../components/Navbar.jsx";
 
 const DIA_LABEL = ["", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
 
@@ -54,9 +54,7 @@ const DashboardDirectivo = () => {
 
   return (
     <>
- 
-      <NavBarDocente vista={vista} onChange={setVista} />
-
+      <Navbar vista={vista} setVista={setVista} />
       <div className="home-container">
         <h1>Bienvenido/a {user?.role}</h1>
 
