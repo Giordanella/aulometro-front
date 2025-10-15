@@ -102,134 +102,131 @@ const DashboardDirectivo = () => {
   
 
   return (
-    <div className="home-container">
+    <>
       <NavBarAdmin vista={vista} onChange={setVista} />
-      <h1>Dashboard Directivo</h1>
-
-     
-
-      {vista === "usuario" && (
-        <div className="home-container">
-          <FormularioAltaUsuario setDocentes={setDocentes} />
-          <DataLoader
-            fetchData={fetchDocentes}
-            fallbackLoading={<Ruedita />}
-            fallbackError="Error al cargar docentes"
-          >
-            <ListaDocentes docentes={docentes} setDocentes={setDocentes} />
-          </DataLoader>
-        </div>
-      )}
-
-      {vista === "aula" && (
-        <div className="home-container">
-          <FormularioAltaAula
-            onAulaCreada={(nuevaAula) =>
-              setAulas((prev) => [...prev, nuevaAula])
-            }
-          />
-          <DataLoader
-            fetchData={fetchAulas}
-            fallbackLoading={<Ruedita />}
-            fallbackError="Error al cargar aulas"
-          >
-            <ListaAulas aulas={aulas} setAulas={setAulas} title="Aulas" />
-          </DataLoader>
-        </div>
-      )}
-
-      {vista === "reservas" && (
-        <div className="home-container">
-          {msg && <p className="reservas-error">{msg}</p>}
-          {/* Cargamos aulas primero para poder mostrar el número */}
-          <DataLoader fetchData={fetchAulas} fallbackLoading={<Ruedita />} fallbackError="Error al cargar aulas">
+      <div className="home-container">
+        <h1>Dashboard Directivo</h1>
+        {vista === "usuario" && (
+          <div className="home-container">
+            <FormularioAltaUsuario setDocentes={setDocentes} />
             <DataLoader
-              fetchData={fetchPendientes}
+              fetchData={fetchDocentes}
               fallbackLoading={<Ruedita />}
-              fallbackError="Error al cargar pendientes"
+              fallbackError="Error al cargar docentes"
             >
-              {!pendientes?.length && (
-                <p className="reservas-empty">No hay pendientes.</p>
-              )}
-
-              <div className="reservas-list">
-                {(pendientes || []).map((r) => (
-                  <div key={r.id} className="reserva-card">
-                    <div className="reserva-info">
-                      <div className="reserva-aula">Aula {aulaNumMap[r.aulaId] ?? r.aulaId}</div>
-                      {r.tipo === "EXAMEN" ? (
-                        <>
-                          <div className="reserva-detalle">
-                            <span className="reserva-badge reserva-examen">Examen</span>
-                          </div>
-                          <div className="reserva-detalle">
-                            {formatFecha(r.fecha)}
-                          </div>
-                          <div className="reserva-detalle">
-                            {formatHora(r.horaInicio)}–{formatHora(r.horaFin)}
-                          </div>
-                          <div className="reserva-obs">
-                            {r.materia} {r.mesa ? `- ${r.mesa}` : ""}
-                          </div>
-                        </>
-                      ) : (
-                        <div className="reserva-detalle">
-                          {[
-                            "",
-                            "Lunes",
-                            "Martes",
-                            "Miércoles",
-                            "Jueves",
-                            "Viernes",
-                            "Sábado",
-                            "Domingo",
-                          ][r.diaSemana]} {formatHora(r.horaInicio)}–{formatHora(r.horaFin)}
-                        </div>
-                      )}
-                      {r.observaciones && (
-                        <div className="reserva-obs">{r.observaciones}</div>
-                      )}
-                    </div>
-
-                    <div className="reserva-actions">
-                      <div className="reserva-buttons">
-                        <BotonPrimario onClick={() => onAprobar(r)}>
-                        Aprobar
-                        </BotonPrimario>
-                        <BotonPrimario onClick={() => setRechazoAbierto(r)}>
-                        Rechazar
-                        </BotonPrimario>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <ListaDocentes docentes={docentes} setDocentes={setDocentes} />
             </DataLoader>
-          </DataLoader>
-          <ModalConfirmacion
-            abierto={!!rechazoAbierto}
-            mensaje={rechazoAbierto?.tipo === "EXAMEN" ? "¿Seguro que desea rechazar la solicitud de reserva de examen?" : "¿Seguro que desea rechazar la solicitud de reserva?"}
-            onConfirmar={onRechazarConfirmado}
-            onCancelar={() => setRechazoAbierto(null)}
-            loading={rechazando}
-            confirmLabel="Rechazar"
-            cancelLabel="Cancelar"
-          >
-            <CampoFormulario
-              placeholder="Motivo del rechazo (opcional)"
-              name={`motivo_${rechazoAbierto?.id ?? ""}`}
-              as="textarea"
-              value={(rechazoAbierto && motivos[rechazoAbierto.id]) || ""}
-              onChange={(e) =>
-                setMotivos((m) => ({ ...m, [rechazoAbierto.id]: e.target.value }))
+          </div>
+        )}
+
+        {vista === "aula" && (
+          <div className="home-container">
+            <FormularioAltaAula
+              onAulaCreada={(nuevaAula) =>
+                setAulas((prev) => [...prev, nuevaAula])
               }
             />
-          </ModalConfirmacion>
-        </div>
-      )}
+            <DataLoader
+              fetchData={fetchAulas}
+              fallbackLoading={<Ruedita />}
+              fallbackError="Error al cargar aulas"
+            >
+              <ListaAulas aulas={aulas} setAulas={setAulas} title="Aulas" />
+            </DataLoader>
+          </div>
+        )}
 
-      
-    </div>
+        {vista === "reservas" && (
+          <div className="home-container">
+            {msg && <p className="reservas-error">{msg}</p>}
+            {/* Cargamos aulas primero para poder mostrar el número */}
+            <DataLoader fetchData={fetchAulas} fallbackLoading={<Ruedita />} fallbackError="Error al cargar aulas">
+              <DataLoader
+                fetchData={fetchPendientes}
+                fallbackLoading={<Ruedita />}
+                fallbackError="Error al cargar pendientes"
+              >
+                {!pendientes?.length && (
+                  <p className="reservas-empty">No hay pendientes.</p>
+                )}
+
+                <div className="reservas-list">
+                  {(pendientes || []).map((r) => (
+                    <div key={r.id} className="reserva-card">
+                      <div className="reserva-info">
+                        <div className="reserva-aula">Aula {aulaNumMap[r.aulaId] ?? r.aulaId}</div>
+                        {r.tipo === "EXAMEN" ? (
+                          <>
+                            <div className="reserva-detalle">
+                              <span className="reserva-badge reserva-examen">Examen</span>
+                            </div>
+                            <div className="reserva-detalle">
+                              {formatFecha(r.fecha)}
+                            </div>
+                            <div className="reserva-detalle">
+                              {formatHora(r.horaInicio)}–{formatHora(r.horaFin)}
+                            </div>
+                            <div className="reserva-obs">
+                              {r.materia} {r.mesa ? `- ${r.mesa}` : ""}
+                            </div>
+                          </>
+                        ) : (
+                          <div className="reserva-detalle">
+                            {[
+                              "",
+                              "Lunes",
+                              "Martes",
+                              "Miércoles",
+                              "Jueves",
+                              "Viernes",
+                              "Sábado",
+                              "Domingo",
+                            ][r.diaSemana]} {formatHora(r.horaInicio)}–{formatHora(r.horaFin)}
+                          </div>
+                        )}
+                        {r.observaciones && (
+                          <div className="reserva-obs">{r.observaciones}</div>
+                        )}
+                      </div>
+
+                      <div className="reserva-actions">
+                        <div className="reserva-buttons">
+                          <BotonPrimario onClick={() => onAprobar(r)}>
+                          Aprobar
+                          </BotonPrimario>
+                          <BotonPrimario onClick={() => setRechazoAbierto(r)}>
+                          Rechazar
+                          </BotonPrimario>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </DataLoader>
+            </DataLoader>
+            <ModalConfirmacion
+              abierto={!!rechazoAbierto}
+              mensaje={rechazoAbierto?.tipo === "EXAMEN" ? "¿Seguro que desea rechazar la solicitud de reserva de examen?" : "¿Seguro que desea rechazar la solicitud de reserva?"}
+              onConfirmar={onRechazarConfirmado}
+              onCancelar={() => setRechazoAbierto(null)}
+              loading={rechazando}
+              confirmLabel="Rechazar"
+              cancelLabel="Cancelar"
+            >
+              <CampoFormulario
+                placeholder="Motivo del rechazo (opcional)"
+                name={`motivo_${rechazoAbierto?.id ?? ""}`}
+                as="textarea"
+                value={(rechazoAbierto && motivos[rechazoAbierto.id]) || ""}
+                onChange={(e) =>
+                  setMotivos((m) => ({ ...m, [rechazoAbierto.id]: e.target.value }))
+                }
+              />
+            </ModalConfirmacion>
+          </div>
+        )}
+      </div>
+    </>
   );
 };
 
