@@ -1,18 +1,17 @@
-import BotonPrimario from "./BotonPrimario";
-import "./styles/NavBar.css";
-import BusquedaAulas from "../components/BusquedaAulas.jsx";
-import { useAuth } from "../contexts/useAuth";
-export default function NavBar({ vista, onChange }) {
-  const {  logout } = useAuth();
+import BotonPrimario from "./BotonPrimario.jsx";
+import "./styles/NavBarDocente.css";
+import BusquedaAulas from "./BusquedaAulas.jsx";
+import { useAuth } from "../contexts/useAuth.js";
+
+export default function NavBarDocente({ vista, onChange }) {
+  const { logout } = useAuth();
   return (
     <nav className="nav">
       <div className="nav-inner">
-   
         <div className="nav-left">
           <div className="nav-brand">Aulómetro</div>
         </div>
 
-   
         <div className="nav-center">
           <BotonPrimario onClick={logout}>Cerrar sesión</BotonPrimario>
           <div className="nav-search-wrap">
