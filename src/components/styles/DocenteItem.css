@@ -3,7 +3,6 @@
   flex-direction: column; /* stack card and buttons */
   gap: 8px;
   width: 100%;
-  max-width: 780px;
   box-sizing: border-box;
 }
 
@@ -17,7 +16,6 @@
   flex-wrap: wrap; /* allow wrap when narrow */
   padding: 1rem;
   width: 100%;
-  max-width: 780px;
   box-sizing: border-box;
 }
 

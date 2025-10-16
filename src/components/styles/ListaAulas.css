@@ -1,10 +1,13 @@
 .aulas-container {
+  /* Gap variables so children spanning all columns can align with grid spacing */
+  --row-gap: 1.25rem;
+  --col-gap: 1.5rem;
   align-items: stretch;
   background-color: whitesmoke;
   border-radius: 8px;
   display: grid;               /* grid for multi-column */
   grid-template-columns: 1fr;  /* 1 col by default */
-  gap: 1.25rem 1.5rem;         /* row-gap | column-gap */
+  gap: var(--row-gap) var(--col-gap);         /* row-gap | column-gap */
   padding: 2rem;
   width: 100%;
   max-width: 960px;
@@ -24,6 +27,13 @@
 .aulas-empty-message {
   display: flex;
   align-items: center;
+  justify-content: center;          /* center its content */
+  justify-self: stretch;            /* stretch across the grid area */
+  grid-column: 1 / -1;              /* span across both columns */
+  /* width auto + margins creates horizontal breathing room inside the container */
+  width: auto;
+  /* keep the same “breathing space” as the grid columns at the sides */
+  margin-inline: var(--col-gap);
   gap: 0.75rem;
   margin-top: 1rem;
   padding: 1rem 1.5rem;

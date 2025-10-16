@@ -33,8 +33,13 @@
 /* Avoid overflow from any child */
 .docentes-container > * { min-width: 0; }
 
-@media (max-width: 800px) {
-  .docentes-container { padding: 1.25rem; }
+/* Make inner docente item stretch full column width */
+.docentes-container .docente-item-container,
+.docentes-container .docente-container { width: 100%; max-width: none; }
+
+/* Optional: two columns for docentes en desktop si hay espacio suficiente */
+@media (min-width: 901px) {
+  .docentes-container { grid-template-columns: repeat(2, minmax(360px, 1fr)); }
 }
 
 @media (max-width: 400px) {
