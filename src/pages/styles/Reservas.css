@@ -1,5 +1,5 @@
 .reservas-container {
-  max-width: 920px;
+  max-width: 980px;
   margin: 0 auto;
   padding: 16px;
 }
@@ -8,6 +8,7 @@
   font-size: 1.5rem;
   font-weight: 600;
   margin-bottom: 12px;
+  text-align: center;
 }
 
 .reservas-error {
@@ -61,7 +62,7 @@
   flex-direction: column;
   align-items: end;
   gap: 8px;
-  min-width: 260px;
+  min-width: 220px;
 }
 
 .reserva-buttons {
@@ -99,4 +100,27 @@
 .reserva-cancelada {
   background: #f3f4f6;
   color: #374151;
+}
+
+/* -------- Responsive rules -------- */
+/* Use the compact mobile layout already from 800px and below */
+@media (max-width: 800px) {
+  .reservas-container { padding: 12px; }
+  .reserva-card {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  .reserva-actions {
+    align-items: flex-start;
+    min-width: 0;
+  }
+  .reserva-buttons { flex-wrap: wrap; }
+  .reservas-container { padding: 10px 8px; }
+  .reserva-card { padding: 10px; }
+  .reserva-buttons { width: 100%; }
+  .reserva-buttons > * { flex: 1 1 48%; }
+  .reserva-badge { font-size: 0.7rem; }
+  .reserva-detalle { font-size: 0.85rem; }
+  .reserva-obs { font-size: 0.8rem; }
 }

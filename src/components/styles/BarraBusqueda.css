@@ -17,17 +17,18 @@
   align-items: center;
   display: flex;
   gap: 8px;
+  flex-wrap: wrap;
 }
 
 .barra-busqueda__input {
   border: 1px solid #ccc;
   border-radius: 8px;
   box-sizing: border-box;
-  flex: 1;
+  flex: 1 1 640px; /* a bit wider on desktop */
   font-size: 16px;
   height: 42px;
   padding: 12px;
-  width: 28ch;
+  width: 100%;
 }
 
 .menu-filtros-toggle {
@@ -61,4 +62,14 @@
   margin: 0;
   padding: 0.75rem;
   text-align: center;
+}
+
+@media (max-width: 800px) {
+  .barra-busqueda__top { padding: 0.75rem; }
+  .barra-busqueda__input { flex-basis: 320px; }
+}
+
+@media (max-width: 400px) {
+  .barra-busqueda__top { padding: 0.5rem; }
+  .menu-filtros-toggle { width: 100%; }
 }

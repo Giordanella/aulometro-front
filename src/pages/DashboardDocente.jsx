@@ -140,7 +140,7 @@ const DashboardDirectivo = () => {
           </div>
         )}
 
-        <p>Has ingresado con tu email {user?.email}</p>
+        <p className="home-footer-text">Has ingresado con tu email {user?.email}</p>
         
       </div>
     </>

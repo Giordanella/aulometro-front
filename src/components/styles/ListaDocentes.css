@@ -1,11 +1,15 @@
 .docentes-container {
-  align-items: center;
+  align-items: stretch;
   background-color: whitesmoke;
   border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 0.7rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem 1.5rem;
   padding: 2rem;
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  box-sizing: border-box;
 }
 
 .docentes-empty-message {
@@ -22,4 +26,17 @@
   font-weight: 500;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
   text-align: center;
+}
+
+.docentes-container h1 { grid-column: 1 / -1; text-align: center; width: 100%; }
+
+/* Avoid overflow from any child */
+.docentes-container > * { min-width: 0; }
+
+@media (max-width: 800px) {
+  .docentes-container { padding: 1.25rem; }
+}
+
+@media (max-width: 400px) {
+  .docentes-container { padding: 1rem; }
 }
