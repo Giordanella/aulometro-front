@@ -16,10 +16,136 @@ input[type="number"] {
   -moz-osx-font-smoothing: grayscale;
 
   --philippine-red: #c4122e;
+
+  /* Light theme tokens */
+  --bg: #0b0b0c; /* will be overridden in light */
+  --text: #0b0b0c;
+  --muted: #4b5563;
+  --surface: #ffffff;
+  --surface-muted: #f5f5f5;
+  --border: rgba(0,0,0,0.08);
+}
+
+/* Explicit light theme (default) */
+.theme-light {
+  --bg: #f3f4f6;
+  --text: #0b0b0c;
+  --muted: #4b5563;
+  --surface: #ffffff;
+  --surface-muted: #f7f7f7;
+  --border: rgba(0,0,0,0.08);
 }
 
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
 }
+
+/* Dark theme overrides applied when <html> has .theme-dark */
+.theme-dark {
+  --bg: #0b0f14;
+  --text: #e5e7eb;
+  --muted: #9ca3af;
+  --surface: #151a21;          /* cards */
+  --surface-muted: #12161c;    /* containers */
+  --border: rgba(255,255,255,0.08);
+}
+
+/* Generic elements that use the tokens to change appearance */
+.theme-dark .home-container { color: var(--text); }
+
+/* Containers */
+.theme-dark .aulas-container,
+.theme-dark .barra-busqueda-container,
+.theme-dark .form-container,
+.theme-dark .reservas-card,
+.theme-dark .lista-docentes-container {
+  background-color: var(--surface-muted) !important;
+  border-color: var(--border) !important;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.35) !important;
+}
+
+/* Cards */
+.theme-dark .aula-container,
+.theme-dark .reserva-card {
+  background-color: var(--surface) !important;
+  border-color: var(--border) !important;
+  color: var(--text) !important;
+}
+
+/* Inputs */
+.theme-dark input,
+.theme-dark select,
+.theme-dark textarea {
+  background-color: #0f141a !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+.theme-dark input::placeholder{ color: #9ca3af; }
+
+/* Search bar specific */
+.theme-dark .barra-busqueda__input{
+  background: #0f141a !important;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.4) !important;
+  /* White magnifier in dark mode */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: 12px center !important;
+  background-size: 18px 18px !important;
+}
+.theme-dark .menu-filtros-toggle{
+  background-color: var(--surface) !important;
+  border-color: var(--border) !important;
+}
+/* Make the filters hamburger icon white in dark mode */
+.theme-dark .menu-filtros-toggle img{ filter: invert(1) brightness(1.3) contrast(1.1); }
+
+/* Lists misc */
+.theme-dark .aulas-empty-message{
+  background-color: rgba(37, 99, 235, 0.12) !important;
+  color: #93c5fd !important;
+  border-color: rgba(147, 197, 253, 0.25) !important;
+}
+/* Aula item: raise text contrast in dark */
+.theme-dark .aula-data{ color: #cbd5e1 !important; }
+
+/* Reservas badges keep same palette */
+.theme-dark .reserva-detalle{ color: var(--muted); }
+.theme-dark .reserva-obs{ color: var(--muted); }
+
+/* Login */
+.theme-dark .login {
+  background-color: var(--surface);
+  color: var(--text);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.35);
+}
+.theme-dark .login-input{
+  background-color: #0f141a;
+  color: var(--text);
+  border-color: var(--border);
+}
+
+/* Docentes list and cards in dark */
+.theme-dark .docentes-container{
+  background-color: var(--surface-muted) !important;
+  border-color: var(--border) !important;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.35) !important;
+}
+.theme-dark .docente-container{
+  background-color: var(--surface) !important;
+  border-color: var(--border) !important;
+  color: var(--text) !important;
+}
+.theme-dark .docente-data{ color: #e5e7eb !important; }
+
+/* Menu filtros in dark */
+.theme-dark .menu-filtros{
+  background-color: var(--surface) !important;
+  border-color: var(--border) !important;
+  color: var(--text);
+}
+.theme-dark .menu-filtros__row label{ color: var(--text); }
+.theme-dark .menu-filtros__divider{ border-top-color: var(--border); }

@@ -12,6 +12,12 @@
   box-sizing: border-box;
 }
 
+/* Dark theme */
+.theme-dark .docentes-container{
+  background-color: var(--surface-muted);
+  border: 1px solid var(--border);
+}
+
 .docentes-empty-message {
   display: flex;
   align-items: center;

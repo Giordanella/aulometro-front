@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "../contexts/useAuth";
 import "./styles/Navbar.css";
+import { useTheme } from "../contexts/useTheme";
 
 const NavLink = ({ id, children, active, onClick }) => (
   <button
@@ -14,6 +15,7 @@ const NavLink = ({ id, children, active, onClick }) => (
 
 export default function Navbar({ vista, setVista }) {
   const { user, logout } = useAuth();
+  const { isDark, toggleTheme } = useTheme();
   const [open, setOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const menuRef = useRef(null);
@@ -136,6 +138,17 @@ export default function Navbar({ vista, setVista }) {
               role="menu"
               onClick={(e) => e.stopPropagation()}
             >
+              <button
+                role="menuitem"
+                className="profile-menu__item"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleTheme();
+                }}
+                title={isDark ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
+              >
+                {isDark ? "Modo claro" : "Modo oscuro"}
+              </button>
               <button
                 role="menuitem"
                 className="profile-menu__item"
