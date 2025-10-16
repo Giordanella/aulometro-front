@@ -1,10 +1,12 @@
 .form-container {
-  background-color: whitesmoke;
+  background-color: transparent; /* themed via index.css */
   padding: 2rem;
   width: 100%;
   max-width: 520px;
-  border-radius: 8px;
+  border-radius: 12px;
   box-sizing: border-box;
+  border: 1px solid var(--border);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.06);
 }
 
 .form {
@@ -26,7 +28,7 @@
 }
 
 .form-input {
-  border: 1px solid #ccc;
+  border: 1px solid #d1d5db;
   font-size: 1rem;
   padding: 0.75rem;
   border-radius: 8px;

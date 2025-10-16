@@ -99,7 +99,7 @@ const AulaItem = ({
               });
             }}
           >
-            Reservar de Examen
+            Reservar para Examen
           </BotonPrimario>
         )}
       </div>
