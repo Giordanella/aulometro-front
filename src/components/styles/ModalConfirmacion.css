@@ -5,6 +5,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100vw;        /* ensure full viewport coverage */
+  height: 100vh;
+  z-index: 2147483000; /* ensure on top of any app content */
+  isolation: isolate;  /* create a new stacking context for safety */
 }
 
 .modal-content {
@@ -12,10 +16,22 @@
   padding: 2rem;
   border-radius: 8px;
   text-align: center;
+  width: 100%;
+  max-width: 520px;
+  margin: 0 12px;
+  max-height: calc(100vh - 96px); /* avoid overflowing out of viewport */
+  overflow: auto;
 }
 
 .modal-buttons {
   display: flex;
   justify-content: space-around;
   margin-top: 1.5rem;
+  gap: 12px;
+}
+
+@media (max-width: 400px) {
+  .modal-content { padding: 1.25rem; }
+  .modal-buttons { flex-wrap: wrap; }
+  .modal-buttons > * { flex: 1 1 48%; }
 }

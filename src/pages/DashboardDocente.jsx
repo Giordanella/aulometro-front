@@ -11,7 +11,8 @@ import FormularioEdicionReserva from "../components/FormularioEdicionReserva.jsx
 import FormularioEdicionReservaExamen from "../components/FormularioEdicionReservaExamen.jsx";
 import "./styles/Home.css";
 import "./styles/Reservas.css";
-import NavBar from "../components/NavBar.jsx";
+import Navbar from "../components/Navbar.jsx";
+import BusquedaAulas from "../components/BusquedaAulas.jsx";
 
 const DIA_LABEL = ["", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
 
@@ -54,11 +55,11 @@ const DashboardDirectivo = () => {
 
   return (
     <>
- 
-      <NavBar vista={vista} onChange={setVista} />
-
+      <Navbar vista={vista} setVista={setVista} />
       <div className="home-container">
         <h1>Bienvenido/a {user?.role}</h1>
+
+        <BusquedaAulas />
 
         {vista === "aulas" && (
           <>
@@ -139,7 +140,7 @@ const DashboardDirectivo = () => {
           </div>
         )}
 
-        <p>Has ingresado con tu email {user?.email}</p>
+        <p className="home-footer-text">Has ingresado con tu email {user?.email}</p>
         
       </div>
     </>

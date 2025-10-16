@@ -1,4 +1,6 @@
 .menu-filtros {
+  /* Shared sizing */
+  --field-height: 44px; /* match Hora inicio/fin */
   background-color: #fafafa;
   border: 1px solid #ddd;
   border-radius: 8px;
@@ -6,8 +8,10 @@
   display: grid;
   gap: 0.75rem;
   grid-template-columns: 1fr;
-  padding: 0.75rem 1rem;
+  padding: 2rem;
   width: 100%;
+  max-width: 880px; /* prevent full stretch on desktop */
+  margin: 0 auto; /* center inside container */
   font-family: sans-serif;
   font-size: 0.9rem;
 }
@@ -29,9 +33,10 @@
 .menu-filtros__row input,
 .menu-filtros__row select {
   width: 100%;
-  padding: 0.35rem 0.5rem;
+  height: var(--field-height);
+  padding: 0 0.75rem;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 8px;
   font-size: 0.9rem;
   transition:
     border-color 0.2s,
@@ -76,7 +81,8 @@
 }
 
 .menu-filtros__row--inline input[type="time"] {
-  padding: 0.5rem 0.75rem;
+  height: var(--field-height);
+  padding: 0 0.75rem;
   border-radius: 8px;
   box-sizing: border-box;
 }

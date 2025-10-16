@@ -1,4 +1,3 @@
-import "./App.css";
 import { Routes, Route, Navigate } from "react-router-dom";
 import DashboardDirectivo from "./pages/DashboardDirectivo";
 import DashboardDocente from "./pages/DashboardDocente";
