@@ -1,8 +1,10 @@
 .form-container {
   background-color: whitesmoke;
   padding: 2rem;
-  width: 400px;
+  width: 100%;
+  max-width: 520px;
   border-radius: 8px;
+  box-sizing: border-box;
 }
 
 .form {
@@ -67,4 +69,13 @@
   align-items: center;
   gap: 0.5rem;
   margin-bottom: 0; /* evita doble espacio bajo la fila de checkbox */
+}
+
+@media (max-width: 800px) {
+  .form-container { padding: 1.25rem; }
+}
+
+@media (max-width: 400px) {
+  .form-container { padding: 1rem; }
+  .form-input { font-size: 0.95rem; }
 }

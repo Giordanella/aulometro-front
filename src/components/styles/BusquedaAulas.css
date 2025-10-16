@@ -3,4 +3,21 @@
   display: flex;
   flex-direction: column;
   gap: 2rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 800px) {
+  .busqueda-aulas-container { gap: 1.25rem; padding: 0 1rem; }
+}
+
+@media (max-width: 400px) {
+  .busqueda-aulas-container { gap: 1rem; padding: 0 0.75rem; }
+}
+
+/* Make the top search row and lists share a comfortable width on desktop */
+.busqueda-aulas-container > .barra-busqueda-container,
+.busqueda-aulas-container > .aulas-container{
+  width: 100%;
+  max-width: 880px;
 }

@@ -1,16 +1,39 @@
 .aulas-container {
-  align-items: center;
+  /* Gap variables so children spanning all columns can align with grid spacing */
+  --row-gap: 1.25rem;
+  --col-gap: 1.5rem;
+  align-items: stretch;
   background-color: whitesmoke;
   border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 0.7rem;
+  display: grid;               /* grid for multi-column */
+  grid-template-columns: 1fr;  /* 1 col by default */
+  gap: var(--row-gap) var(--col-gap);         /* row-gap | column-gap */
   padding: 2rem;
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  box-sizing: border-box;      /* include padding */
 }
+
+/* Let the title span all columns */
+.aulas-container > h1 { grid-column: 1 / -1; text-align: center; width: 100%; }
+
+/* In grid, cards should fill the column width (not keep their own max-width) */
+.aulas-container .aula-container { max-width: none; width: 100%; }
+
+/* Avoid overflow from any child */
+.aulas-container > * { min-width: 0; }
 
 .aulas-empty-message {
   display: flex;
   align-items: center;
+  justify-content: center;          /* center its content */
+  justify-self: stretch;            /* stretch across the grid area */
+  grid-column: 1 / -1;              /* span across both columns */
+  /* width auto + margins creates horizontal breathing room inside the container */
+  width: auto;
+  /* keep the same “breathing space” as the grid columns at the sides */
+  margin-inline: var(--col-gap);
   gap: 0.75rem;
   margin-top: 1rem;
   padding: 1rem 1.5rem;
@@ -22,4 +45,25 @@
   font-weight: 500;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
   text-align: center;
+}
+
+.aulas-container h1 { text-align: center; width: 100%; }
+
+/* 2 columns on desktop (from 901px) */
+@media (min-width: 901px) {
+  .aulas-container { grid-template-columns: repeat(2, minmax(340px, 1fr)); }
+}
+
+/* Between 400px and 900px: increase left/right padding so items don't hug the edges */
+@media (min-width: 400px) and (max-width: 900px) {
+  .aulas-container { padding: 1.75rem; }
+}
+
+/* Under 400px: visually remove the container background and padding */
+@media (max-width: 400px) {
+  .aulas-container {
+    background-color: transparent;
+    padding: 0;
+    border-radius: 0;
+  }
 }

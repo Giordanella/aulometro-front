@@ -1,7 +1,9 @@
 .docente-item-container {
   display: flex;
-  flex-direction: row;
+  flex-direction: column; /* stack card and buttons */
   gap: 8px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .docente-container {
@@ -10,9 +12,11 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
   display: flex;
   gap: 1rem;
-  justify-content: space-evenly;
+  justify-content: space-between; /* better spacing */
+  flex-wrap: wrap; /* allow wrap when narrow */
   padding: 1rem;
-  width: 600px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .docente-data {
@@ -21,7 +25,7 @@
   overflow: hidden;
   padding: 0.5rem;
   text-overflow: ellipsis;
-  white-space: nowrap;
+  white-space: nowrap; /* keep pills single-line with ellipsis */
 }
 
 .name {
@@ -36,4 +40,11 @@
   align-items: center;
   display: flex;
   gap: 8px;
+  justify-content: flex-end; /* place under card aligned to right */
+}
+
+@media (max-width: 400px) {
+  .docente-container { flex-direction: column; align-items: stretch; }
+  .buttons-container { flex-wrap: wrap; }
+  .buttons-container > * { flex: 1 1 48%; }
 }
