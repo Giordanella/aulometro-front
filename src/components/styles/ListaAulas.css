@@ -3,7 +3,7 @@
   --row-gap: 1.25rem;
   --col-gap: 1.5rem;
   align-items: stretch;
-  background-color: whitesmoke;
+  background-color: transparent; /* themed in index.css */
   border-radius: 8px;
   display: grid;               /* grid for multi-column */
   grid-template-columns: 1fr;  /* 1 col by default */
@@ -61,8 +61,13 @@
 
 /* Under 400px: visually remove the container background and padding */
 @media (max-width: 400px) {
+  /* Bump specificity to override theme-scoped rules */
+  .theme-light .aulas-container,
+  .theme-dark .aulas-container,
   .aulas-container {
-    background-color: transparent;
+    background-color: transparent !important; /* override theme surface */
+    border: none !important;
+    box-shadow: none !important;
     padding: 0;
     border-radius: 0;
   }

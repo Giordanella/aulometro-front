@@ -7,12 +7,13 @@
 
 .login {
   align-items: center;
-  background-color: whitesmoke;
+  background-color: transparent; /* themed via index.css */
   display: flex;
   flex-direction: column;
   gap: 3rem;
   padding: 3rem;
   width: 400px;
+  border-radius: 12px; /* consistent with app containers */
 }
 
 .login-title {
@@ -27,7 +28,10 @@
 }
 
 .login-input {
-  border: 1px solid #ccc;
+  border: 1px solid #d1d5db;
   font-size: 1rem;
   padding: 0.75rem;
+  border-radius: 10px; /* rounded fields in both themes */
+  width: 100%;
+  box-sizing: border-box;
 }

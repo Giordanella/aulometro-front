@@ -1,6 +1,6 @@
 .docentes-container {
   align-items: stretch;
-  background-color: whitesmoke;
+  background-color: transparent; /* themed in index.css */
   border-radius: 8px;
   display: grid;
   grid-template-columns: 1fr;
