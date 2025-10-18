@@ -97,6 +97,10 @@ export default function Navbar({ vista, setVista }) {
           <NavLink id="reservas" active={vista === "reservas"} onClick={handleChange}>
             {user?.role === "DIRECTIVO" ? "Gestión de reservas" : "Reservas"}
           </NavLink>
+
+          <NavLink id="config" active={vista === "config"} onClick={handleChange}>
+            Configuración
+          </NavLink>
         </nav>
 
         <div className="navbar__actions">

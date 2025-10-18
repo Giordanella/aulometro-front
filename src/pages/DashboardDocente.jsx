@@ -13,6 +13,7 @@ import "./styles/Home.css";
 import "./styles/Reservas.css";
 import Navbar from "../components/Navbar.jsx";
 import BusquedaAulas from "../components/BusquedaAulas.jsx";
+import FormularioCambioClave from "../components/FormularioCambioClave.jsx";
 
 const DIA_LABEL = ["", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
 
@@ -59,7 +60,7 @@ const DashboardDirectivo = () => {
       <div className="home-container">
         <h1>Bienvenido/a {user?.role}</h1>
 
-        <BusquedaAulas />
+        {vista !== "config" && <BusquedaAulas />}
 
         {vista === "aulas" && (
           <>
@@ -137,6 +138,12 @@ const DashboardDirectivo = () => {
                 ))}
               </div>
             </DataLoader>
+          </div>
+        )}
+
+        {vista === "config" && (
+          <div className="home-container">
+            <FormularioCambioClave />
           </div>
         )}
 
