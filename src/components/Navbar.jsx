@@ -97,10 +97,6 @@ export default function Navbar({ vista, setVista }) {
           <NavLink id="reservas" active={vista === "reservas"} onClick={handleChange}>
             {user?.role === "DIRECTIVO" ? "Gestión de reservas" : "Reservas"}
           </NavLink>
-
-          <NavLink id="config" active={vista === "config"} onClick={handleChange}>
-            Configuración
-          </NavLink>
         </nav>
 
         <div className="navbar__actions">
@@ -152,6 +148,16 @@ export default function Navbar({ vista, setVista }) {
                 title={isDark ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
               >
                 {isDark ? "Modo claro" : "Modo oscuro"}
+              </button>
+              <button
+                role="menuitem"
+                className="profile-menu__item"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleChange("config");
+                }}
+              >
+                Configuración
               </button>
               <button
                 role="menuitem"
