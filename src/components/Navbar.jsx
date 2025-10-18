@@ -154,6 +154,16 @@ export default function Navbar({ vista, setVista }) {
                 className="profile-menu__item"
                 onClick={(e) => {
                   e.stopPropagation();
+                  handleChange("config");
+                }}
+              >
+                Configuración
+              </button>
+              <button
+                role="menuitem"
+                className="profile-menu__item"
+                onClick={(e) => {
+                  e.stopPropagation();
                   setProfileOpen(false);
                   logout();
                 }}

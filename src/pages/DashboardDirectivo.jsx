@@ -23,6 +23,7 @@ import { useLista } from "../hooks/useLista.jsx";
 import "./styles/Home.css";
 import "./styles/Reservas.css";
 import Navbar from "../components/Navbar.jsx";
+import FormularioCambioClave from "../components/FormularioCambioClave.jsx";
 
 const getPendientesRows = () =>
   getPendientes().then(({ data }) => ({
@@ -223,6 +224,12 @@ const DashboardDirectivo = () => {
                 }
               />
             </ModalConfirmacion>
+          </div>
+        )}
+
+        {vista === "config" && (
+          <div className="home-container">
+            <FormularioCambioClave />
           </div>
         )}
       </div>
