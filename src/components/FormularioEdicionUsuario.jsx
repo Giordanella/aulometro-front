@@ -3,7 +3,6 @@ import { useFormulario } from "../hooks/useFormulario.jsx";
 import {
   validarNombreUsuario,
   validarEmail,
-  validarPassword,
   validarRole
 } from "../utils/validarUsuario.js";
 import CamposUsuario from "./CamposUsuario.jsx";
@@ -13,7 +12,6 @@ const FormularioEdicionUsuario = ({ docente, onUpdatedUsuario, onCancel }) => {
   const validators = {
     name: validarNombreUsuario,
     email: validarEmail,
-    password: validarPassword,
     role: validarRole
   };
   
@@ -26,7 +24,10 @@ const FormularioEdicionUsuario = ({ docente, onUpdatedUsuario, onCancel }) => {
     handleSubmit
   } = useFormulario(
     docente,
-    (data) => updateUserById(docente.id, data),
+    (data) => {
+      const { name, email, role } = data;
+      return updateUserById(docente.id, { name, email, role });
+    },
     onUpdatedUsuario,
     validators,
     { resetOnSuccess: false }
@@ -40,6 +41,7 @@ const FormularioEdicionUsuario = ({ docente, onUpdatedUsuario, onCancel }) => {
           handleChange={handleChange}
           errores={errores}
           mostrarLabels
+          incluirPassword={false}
         />
         {mensaje && (
           <p className={`form-message ${tipoMensaje}`}>{mensaje}</p>
