@@ -1,5 +1,5 @@
 // src/pages/DashboardDirectivo.jsx
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { getDocentes } from "../api/users";
 import { getAulas } from "../api/aulas";
 import {
@@ -59,6 +59,18 @@ const DashboardDirectivo = () => {
   const [rechazoAbierto, setRechazoAbierto] = useState(null); // guarda reserva r a rechazar o null
   const [rechazando, setRechazando] = useState(false);
   const [msg, setMsg] = useState("");
+  const [msgTipo, setMsgTipo] = useState(""); // 'success' | 'error'
+  const msgTimeoutRef = useRef(null);
+
+  // Limpieza de timeout de mensajes al desmontar o cuando cambian
+  useEffect(() => {
+    return () => {
+      if (msgTimeoutRef.current) {
+        clearTimeout(msgTimeoutRef.current);
+        msgTimeoutRef.current = null;
+      }
+    };
+  }, []);
 
   const aulaNumMap = Object.fromEntries((aulas || []).map((a) => [a.id, a.numero]));
   const formatFecha = (iso) => {
@@ -76,8 +88,15 @@ const DashboardDirectivo = () => {
         await aprobarReserva(r.id);
       }
       setPendientes((prev) => prev.filter((x) => x.id !== r.id));
+      setMsg("Reserva aprobada correctamente.");
+      setMsgTipo("success");
+      if (msgTimeoutRef.current) { clearTimeout(msgTimeoutRef.current); }
+      msgTimeoutRef.current = setTimeout(() => { setMsg(""); setMsgTipo(""); }, 5000);
     } catch (e) {
       setMsg(e?.response?.data?.error || e.message || "No se pudo aprobar.");
+      setMsgTipo("error");
+      if (msgTimeoutRef.current) { clearTimeout(msgTimeoutRef.current); }
+      msgTimeoutRef.current = setTimeout(() => { setMsg(""); setMsgTipo(""); }, 7000);
     }
   }
 
@@ -96,6 +115,7 @@ const DashboardDirectivo = () => {
       setRechazoAbierto(null);
     } catch (e) {
       setMsg(e?.response?.data?.error || e.message || "No se pudo rechazar.");
+      setMsgTipo("error");
     } finally {
       setRechazando(false);
     }
@@ -139,7 +159,11 @@ const DashboardDirectivo = () => {
 
         {vista === "reservas" && (
           <div className="home-container">
-            {msg && <p className="reservas-error">{msg}</p>}
+            {msg && (
+              <p className={`reservas-message ${msgTipo === "success" ? "success" : "error"}`}>
+                {msg}
+              </p>
+            )}
             {/* Cargamos aulas primero para poder mostrar el número */}
             <DataLoader fetchData={fetchAulas} fallbackLoading={<Ruedita />} fallbackError="Error al cargar aulas">
               <DataLoader
