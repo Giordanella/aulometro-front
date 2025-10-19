@@ -1,7 +1,7 @@
 import "./styles/FormularioAlta.css";
 import CampoFormulario from "./CampoFormulario";
 
-const CamposUsuario = ({ formData, handleChange, errores, mostrarLabels = false }) => {
+const CamposUsuario = ({ formData, handleChange, errores, mostrarLabels = false, incluirPassword = true }) => {
   return (
     <>
       <CampoFormulario
@@ -24,16 +24,18 @@ const CamposUsuario = ({ formData, handleChange, errores, mostrarLabels = false 
         required
       />
 
-      <CampoFormulario
-        label={mostrarLabels ? "Contraseña" : undefined}
-        placeholder="Contraseña"
-        name="password"
-        type="password"
-        value={formData.password}
-        onChange={handleChange}
-        error={errores.password}
-        required
-      />
+      {incluirPassword && (
+        <CampoFormulario
+          label={mostrarLabels ? "Contraseña" : undefined}
+          placeholder="Contraseña"
+          name="password"
+          type="password"
+          value={formData.password}
+          onChange={handleChange}
+          error={errores.password}
+          required
+        />
+      )}
 
       <CampoFormulario
         label={mostrarLabels ? "Rol" : undefined}
