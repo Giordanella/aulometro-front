@@ -1,4 +1,4 @@
-import { validarNumeroAula, validarCapacidad, validarUbicacion, validarCantidadComputadoras, validarEstado } from "../utils/validarAula";
+import { validarNumeroAula, validarCapacidad, validarUbicacion, validarCantidadComputadoras, validarEstado, validarFiltros, hasErrors } from "../utils/validarAula";
 
 // Aula tests Lunes enum 1..6 8:00 a 9:00
 
@@ -6,6 +6,11 @@ import { validarNumeroAula, validarCapacidad, validarUbicacion, validarCantidadC
 
 test("numero de aula valido", () => {
   expect(validarNumeroAula({numero: 150})).toBeNull();
+});
+
+test("numero de aula limites inclusivos", () => {
+  expect(validarNumeroAula({numero: 1})).toBeNull();
+  expect(validarNumeroAula({numero: 350})).toBeNull();
 });
 
 test("numero de aula invalido (negativo)", () => {
@@ -20,10 +25,19 @@ test("numero de aula invalido (no entero)", () => {
   expect(validarNumeroAula({numero: 25.5})).toBe("El número de aula debe ser un número entero no negativo.");
 });
 
+test("numero de aula con string numerico", () => {
+  expect(validarNumeroAula({numero: "10"})).toBeNull();
+});
+
 // Capacidad tests
 
 test("capacidad valida", () => {
   expect(validarCapacidad({capacidad: 30})).toBeNull();
+});
+
+test("capacidad limites inclusivos", () => {
+  expect(validarCapacidad({capacidad: 1})).toBeNull();
+  expect(validarCapacidad({capacidad: 100})).toBeNull();
 });
 
 test("capacidad invalida (negativa)", () => {
@@ -36,6 +50,10 @@ test("capacidad invalida (fuera de rango)", () => {
 
 test("capacidad invalida (no entero)", () => {
   expect(validarCapacidad({capacidad: 20.5})).toBe("La capacidad debe ser un número entero no negativo.");
+});
+
+test("capacidad con string numerico en limite superior valido", () => {
+  expect(validarCapacidad({capacidad: "100"})).toBeNull();
 });
 
 // Ubicacion tests
@@ -52,10 +70,18 @@ test("ubicacion con caracteres invalidos", () => {
   expect(validarUbicacion({ubicacion:"Edificio @123"})).toBe("La ubicación contiene caracteres inválidos.");
 });
 
+test("ubicacion con puntos y guiones validos", () => {
+  expect(validarUbicacion({ubicacion:"Pab. B-1.2"})).toBeNull();
+});
+
 // Cantidad de computadoras tests
 
 test("cantidad de computadoras valida", () => {
   expect(validarCantidadComputadoras({computadoras: 20, capacidad: 20})).toBeNull();
+});
+
+test("cantidad de computadoras limite superior", () => {
+  expect(validarCantidadComputadoras({computadoras: 50, capacidad: 80})).toBeNull();
 });
 
 test("cantidad de computadoras invalida (negativa)", () => {
@@ -74,6 +100,10 @@ test("cantidad de computadoras mayor que capacidad", () => {
   expect(validarCantidadComputadoras({computadoras: 25, capacidad: 20})).toBe("Las computadoras no deben exceder la capacidad del aula.");
 });
 
+test("cantidad de computadoras con string numerico", () => {
+  expect(validarCantidadComputadoras({computadoras: "0", capacidad: 10})).toBeNull();
+});
+
 // Estado tests
 
 test("estado valido", () => {
@@ -85,4 +115,30 @@ test("estado valido", () => {
 test("estado invalido", () => {
   expect(validarEstado({estado: "cerrada"})).toBe("El estado debe ser 'disponible', 'ocupada' o 'mantenimiento'.");
   expect(validarEstado({estado: ""})).toBe("El estado debe ser 'disponible', 'ocupada' o 'mantenimiento'.");
+});
+
+// validarFiltros tests
+
+test("validarFiltros: todos validos", () => {
+  const errors = validarFiltros({ ubicacion: "Edif A", capacidadMin: 10, computadorasMin: 5, diaSemana: 3, horaInicio: "08:00", horaFin: "09:00" });
+  expect(hasErrors(errors)).toBe(false);
+});
+
+test("validarFiltros: invalid diaSemana y horas", () => {
+  const errors = validarFiltros({ diaSemana: 0, horaInicio: "8:00", horaFin: "07:00" });
+  expect(errors.diaSemana).toBe("El día debe ser Lunes a Sábado.");
+  expect(errors.horaInicio).toBe("Formato HH:mm");
+  // horaFin formato malo no se evalua como orden
+  const errors2 = validarFiltros({ horaInicio: "08:00", horaFin: "07:00" });
+  expect(errors2.horaFin).toBe("La hora fin debe ser mayor que inicio");
+});
+
+test("validarFiltros: computadoras exceden capacidad minima", () => {
+  const errors = validarFiltros({ capacidadMin: 5, computadorasMin: 6 });
+  expect(errors.computadorasMin).toBe("Las computadoras no deben exceder la capacidad del aula.");
+});
+
+test("hasErrors retorna true cuando hay algun error", () => {
+  const errors = validarFiltros({ horaInicio: "08:00", horaFin: "07:00" });
+  expect(hasErrors(errors)).toBe(true);
 });

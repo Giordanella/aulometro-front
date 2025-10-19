@@ -12,6 +12,10 @@ test("nombre de usuario vacio test", () => {
   expect(validarNombreUsuario({name: ""})).toBe("El nombre no puede estar vacío.");
 });
 
+test("nombre de usuario solo espacios", () => {
+  expect(validarNombreUsuario({name: "   "})).toBe("El nombre no puede estar vacío.");
+});
+
 test("nombre de usuario muy corto", () => {
   expect(validarNombreUsuario({name: "Jo"})).toBe("El nombre debe tener entre 3 y 50 caracteres.");
 });
@@ -22,6 +26,10 @@ test("nombre de usuario muy largo", () => {
 
 test("nombre de usuario con caracteres invalidos", () => {
   expect(validarNombreUsuario({name: "John123"})).toBe("El nombre solo puede contener letras y espacios.");
+});
+
+test("nombre de usuario con acentos y ñ", () => {
+  expect(validarNombreUsuario({name: "José Ñandú"})).toBeNull();
 });
 
 // Email tests
@@ -46,6 +54,10 @@ test("email con formato invalido", () => {
   expect(validarEmail({email: "invalid-email"})).toBe("El correo electrónico no es válido.");
 });
 
+test("email con punto al final de local es invalido", () => {
+  expect(validarEmail({email: "john.@gmail.com"})).toBe("El correo electrónico no es válido.");
+});
+
 // Password tests
 
 test("password valido", () => {
@@ -62,6 +74,10 @@ test("password muy corta", () => {
 
 test("password muy larga", () => {
   expect(validarPassword({password: "a".repeat(51)})).toBe("La contraseña no puede exceder los 50 caracteres.");
+});
+
+test("password con espacios permitidos", () => {
+  expect(validarPassword({password: " 123456 "})).toBeNull();
 });
 
 // Role tests
@@ -85,4 +101,8 @@ test("role muy largo", () => {
 
 test("role invalido", () => {
   expect(validarRole({role: "ADMIN"})).toBe("El rol debe ser 'DOCENTE' o 'DIRECTIVO'.");
+});
+
+test("role con espacios debe ser exacto", () => {
+  expect(validarRole({role: " DOCENTE "})).toBe("El rol debe ser 'DOCENTE' o 'DIRECTIVO'.");
 });
