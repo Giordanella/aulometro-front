@@ -113,9 +113,16 @@ const DashboardDirectivo = () => {
       }
       setPendientes((prev) => prev.filter((x) => x.id !== r.id));
       setRechazoAbierto(null);
+      // Mensaje de éxito al rechazar
+      setMsg("Reserva rechazada correctamente.");
+      setMsgTipo("success");
+      if (msgTimeoutRef.current) { clearTimeout(msgTimeoutRef.current); }
+      msgTimeoutRef.current = setTimeout(() => { setMsg(""); setMsgTipo(""); }, 5000);
     } catch (e) {
       setMsg(e?.response?.data?.error || e.message || "No se pudo rechazar.");
       setMsgTipo("error");
+      if (msgTimeoutRef.current) { clearTimeout(msgTimeoutRef.current); }
+      msgTimeoutRef.current = setTimeout(() => { setMsg(""); setMsgTipo(""); }, 7000);
     } finally {
       setRechazando(false);
     }
