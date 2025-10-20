@@ -12,7 +12,7 @@
 }
 
 .modal-content {
-  background: white;
+  background: var(--surface);
   padding: 2rem;
   border-radius: 8px;
   text-align: center;
@@ -21,6 +21,30 @@
   margin: 0 12px;
   max-height: calc(100vh - 96px); /* avoid overflowing out of viewport */
   overflow: auto;
+}
+
+/* Text color follows theme */
+.modal-content, .modal-content p {
+  color: var(--text);
+}
+
+/* Ensure textarea/input inside modal matches theme tokens */
+.modal-content textarea,
+.modal-content input,
+.modal-content select {
+  background-color: #0f141a; /* default for dark; overridden by light theme tokens if any */
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+}
+
+/* Light theme specific overrides leveraging tokens */
+.theme-light .modal-content textarea,
+.theme-light .modal-content input,
+.theme-light .modal-content select {
+  background-color: #ffffff;
+  color: #0b0b0c;
 }
 
 .modal-buttons {

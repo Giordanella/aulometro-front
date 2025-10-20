@@ -10,6 +10,7 @@ import ModalConfirmacion from "./ModalConfirmacion";
 import { deleteAulaById } from "../api/aulas";
 import FormReserva from "./FormularioReserva";
 import FormularioReservaExamen from "./FormularioReservaExamen"; 
+import LiberarAulaDialogo from "./LiberarAulaDialogo";
 
 const AulaItem = ({
   aulaId,
@@ -28,11 +29,15 @@ const AulaItem = ({
     useBorrarItem(deleteAulaById, onDelete);
 
   const [abrirReserva, setAbrirReserva] = useState(false);
-  const [abrirReservaExamen, setAbrirReservaExamen] = useState(false); 
+  const [abrirReservaExamen, setAbrirReservaExamen] = useState(false);
+
+  const [showLiberarAulaDialogo, setShowLiberarAulaDialogo] = useState(false);
 
   const puedeReservar =
     (typeof can === "function" && can(user, "crearReservas")) ||
     user?.role === "DOCENTE";
+
+  const puedeLiberarAula = user?.role === "DIRECTIVO";
 
   if (isEditing) {
     return (
@@ -64,6 +69,11 @@ const AulaItem = ({
       <span className="aula-data">Con proyector: {tieneProyector ? "Sí" : "No"}</span>
 
       <div className="aula-acciones">
+        {puedeLiberarAula && (
+          <BotonPrimario type="button" onClick={() => setShowLiberarAulaDialogo(true)}>
+            Liberar
+          </BotonPrimario>
+        )}
         {can(user, "modificarAulas") && (
           <BotonPrimario type="button" onClick={() => setIsEditing(true)}>
             Modificar
@@ -80,7 +90,7 @@ const AulaItem = ({
             onClick={() => {
               setAbrirReserva((prev) => {
                 const next = !prev; // toggle
-                if (next) {setAbrirReservaExamen(false);} // mutual exclusión
+                if (next) { setAbrirReservaExamen(false); } // mutual exclusión
                 return next;
               });
             }}
@@ -94,7 +104,7 @@ const AulaItem = ({
             onClick={() => {
               setAbrirReservaExamen((prev) => {
                 const next = !prev; // toggle
-                if (next) {setAbrirReserva(false);} // mutual exclusión
+                if (next) { setAbrirReserva(false); } // mutual exclusión
                 return next;
               });
             }}
@@ -135,6 +145,12 @@ const AulaItem = ({
         onConfirmar={() => handleDelete(aulaId)}
         onCancelar={() => setShowDeleteModal(false)}
         loading={loading}
+      />
+
+      <LiberarAulaDialogo
+        numero={numero}
+        open={showLiberarAulaDialogo}
+        setOpen={setShowLiberarAulaDialogo}
       />
     </div>
   );

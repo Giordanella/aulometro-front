@@ -3,6 +3,7 @@
   display: flex;
   justify-content: center;
   min-height: 100vh;
+  position: relative; /* needed for overlay */
 }
 
 .login {
@@ -34,4 +35,61 @@
   border-radius: 10px; /* rounded fields in both themes */
   width: 100%;
   box-sizing: border-box;
+}
+
+.login-error {
+  color: #ef4444; /* red-500 */
+  margin-top: 1rem;
+  text-align: center;
+}
+
+/* Overlay shown while loading to block interactions */
+.login-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+/* Simple CSS spinner */
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid #cbd5e1; /* slate-300 */
+  border-top-color: #2563eb; /* blue-600 */
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Dark theme: only blur, no white tint; keep spinner visible */
+.theme-dark .login-overlay {
+  background: transparent;        /* remove white film */
+  backdrop-filter: blur(3px);     /* slightly stronger blur */
+}
+.theme-dark .spinner {
+  border-color: rgba(148, 163, 184, 0.25); /* slate-400 at 25% */
+  border-top-color: #60a5fa;              /* blue-400 for visibility */
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Screen-reader only text */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }

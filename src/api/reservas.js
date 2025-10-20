@@ -30,3 +30,9 @@ export const aprobarReservaExamen = (id) => api.post(`/reservas/examen/${id}/apr
 export const rechazarReservaExamen = (id, motivo) => api.post(`/reservas/examen/${id}/rechazar`, { motivo });
 export const cancelarReservaExamen = (id) => api.post(`/reservas/examen/${id}/cancelar`);
 export const actualizarReservaExamen = (id, data) => api.put(`/reservas/examen/${id}`, data);
+
+export const getReservasAprobadasPorAula = (nombreAula) => api.get(`/reservas/aulas/${nombreAula}/aprobadas`);
+export const getReservasExamenAprobadasPorAula = (nombreAula) => api.get(`/reservas/examen/aulas/${nombreAula}/aprobadas`);
+
+export const liberarReserva = (id) => api.post(`/reservas/${id}/liberar`);
+export const liberarReservaExamen = (id) => api.post(`/reservas/examen/${id}/liberar`);
