@@ -51,8 +51,7 @@ const LiberarAulaDialogo = ({ numero, open, setOpen }) => {
 
         const combined = [...list1, ...list2];
         setReservas(combined);
-      } catch (err) {
-        console.error("Error al obtener reservas aprobadas:", err);
+      } catch {
         setError("No se pudieron cargar las reservas.");
       } finally {
         setLoading(false);
@@ -73,12 +72,11 @@ const LiberarAulaDialogo = ({ numero, open, setOpen }) => {
 
   const manejarRechazo = (error, idReserva) => {
     if (error) {
-      setMensaje("Ocurrió un error al rechazar la reserva.");
+      setMensaje(typeof error === "string" ? error : "Ocurrió un error al descartar la reserva.");
       setTipoMensaje("error");
     } else {
-      setMensaje("Reserva rechazada con éxito.");
+      setMensaje("Reserva descartada con éxito.");
       setTipoMensaje("success");
-      // Actualizamos la lista quitando la reserva rechazada
       setReservas((prev) => prev.filter((r) => r.id !== idReserva));
     }
   };
@@ -112,6 +110,8 @@ const LiberarAulaDialogo = ({ numero, open, setOpen }) => {
                 sx={{ m: 2 }}
                 color={tipoMensaje === "error" ? "error" : "success.main"}
                 className={`form-message ${tipoMensaje}`}
+                role="status"
+                aria-live="polite"
               >
                 {mensaje}
               </Typography>

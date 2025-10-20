@@ -2,7 +2,7 @@ import { useState } from "react";
 import BotonPrimario from "./BotonPrimario";
 import "./styles/ReservaItem.css";
 import ModalConfirmacion from "./ModalConfirmacion";
-import { rechazarReserva, rechazarReservaExamen } from "../api/reservas";
+import { liberarReserva, liberarReservaExamen } from "../api/reservas";
 
 const DIA_LABEL = ["", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
 
@@ -10,10 +10,10 @@ const ReservaItem = ({ reserva, numeroAula, onRechazo }) => {
   const [mostrarConfirmacion, setMostrarConfirmacion] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  if (!reserva) {return null;}
+  if (!reserva) { return null; }
 
   const formatFecha = (iso) => {
-    if (!iso || typeof iso !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(iso)) {return iso || "";}
+    if (!iso || typeof iso !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(iso)) { return iso || ""; }
     const [y, m, d] = iso.split("-");
     return `${d}/${m}/${y}`;
   };
@@ -22,18 +22,17 @@ const ReservaItem = ({ reserva, numeroAula, onRechazo }) => {
 
   const isExamen = reserva.fecha && (reserva.mesa || reserva.materia);
 
-  const rechazar = async () => {
+  const descartar = async () => {
     setLoading(true);
     try {
-      const motivo = "Liberación de aula";
       if (isExamen) {
-        await rechazarReservaExamen(reserva.id, motivo);
+        await liberarReservaExamen(reserva.id);
       } else {
-        await rechazarReserva(reserva.id, motivo);
+        await liberarReserva(reserva.id);
       }
-      if (onRechazo) {onRechazo(null, reserva.id);} // null = sin error
+      if (onRechazo) { onRechazo(null, reserva.id); } // null = sin error
     } catch (error) {
-      if (onRechazo) {onRechazo(error, reserva.id);}
+      if (onRechazo) { onRechazo(error, reserva.id); }
     } finally {
       setLoading(false);
       setMostrarConfirmacion(false);
@@ -72,16 +71,18 @@ const ReservaItem = ({ reserva, numeroAula, onRechazo }) => {
           {reserva.estado}
         </span>
 
-        <BotonPrimario onClick={() => setMostrarConfirmacion(true)}>Rechazar</BotonPrimario>
+        <BotonPrimario onClick={() => setMostrarConfirmacion(true)} disabled={loading} aria-disabled={loading}>
+          {loading ? "Procesando..." : "Descartar"}
+        </BotonPrimario>
       </div>
 
       <ModalConfirmacion
         abierto={mostrarConfirmacion}
-        mensaje="¿Estás seguro de que querés rechazar esta reserva?"
-        onConfirmar={rechazar}
+        mensaje="¿Estás seguro de que querés descartar esta reserva?"
+        onConfirmar={descartar}
         onCancelar={() => setMostrarConfirmacion(false)}
         loading={loading}
-        confirmLabel="Rechazar"
+        confirmLabel="Descartar"
         cancelLabel="Cancelar"
       />
     </div>
