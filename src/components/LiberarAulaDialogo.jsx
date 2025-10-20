@@ -14,6 +14,8 @@ import Slide from "@mui/material/Slide";
 import CloseIcon from "@mui/icons-material/Close";
 import ReservaItem from "./ReservaItem";
 import Ruedita from "./Ruedita";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useTheme } from "@mui/material/styles";
 
 const Transition = (props) => <Slide direction="up" {...props} />;
 
@@ -21,6 +23,8 @@ const LiberarAulaDialogo = ({ numero, open, setOpen }) => {
   const [reservas, setReservas] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [mensaje, setMensaje] = useState("");
   const [tipoMensaje, setTipoMensaje] = useState(""); // "error" o "success"
@@ -107,15 +111,17 @@ const LiberarAulaDialogo = ({ numero, open, setOpen }) => {
   return (
     <Fragment>
       <Dialog
-        fullScreen
+        fullScreen={fullScreen}
         open={open}
         onClose={handleClose}
         slots={{ transition: Transition }}
-        slotProps={{
-          paper: {
-            sx: {
-              backgroundColor: "var(--bg)",
-            },
+        PaperProps={{
+          className: "liberar-aula-dialog",
+          sx: {
+            backgroundColor: "var(--bg)",
+            width: fullScreen ? "100%" : "min(92vw, 860px)",
+            maxWidth: "100%",
+            margin: fullScreen ? 0 : "32px auto",
           },
         }}
       >
