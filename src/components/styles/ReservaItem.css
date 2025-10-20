@@ -1,0 +1,104 @@
+.reserva-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 12px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  background: #fff;
+  align-items: start;
+}
+
+.reserva-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1 1 auto;
+}
+
+.reserva-aula {
+  font-weight: 600;
+}
+
+.reserva-detalle {
+  font-size: 0.95rem;
+  color: #374151;
+}
+
+.reserva-obs {
+  font-size: 0.85rem;
+  color: #6b7280;
+  margin-top: 4px;
+}
+
+.reserva-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  gap: 8px;
+  min-width: 220px;
+}
+
+.reserva-badge {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Tipo examen */
+.reserva-examen {
+  background: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+}
+
+/* Badges por estado */
+.reserva-pendiente {
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fde68a;
+}
+.reserva-aprobada {
+  background: #dcfce7;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+.reserva-rechazada {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+.reserva-cancelada {
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #e5e7eb;
+}
+
+/* -------- Responsive -------- */
+@media (max-width: 800px) {
+  .reserva-card {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .reserva-actions {
+    align-items: flex-start;
+    min-width: 0;
+  }
+
+  .reserva-badge {
+    font-size: 0.7rem;
+  }
+
+  .reserva-detalle {
+    font-size: 0.9rem;
+  }
+
+  .reserva-obs {
+    font-size: 0.82rem;
+  }
+}
