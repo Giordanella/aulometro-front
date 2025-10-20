@@ -46,10 +46,27 @@ const LiberarAulaDialogo = ({ numero, open, setOpen }) => {
           getReservasExamenAprobadasPorAula(Number(numero)),
         ]);
 
-        const list1 = Array.isArray(res1?.data) ? res1.data : res1?.data?.rows ?? [];
-        const list2 = Array.isArray(res2?.data) ? res2.data : res2?.data?.rows ?? [];
+        const list1 = Array.isArray(res1?.data)
+          ? res1.data
+          : res1?.data?.rows ?? [];
+        const list2 = Array.isArray(res2?.data)
+          ? res2.data
+          : res2?.data?.rows ?? [];
 
-        const combined = [...list1, ...list2];
+        // Normalizamos con identificadores únicos
+        const mapped1 = list1.map((r) => ({
+          ...r,
+          __tipo: "normal",
+          __compositeId: `N-${r.id}`,
+        }));
+
+        const mapped2 = list2.map((r) => ({
+          ...r,
+          __tipo: "examen",
+          __compositeId: `E-${r.id}`,
+        }));
+
+        const combined = [...mapped1, ...mapped2];
         setReservas(combined);
       } catch {
         setError("No se pudieron cargar las reservas.");
@@ -70,14 +87,18 @@ const LiberarAulaDialogo = ({ numero, open, setOpen }) => {
     }
   }, [numero, open]);
 
-  const manejarRechazo = (error, idReserva) => {
+  const manejarRechazo = (error, compositeId) => {
     if (error) {
-      setMensaje(typeof error === "string" ? error : "Ocurrió un error al descartar la reserva.");
+      setMensaje(
+        typeof error === "string"
+          ? error
+          : "Ocurrió un error al descartar la reserva."
+      );
       setTipoMensaje("error");
     } else {
       setMensaje("Reserva descartada con éxito.");
       setTipoMensaje("success");
-      setReservas((prev) => prev.filter((r) => r.id !== idReserva));
+      setReservas((prev) => prev.filter((r) => r.__compositeId !== compositeId));
     }
   };
 
@@ -85,10 +106,20 @@ const LiberarAulaDialogo = ({ numero, open, setOpen }) => {
 
   return (
     <Fragment>
-      <Dialog fullScreen open={open} onClose={handleClose} slots={{ transition: Transition }}>
+      <Dialog
+        fullScreen
+        open={open}
+        onClose={handleClose}
+        slots={{ transition: Transition }}
+      >
         <AppBar sx={{ position: "relative" }}>
           <Toolbar>
-            <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
+            <IconButton
+              edge="start"
+              color="inherit"
+              onClick={handleClose}
+              aria-label="close"
+            >
               <CloseIcon />
             </IconButton>
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
@@ -124,7 +155,7 @@ const LiberarAulaDialogo = ({ numero, open, setOpen }) => {
             ) : (
               <List>
                 {reservas.map((reserva) => (
-                  <Fragment key={reserva.id}>
+                  <Fragment key={reserva.__compositeId}>
                     <ReservaItem
                       reserva={reserva}
                       numeroAula={numero}

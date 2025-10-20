@@ -10,17 +10,23 @@ const ReservaItem = ({ reserva, numeroAula, onRechazo }) => {
   const [mostrarConfirmacion, setMostrarConfirmacion] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  if (!reserva) { return null; }
+  if (!reserva) {return null;}
 
   const formatFecha = (iso) => {
-    if (!iso || typeof iso !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(iso)) { return iso || ""; }
+    if (!iso || typeof iso !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(iso)) {return iso || "";}
     const [y, m, d] = iso.split("-");
     return `${d}/${m}/${y}`;
   };
 
   const formatHora = (h) => (typeof h === "string" ? h.slice(0, 5) : h);
 
-  const isExamen = reserva.fecha && (reserva.mesa || reserva.materia);
+  // Usamos el tipo ya asignado desde el padre, o la heurística como fallback
+  const isExamen =
+    reserva.__tipo === "examen" ||
+    (reserva.fecha && (reserva.mesa || reserva.materia));
+
+  // ID compuesto para distinguir reservas de distinto origen
+  const compositeId = reserva.__compositeId || `${isExamen ? "E" : "N"}-${reserva.id}`;
 
   const descartar = async () => {
     setLoading(true);
@@ -30,9 +36,9 @@ const ReservaItem = ({ reserva, numeroAula, onRechazo }) => {
       } else {
         await liberarReserva(reserva.id);
       }
-      if (onRechazo) { onRechazo(null, reserva.id); } // null = sin error
+      if (onRechazo) {onRechazo(null, compositeId);} // enviamos compositeId
     } catch (error) {
-      if (onRechazo) { onRechazo(error, reserva.id); }
+      if (onRechazo) {onRechazo(error, compositeId);}
     } finally {
       setLoading(false);
       setMostrarConfirmacion(false);
@@ -59,19 +65,28 @@ const ReservaItem = ({ reserva, numeroAula, onRechazo }) => {
           </>
         ) : (
           <div className="reserva-detalle">
-            {DIA_LABEL[reserva.diaSemana]} {formatHora(reserva.horaInicio)}–{formatHora(reserva.horaFin)}
+            {DIA_LABEL[reserva.diaSemana]} {formatHora(reserva.horaInicio)}–
+            {formatHora(reserva.horaFin)}
           </div>
         )}
 
-        {reserva.observaciones && <div className="reserva-obs">{reserva.observaciones}</div>}
+        {reserva.observaciones && (
+          <div className="reserva-obs">{reserva.observaciones}</div>
+        )}
       </div>
 
       <div className="reserva-actions">
-        <span className={`reserva-badge reserva-${(reserva.estado || "").toLowerCase()}`}>
+        <span
+          className={`reserva-badge reserva-${(reserva.estado || "").toLowerCase()}`}
+        >
           {reserva.estado}
         </span>
 
-        <BotonPrimario onClick={() => setMostrarConfirmacion(true)} disabled={loading} aria-disabled={loading}>
+        <BotonPrimario
+          onClick={() => setMostrarConfirmacion(true)}
+          disabled={loading}
+          aria-disabled={loading}
+        >
           {loading ? "Procesando..." : "Descartar"}
         </BotonPrimario>
       </div>
