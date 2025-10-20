@@ -1,13 +1,43 @@
-.MuiPaper-root {
+/* Scope styles to the liberar aula dialog only */
+.liberar-aula-dialog.MuiPaper-root {
   align-items: center;
 }
 
-.MuiList-root {
+.liberar-aula-dialog .MuiList-root {
   display: flex;
   flex-direction: column;
   gap: 8px;
   padding: 16px !important;
-  width: 512px;
+  width: 100%;
+  max-width: 720px; /* prevents overly wide content on desktop */
+  box-sizing: border-box;
+  margin: 0 auto; /* center list on wider screens */
+}
+
+/* Responsive paddings for very small screens */
+@media (max-width: 600px) {
+  .liberar-aula-dialog .MuiList-root {
+    padding: 12px !important;
+    gap: 8px;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 400px) {
+  .liberar-aula-dialog .MuiList-root {
+    padding: 8px !important;
+    gap: 6px;
+  }
+}
+
+/* Keep actions (Descartar) aligned to the right inside the dialog on small screens */
+@media (max-width: 800px) {
+  /* Move the whole actions column to the right when the card stacks */
+  .liberar-aula-dialog .reserva-actions {
+    align-self: flex-end;         /* override parent's align-items in column layout */
+    align-items: flex-end !important; /* keep inner content right-aligned */
+    width: auto;                  /* avoid stretching full width */
+  }
 }
 
 .form-message {
@@ -16,6 +46,11 @@
   padding: 0.75rem;
   border-radius: 6px;
   text-align: center;
+  width: 100%;
+  max-width: 720px;
+  box-sizing: border-box;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .form-message.success {
