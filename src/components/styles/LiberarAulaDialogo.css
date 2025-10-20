@@ -1,3 +1,15 @@
+.MuiPaper-root {
+  align-items: center;
+}
+
+.MuiList-root {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px !important;
+  width: 512px;
+}
+
 .form-message {
   margin-top: 1rem;
   font-weight: bold;

@@ -6,7 +6,6 @@ import {
 import "./styles/LiberarAulaDialogo.css";
 import Dialog from "@mui/material/Dialog";
 import List from "@mui/material/List";
-import Divider from "@mui/material/Divider";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
@@ -14,6 +13,7 @@ import Typography from "@mui/material/Typography";
 import Slide from "@mui/material/Slide";
 import CloseIcon from "@mui/icons-material/Close";
 import ReservaItem from "./ReservaItem";
+import Ruedita from "./Ruedita";
 
 const Transition = (props) => <Slide direction="up" {...props} />;
 
@@ -111,8 +111,20 @@ const LiberarAulaDialogo = ({ numero, open, setOpen }) => {
         open={open}
         onClose={handleClose}
         slots={{ transition: Transition }}
+        slotProps={{
+          paper: {
+            sx: {
+              backgroundColor: "var(--bg)",
+            },
+          },
+        }}
       >
-        <AppBar sx={{ position: "relative" }}>
+        <AppBar
+          sx={{
+            position: "relative",
+            backgroundColor: "var(--philippine-red)",
+          }}
+        >
           <Toolbar>
             <IconButton
               edge="start"
@@ -123,13 +135,13 @@ const LiberarAulaDialogo = ({ numero, open, setOpen }) => {
               <CloseIcon />
             </IconButton>
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-              Reservas aprobadas del aula {numero}
+              Reservas del aula {numero}
             </Typography>
           </Toolbar>
         </AppBar>
 
         {loading ? (
-          <Typography sx={{ m: 2 }}>Cargando reservas...</Typography>
+          <Ruedita />
         ) : error ? (
           <Typography sx={{ m: 2 }} color="error">
             {error}
@@ -149,7 +161,7 @@ const LiberarAulaDialogo = ({ numero, open, setOpen }) => {
             )}
 
             {reservas.length === 0 ? (
-              <Typography sx={{ m: 2 }} color="text.secondary">
+              <Typography sx={{ m: 2 }} color="error">
                 No hay reservas aprobadas para este aula.
               </Typography>
             ) : (
@@ -161,7 +173,6 @@ const LiberarAulaDialogo = ({ numero, open, setOpen }) => {
                       numeroAula={numero}
                       onRechazo={manejarRechazo}
                     />
-                    <Divider />
                   </Fragment>
                 ))}
               </List>
