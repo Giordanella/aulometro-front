@@ -36,7 +36,7 @@
   width: 36px;
   height: 36px;
   display: inline-block;
-  background-image: url("https://www.unq.edu.ar/wp-content/uploads/2022/10/favicon-150x150.png");
+  background-image: url("/unq-favicon.png"); /* served from public/ */
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
