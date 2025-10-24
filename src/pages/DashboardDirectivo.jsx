@@ -1,6 +1,6 @@
 // src/pages/DashboardDirectivo.jsx
 import { useState, useEffect, useRef } from "react";
-import { getDocentes } from "../api/users";
+import { getDocentes, getUsers } from "../api/users";
 import { getAulas } from "../api/aulas";
 import {
   getPendientes,
@@ -12,6 +12,7 @@ import {
 import FormularioAltaUsuario from "../components/FormularioAltaUsuario";
 import FormularioAltaAula from "../components/FormularioAltaAula";
 import ListaDocentes from "../components/ListaDocentes";
+import ListaDirectivos from "../components/ListaDirectivos";
 import ListaAulas from "../components/ListaAulas";
 import BotonPrimario from "../components/BotonPrimario";
 import CampoFormulario from "../components/CampoFormulario";
@@ -28,6 +29,15 @@ import FormularioCambioClave from "../components/FormularioCambioClave.jsx";
 const getPendientesRows = () =>
   getPendientes().then(({ data }) => ({
     data: { rows: Array.isArray(data) ? data : (data?.rows ?? []) },
+  }));
+
+const getDirectivosRows = () =>
+  getUsers().then(({ data }) => ({
+    data: {
+      rows: (Array.isArray(data) ? data : data?.rows ?? []).filter(
+        (u) => u.role === "DIRECTIVO"
+      ),
+    },
   }));
 
 const DashboardDirectivo = () => {
@@ -49,6 +59,11 @@ const DashboardDirectivo = () => {
     setItems: setDocentes,
     fetchItems: fetchDocentes,
   } = useLista(getDocentes);
+
+  const {
+    items: directivos,
+    fetchItems: fetchDirectivos,
+  } = useLista(getDirectivosRows);
 
   const {
     items: pendientes,
@@ -143,6 +158,13 @@ const DashboardDirectivo = () => {
               fallbackError="Error al cargar docentes"
             >
               <ListaDocentes docentes={docentes} setDocentes={setDocentes} />
+            </DataLoader>
+            <DataLoader
+              fetchData={fetchDirectivos}
+              fallbackLoading={<Ruedita />}
+              fallbackError="Error al cargar directivos"
+            >
+              <ListaDirectivos directivos={directivos} />
             </DataLoader>
           </div>
         )}
