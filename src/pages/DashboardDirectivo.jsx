@@ -1,6 +1,6 @@
 // src/pages/DashboardDirectivo.jsx
 import { useState, useEffect, useRef } from "react";
-import { getDocentes } from "../api/users";
+import { getDocentes, getUsers } from "../api/users";
 import { getAulas } from "../api/aulas";
 import {
   getPendientes,
@@ -12,12 +12,14 @@ import {
 import FormularioAltaUsuario from "../components/FormularioAltaUsuario";
 import FormularioAltaAula from "../components/FormularioAltaAula";
 import ListaDocentes from "../components/ListaDocentes";
+import ListaDirectivos from "../components/ListaDirectivos";
 import ListaAulas from "../components/ListaAulas";
 import BotonPrimario from "../components/BotonPrimario";
 import CampoFormulario from "../components/CampoFormulario";
 import ModalConfirmacion from "../components/ModalConfirmacion";
 import DataLoader from "../components/DataLoader.jsx";
 import Ruedita from "../components/Ruedita.jsx";
+import ReservaItem from "../components/ReservaItem.jsx";
 
 import { useLista } from "../hooks/useLista.jsx";
 import "./styles/Home.css";
@@ -28,6 +30,15 @@ import FormularioCambioClave from "../components/FormularioCambioClave.jsx";
 const getPendientesRows = () =>
   getPendientes().then(({ data }) => ({
     data: { rows: Array.isArray(data) ? data : (data?.rows ?? []) },
+  }));
+
+const getDirectivosRows = () =>
+  getUsers().then(({ data }) => ({
+    data: {
+      rows: (Array.isArray(data) ? data : data?.rows ?? []).filter(
+        (u) => u.role === "DIRECTIVO"
+      ),
+    },
   }));
 
 const DashboardDirectivo = () => {
@@ -49,6 +60,11 @@ const DashboardDirectivo = () => {
     setItems: setDocentes,
     fetchItems: fetchDocentes,
   } = useLista(getDocentes);
+
+  const {
+    items: directivos,
+    fetchItems: fetchDirectivos,
+  } = useLista(getDirectivosRows);
 
   const {
     items: pendientes,
@@ -73,12 +89,10 @@ const DashboardDirectivo = () => {
   }, []);
 
   const aulaNumMap = Object.fromEntries((aulas || []).map((a) => [a.id, a.numero]));
-  const formatFecha = (iso) => {
-    if (!iso || typeof iso !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(iso)) {return iso || "";}
-    const [y, m, d] = iso.split("-");
-    return `${d}/${m}/${y}`;
-  };
-  const formatHora = (h) => (typeof h === "string" ? h.slice(0,5) : h);
+  const userMap = Object.fromEntries(
+    ([...(docentes || []), ...(directivos || [])]).map((u) => [u.id, u])
+  );
+  // Nota: las tarjetas de pendientes usan el componente ReservaItem para formateo y layout
 
   async function onAprobar(r) {
     try {
@@ -144,6 +158,13 @@ const DashboardDirectivo = () => {
             >
               <ListaDocentes docentes={docentes} setDocentes={setDocentes} />
             </DataLoader>
+            <DataLoader
+              fetchData={fetchDirectivos}
+              fallbackLoading={<Ruedita />}
+              fallbackError="Error al cargar directivos"
+            >
+              <ListaDirectivos directivos={directivos} />
+            </DataLoader>
           </div>
         )}
 
@@ -184,54 +205,16 @@ const DashboardDirectivo = () => {
 
                 <div className="reservas-list">
                   {(pendientes || []).map((r) => (
-                    <div key={r.id} className="reserva-card">
-                      <div className="reserva-info">
-                        <div className="reserva-aula">Aula {aulaNumMap[r.aulaId] ?? r.aulaId}</div>
-                        {r.tipo === "EXAMEN" ? (
-                          <>
-                            <div className="reserva-detalle">
-                              <span className="reserva-badge reserva-examen">Examen</span>
-                            </div>
-                            <div className="reserva-detalle">
-                              {formatFecha(r.fecha)}
-                            </div>
-                            <div className="reserva-detalle">
-                              {formatHora(r.horaInicio)}–{formatHora(r.horaFin)}
-                            </div>
-                            <div className="reserva-obs">
-                              {r.materia} {r.mesa ? `- ${r.mesa}` : ""}
-                            </div>
-                          </>
-                        ) : (
-                          <div className="reserva-detalle">
-                            {[
-                              "",
-                              "Lunes",
-                              "Martes",
-                              "Miércoles",
-                              "Jueves",
-                              "Viernes",
-                              "Sábado",
-                              "Domingo",
-                            ][r.diaSemana]} {formatHora(r.horaInicio)}–{formatHora(r.horaFin)}
-                          </div>
-                        )}
-                        {r.observaciones && (
-                          <div className="reserva-obs">{r.observaciones}</div>
-                        )}
-                      </div>
-
-                      <div className="reserva-actions">
-                        <div className="reserva-buttons">
-                          <BotonPrimario onClick={() => onAprobar(r)}>
-                          Aprobar
-                          </BotonPrimario>
-                          <BotonPrimario onClick={() => setRechazoAbierto(r)}>
-                          Rechazar
-                          </BotonPrimario>
-                        </div>
-                      </div>
-                    </div>
+                    <ReservaItem
+                      key={`P-${r.id}`}
+                      reserva={r}
+                      numeroAula={aulaNumMap[r.aulaId] ?? r.aulaId}
+                      mostrarAutor
+                      autor={userMap[r.solicitanteId]}
+                      modoPendiente
+                      onAprobar={() => onAprobar(r)}
+                      onRechazar={() => setRechazoAbierto(r)}
+                    />
                   ))}
                 </div>
               </DataLoader>
