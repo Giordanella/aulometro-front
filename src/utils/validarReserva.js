@@ -1,4 +1,14 @@
 const TIME_RX = /^\d{2}:\d{2}$/;
+const MIN_MINUTOS = 30;
+const MAX_MINUTOS = 8 * 60; // 8 horas
+const MAX_HORAS = MAX_MINUTOS / 60;
+
+function minutosEntre(h1, h2) {
+  // h1, h2 en formato HH:mm garantizado por TIME_RX
+  const [h1h, h1m] = h1.split(":").map(Number);
+  const [h2h, h2m] = h2.split(":").map(Number);
+  return (h2h * 60 + h2m) - (h1h * 60 + h1m);
+}
 
 function validarDiaSemana(valor) {
   const d = Number(valor);
@@ -32,6 +42,16 @@ export function validarReserva(formData = {}) {
   errors.horaInicio = validarHoraInicio(formData.horaInicio);
   errors.horaFin = validarHoraFin(formData.horaInicio, formData.horaFin);
 
+  // Validación de duración mínima y máxima solo si formatos están OK y fin>inicio
+  if (!errors.horaInicio && !errors.horaFin) {
+    const mins = minutosEntre(formData.horaInicio, formData.horaFin);
+    if (mins < MIN_MINUTOS) {
+      errors.horaFin = `La reserva debe durar al menos ${MIN_MINUTOS} minutos`;
+    } else if (mins > MAX_MINUTOS) {
+      errors.horaFin = `La reserva no puede durar más de ${MAX_HORAS} horas`;
+    }
+  }
+
   return errors;
 }
 
@@ -39,4 +59,4 @@ export function hasErrors(errors) {
   return Object.values(errors).some((msg) => msg !== null);
 }
 
-export const __internals__ = { TIME_RX, validarDiaSemana, validarHoraInicio, validarHoraFin };
+export const __internals__ = { TIME_RX, validarDiaSemana, validarHoraInicio, validarHoraFin, minutosEntre, MIN_MINUTOS, MAX_MINUTOS, MAX_HORAS };
