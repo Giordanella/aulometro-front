@@ -3,6 +3,7 @@ import {
   getReservasAprobadasPorAula,
   getReservasExamenAprobadasPorAula,
 } from "../api/reservas";
+import { getUsers } from "../api/users";
 import "./styles/LiberarAulaDialogo.css";
 import Dialog from "@mui/material/Dialog";
 import List from "@mui/material/List";
@@ -23,6 +24,7 @@ const LiberarAulaDialogo = ({ numero, open, setOpen }) => {
   const [reservas, setReservas] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [userMap, setUserMap] = useState({});
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -45,9 +47,10 @@ const LiberarAulaDialogo = ({ numero, open, setOpen }) => {
       setLoading(true);
       setError(null);
       try {
-        const [res1, res2] = await Promise.all([
+        const [res1, res2, usersResp] = await Promise.all([
           getReservasAprobadasPorAula(Number(numero)),
           getReservasExamenAprobadasPorAula(Number(numero)),
+          getUsers(),
         ]);
 
         const list1 = Array.isArray(res1?.data)
@@ -56,6 +59,9 @@ const LiberarAulaDialogo = ({ numero, open, setOpen }) => {
         const list2 = Array.isArray(res2?.data)
           ? res2.data
           : res2?.data?.rows ?? [];
+        const usersList = Array.isArray(usersResp?.data)
+          ? usersResp.data
+          : usersResp?.data?.rows ?? [];
 
         // Normalizamos con identificadores únicos
         const mapped1 = list1.map((r) => ({
@@ -72,6 +78,8 @@ const LiberarAulaDialogo = ({ numero, open, setOpen }) => {
 
         const combined = [...mapped1, ...mapped2];
         setReservas(combined);
+        // Crear mapa de usuarios para autor por id
+        setUserMap(Object.fromEntries(usersList.map((u) => [u.id, u])));
       } catch {
         setError("No se pudieron cargar las reservas.");
       } finally {
@@ -88,6 +96,7 @@ const LiberarAulaDialogo = ({ numero, open, setOpen }) => {
       setError(null);
       setMensaje("");
       setTipoMensaje("");
+      setUserMap({});
     }
   }, [numero, open]);
 
@@ -177,6 +186,8 @@ const LiberarAulaDialogo = ({ numero, open, setOpen }) => {
                     <ReservaItem
                       reserva={reserva}
                       numeroAula={numero}
+                      mostrarAutor
+                      autor={userMap?.[reserva.solicitanteId]}
                       onRechazo={manejarRechazo}
                     />
                   </Fragment>
