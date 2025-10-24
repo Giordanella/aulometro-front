@@ -88,6 +88,9 @@ const DashboardDirectivo = () => {
   }, []);
 
   const aulaNumMap = Object.fromEntries((aulas || []).map((a) => [a.id, a.numero]));
+  const userMap = Object.fromEntries(
+    ([...(docentes || []), ...(directivos || [])]).map((u) => [u.id, u])
+  );
   const formatFecha = (iso) => {
     if (!iso || typeof iso !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(iso)) {return iso || "";}
     const [y, m, d] = iso.split("-");
@@ -209,6 +212,10 @@ const DashboardDirectivo = () => {
                     <div key={r.id} className="reserva-card">
                       <div className="reserva-info">
                         <div className="reserva-aula">Aula {aulaNumMap[r.aulaId] ?? r.aulaId}</div>
+                        <div className="reserva-detalle">
+                          Solicitada por: {userMap[r.solicitanteId]?.name || `Usuario #${r.solicitanteId}`}
+                          {userMap[r.solicitanteId]?.email ? ` (${userMap[r.solicitanteId].email})` : ""}
+                        </div>
                         {r.tipo === "EXAMEN" ? (
                           <>
                             <div className="reserva-detalle">
