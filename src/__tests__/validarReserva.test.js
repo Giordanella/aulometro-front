@@ -30,6 +30,16 @@ test("horaFin debe ser mayor que inicio", () => {
   expect(errors.horaFin).toBe("La hora fin debe ser mayor que inicio");
 });
 
+test("duración mínima de 30 minutos (regular)", () => {
+  const errors = validarReserva({ diaSemana: 2, horaInicio: "08:00", horaFin: "08:20" });
+  expect(errors.horaFin).toMatch(/al menos 30 minutos/i);
+});
+
+test("duración máxima de 8 horas (regular)", () => {
+  const errors = validarReserva({ diaSemana: 2, horaInicio: "08:00", horaFin: "16:30" });
+  expect(errors.horaFin).toMatch(/más de 8 horas/i);
+});
+
 test("internals TIME_RX coincide con 2 digitos", () => {
   expect(__internals__.TIME_RX.test("00:00")).toBe(true);
   expect(__internals__.TIME_RX.test("0:00")).toBe(false);
