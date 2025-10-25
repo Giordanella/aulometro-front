@@ -1,4 +1,13 @@
 const TIME_RX = /^\d{2}:\d{2}$/;
+const MIN_MINUTOS_EX = 30;
+const MAX_MINUTOS_EX = 6 * 60; // 6 horas
+const MAX_HORAS_EX = MAX_MINUTOS_EX / 60;
+
+function minutosEntre(h1, h2) {
+  const [h1h, h1m] = h1.split(":").map(Number);
+  const [h2h, h2m] = h2.split(":").map(Number);
+  return (h2h * 60 + h2m) - (h1h * 60 + h1m);
+}
 
 function validarFecha(valor) {
   if (!valor) {return "La fecha es requerida.";}
@@ -44,6 +53,16 @@ export function validarReservaExamen(formData = {}) {
   errors.horaInicio = validarHoraInicio(formData.horaInicio);
   errors.horaFin = validarHoraFin(formData.horaInicio, formData.horaFin);
 
+  // Validar duración mínima y máxima para examen si horas son válidas
+  if (!errors.horaInicio && !errors.horaFin) {
+    const mins = minutosEntre(formData.horaInicio, formData.horaFin);
+    if (mins < MIN_MINUTOS_EX) {
+      errors.horaFin = `La reserva de examen debe durar al menos ${MIN_MINUTOS_EX} minutos`;
+    } else if (mins > MAX_MINUTOS_EX) {
+      errors.horaFin = `La reserva de examen no puede durar más de ${MAX_HORAS_EX} horas`;
+    }
+  }
+
   return errors;
 }
 
@@ -51,4 +70,4 @@ export function hasErrors(errors) {
   return Object.values(errors).some((msg) => msg !== null);
 }
 
-export const __internals__ = { TIME_RX, validarFecha, validarHoraInicio, validarHoraFin };
+export const __internals__ = { TIME_RX, validarFecha, validarHoraInicio, validarHoraFin, minutosEntre, MIN_MINUTOS_EX, MAX_MINUTOS_EX, MAX_HORAS_EX };

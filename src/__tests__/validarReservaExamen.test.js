@@ -27,6 +27,16 @@ test("hora formatos invalidos", () => {
   expect(e2.horaFin).toBe("Formato HH:mm");
 });
 
+test("duración mínima de 30 minutos (examen)", () => {
+  const errors = validarReservaExamen({ fecha: "2025-11-02", horaInicio: "10:00", horaFin: "10:20" });
+  expect(errors.horaFin).toMatch(/al menos 30 minutos/i);
+});
+
+test("duración máxima de 6 horas (examen)", () => {
+  const errors = validarReservaExamen({ fecha: "2025-11-03", horaInicio: "08:00", horaFin: "15:00" });
+  expect(errors.horaFin).toMatch(/más de 6 horas/i);
+});
+
 test("internals TIME_RX requiere 2 digitos", () => {
   expect(__internals__.TIME_RX.test("07:05")).toBe(true);
   expect(__internals__.TIME_RX.test("7:5")).toBe(false);

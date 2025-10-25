@@ -23,7 +23,7 @@ export function validarCapacidad(formData) {
 }
 
 export function validarUbicacion(formData) {
-  const regex = /^[a-zA-Z0-9\s,.-]+$/;
+  const regex = /^[a-zA-Z0-9\s,.\-ñÑºáéíóúÁÉÍÓÚ]+$/;
   if (!formData.ubicacion || formData.ubicacion.trim().length === 0) {
     return "La ubicación no puede estar vacía.";
   }
